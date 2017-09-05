@@ -2,9 +2,10 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import {default as routers} from './routers';
 import * as mongoose from 'mongoose';
 import * as passport from 'passport';
+
+import {default as routers} from './routers';
 import { PassportConfig } from './config/passport';
 
 class App {
@@ -58,7 +59,7 @@ class App {
      * app environment configuration
      */
     private setEnvironment(): void {
-        dotenv.config({ path: ".env" });
+        dotenv.config({ path: '.env' });
     }
 
     /**
