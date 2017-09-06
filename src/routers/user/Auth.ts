@@ -104,7 +104,7 @@ export class Auth extends BaseRoute {
     public profileAction(router: Router): void {
         router.get('/profile', this.guard, (req: Request, res: Response) => {
             res.json({
-                success: false,
+                success: true,
                 user: req.body.user
             });
         });
