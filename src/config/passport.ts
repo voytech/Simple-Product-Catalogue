@@ -1,5 +1,5 @@
-import {Strategy, ExtractJwt} from 'passport-jwt';
-import {Passport} from "passport";
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import { Passport } from "passport";
 
 import { User } from '../models/user';
 
