@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as debug from 'debug';
 import * as winston from 'winston';
+
 import App  from './App';
 
 
@@ -44,11 +45,13 @@ class Server {
     private createServer() {
         this.server = http.createServer(App);
         this.server.listen(this.port);
+        
         this.server.on('listening', () => {
             let address = this.server.address();
             let bind = (typeof address === 'string') ? `pipe ${address}` : `port ${address.port}`;
             debug(`Listening on ${bind}`);
         });
+
         this.server.on('error', (error: NodeJS.ErrnoException) => {
             if (error.syscall !== 'listen') throw error;
             console.error(error);

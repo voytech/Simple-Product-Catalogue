@@ -2,8 +2,10 @@
  * application main router
  */
 import * as express from 'express';
-const api = express.Router();
+
 import {default as userRouter} from './user';
+
+const api = express.Router();
 
 api.use('/user', userRouter);
 

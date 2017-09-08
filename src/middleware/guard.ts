@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 
 /**
  * http(s) middleware guard
@@ -13,7 +13,7 @@ export const guard = (req: Request, res: Response, next: NextFunction) => {
         if (token) {
             jwt.verify(token, process.env.APPLICATION_SECRET, (err, user) => {
                 if (err) {
-                    console.log(err);
+                    this.logger.error(err.toString());
                     return res.json({
                         success: false,
                         message: 'Failed to authenticate token.'
