@@ -4,5 +4,4 @@ logs
 dist
 .env
 application.log
-package-lock.json
 npm-debug.log

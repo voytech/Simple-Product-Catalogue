@@ -13,7 +13,7 @@ export const guard = (req: Request, res: Response, next: NextFunction) => {
         if (token) {
             jwt.verify(token, process.env.APPLICATION_SECRET, (err, user) => {
                 if (err) {
-                    this.logger.error(err.toString());
+                    console.error(err);
                     return res.json({
                         success: false,
                         message: 'Failed to authenticate token.'
