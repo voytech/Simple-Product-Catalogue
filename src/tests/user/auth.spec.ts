@@ -2,8 +2,9 @@ import { BaseTest } from '../BaseTest';
 
 describe('/POST user/auth/', () => {
 
-    const test = new BaseTest();
-    const random = Math.floor(Math.random() * 1000);
+    const   test = new BaseTest(),
+            random = Math.floor(Math.random() * 1000);
+    
     const user = {
         name: 'test user',
         email: `test${random}@mailinator.com`,

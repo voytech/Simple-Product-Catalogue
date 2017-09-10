@@ -1,6 +1,7 @@
-import {Strategy, ExtractJwt} from 'passport-jwt';
-import {User} from '../models/user';
-import {Passport} from "passport";
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import { Passport } from "passport";
+
+import { User } from '../models/user';
 
 /**
  * passport jwt configuration
@@ -18,12 +19,12 @@ export class PassportConfig {
             jwtFromRequest: ExtractJwt.fromAuthHeader(),
             secretOrKey: process.env.APPLICATION_SECRET
         };
+
         this.passport.use(new Strategy(opts, (jwtPayload, done) => {
             User.findOne({_id: jwtPayload._doc._id}, (err, user) => {
                 if (err) {
                     return done(err, false);
-                }
-                if (user) {
+                } else if (user) {
                     return done(null, user);
                 } else {
                     return done(null, false);

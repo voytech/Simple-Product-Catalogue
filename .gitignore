@@ -4,3 +4,4 @@ logs
 dist
 .env
 application.log
+npm-debug.log

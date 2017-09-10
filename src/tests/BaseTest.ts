@@ -1,6 +1,7 @@
 import * as chai from 'chai';
 import * as chaiHttp from 'chai-http';
-import {server} from '../index'
+
+import { server } from '../index'
 
 
 export class BaseTest {

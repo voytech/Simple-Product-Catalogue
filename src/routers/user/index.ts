@@ -2,8 +2,9 @@
  * user router
  */
 import * as express from 'express';
-const user = express.Router();
 import {Auth} from './Auth';
+
+const user = express.Router();
 
 user.use('/auth', new Auth().getRoutes());
 

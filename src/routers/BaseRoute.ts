@@ -1,7 +1,7 @@
-import * as express from 'express';
-import {Router} from 'express';
-import {guard} from '../middleware/guard';
+import { Router } from 'express';
 import * as winston from 'winston';
+
+import { guard } from '../middleware/guard';
 
 export abstract class BaseRoute {
 
@@ -14,7 +14,7 @@ export abstract class BaseRoute {
         this.guard = guard;
         this.logger = winston;
         this.onInit();
-        this.router = express.Router();
+        this.router = Router();
         this.initRoutes();
     }
 
