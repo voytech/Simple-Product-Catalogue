@@ -37,12 +37,15 @@
     "gulp-yaml": "^1.0.1",
     "mocha": "^3.4.2",
     "mocha-typescript": "^1.1.4",
+    "ntypescript": "1.201706190042.1",
     "typescript": "^2.3.4"
   },
   "scripts": {
-    "start": "nodemon dist/index.js",
-    "build": "gulp build",
-    "test": "mocha -t 30000 dist/tests/**/*.spec.js"
+    "build": "ntsc",
+    "dev": "ntsc --watch & nodemon dist",
+    "test": "ntsc && mocha dist/**/*.spec.js",
+    "lint": "eslint src --ext ts",
+    "tsc": "ntsc"
   },
   "repository": {
     "type": "git",
