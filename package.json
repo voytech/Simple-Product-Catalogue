@@ -42,7 +42,8 @@
   },
   "scripts": {
     "build": "ntsc",
-    "dev": "ntsc --watch & nodemon dist",
+    "run": "ntsc & node dist/index.js",
+    "dev": "ntsc --watch & nodemon dist/index.js",
     "test": "ntsc && mocha dist/**/*.spec.js",
     "lint": "eslint src --ext ts",
     "tsc": "ntsc"
