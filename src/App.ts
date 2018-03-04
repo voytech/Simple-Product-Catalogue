@@ -4,6 +4,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as passport from 'passport';
+import * as swagger  from 'swagger-express';
 
 import {default as routers} from './routers';
 import { PassportConfig } from './config/passport';
@@ -32,6 +33,24 @@ class App {
         });
     }
 
+    private swagger(): void {
+      //first do webpack.
+      /*this.express.use(swagger.init(this.express, {
+            apiVersion: '1.0',
+            swaggerVersion: '1.0',
+            swaggerURL: '/swagger',
+            swaggerJSON: '/api-docs.json',
+            swaggerUI: './public/swagger/',
+            basePath: 'http://localhost:3000',
+            info: {
+              title: 'swagger-express sample app',
+              description: 'Swagger + Express = {swagger-express}'
+            },
+            apis: ['./api.js', './api.yml'],
+            middleware: function(req, res){}
+          }));
+          */
+    }
     /**
      * http(s) request middleware
      */
@@ -67,6 +86,7 @@ class App {
      */
     private routes(): void {
         this.express.use('/v1', routers);
+        this.express.use('/app',express.static(__dirname+"/web"));
         this.express.use('/', (req, res) => {
             res.status(404).send({ error: `path doesn't exist`});
         });
