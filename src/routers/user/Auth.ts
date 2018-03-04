@@ -1,63 +1,24 @@
 import * as jwt from 'jsonwebtoken';
 import { Router, Request, Response } from 'express';
-
 import { User } from '../../models/user';
 import { BaseRoute } from '../BaseRoute';
+import * as passport from 'passport';
 
 export class Auth extends BaseRoute {
 
     public loginAction(router: Router): void {
-        router.post('/login', (req: Request, res: Response) => {
-            let email = req.body.email;
-
-            const re = /\S+@\S+\.\S+/;
-            
-            if (!re.test(email)) {
-                res.status(400);
-                res.json({
-                    success: false,
-                    message: 'wrong input.'
-                });
-                return false;
+        router.post('/login',(req,res,next) => {
+          passport.authenticate("local",(err, user, info) => {
+            if (err) return next(err);
+            if (!user) {
+              return res.status(401).json({ status: 'error', code: 'unauthorized' });
+            } else {
+              return res.json({ token: jwt.sign({id: user._id}, process.env.APPLICATION_SECRET)});
             }
-
-            User.findByEmail(email, (err, user) => {
-                if(user) {
-                    User.comparePassword(req.body.password, user.password, (err, isMatch) => {
-                        if (err) {
-                            this.logger.error(err.toString());
-                            res.status(500);
-                            res.json({
-                                success: false,
-                                message: 'something went wrong.'
-                            });
-                        } else if (isMatch) {
-                            const token = jwt.sign(user, process.env.APPLICATION_SECRET, {
-                                expiresIn: 604800 // 1 week
-                            });
-
-                            res.json({
-                                success: true,
-                                token: token,
-                            });
-                        } else {
-                            res.status(400);
-                            res.json({
-                                success: false,
-                                message: 'wrong credentials.'
-                            });
-                        }
-                    });
-                } else {
-                    res.status(400);
-                    res.json({
-                        success: false,
-                        message: 'wrong credentials.'
-                    });
-                }
-            });
+          })(req,res,next);
         });
     }
+
 
     public registerAction(router: Router): void {
         router.post('/register', (req: Request, res: Response) => {
@@ -118,12 +79,11 @@ export class Auth extends BaseRoute {
     }
 
     public profileAction(router: Router): void {
-        router.get('/profile', this.guard, (req: Request, res: Response) => {
-            res.json({
+        router.get('/profile',this.guard(), (req: Request, res: Response) => {
+            return res.json({
                 success: true,
-                user: req.body.user
+                user: {}
             });
         });
     }
 }
-
