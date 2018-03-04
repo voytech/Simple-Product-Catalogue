@@ -9,18 +9,18 @@ export class Auth extends BaseRoute {
     public loginAction(router: Router): void {
        /**
         * @swagger
-        * /login:
+        * /user/auth/login:
         *   post:
         *     description: Login to the application
         *     produces:
         *       - application/json
         *     parameters:
-        *       - name: username
-        *         description: Username to use for login.
+        *       - name: email
+        *         description: User's email to use for login.
         *         in: formData
         *         required: true
         *         type: string
-        *       - name: password
+        *       - name: passwd
         *         description: User's password.
         *         in: formData
         *         required: true
@@ -43,6 +43,33 @@ export class Auth extends BaseRoute {
 
 
     public registerAction(router: Router): void {
+      /**
+       * @swagger
+       * /user/auth/register:
+       *   post:
+       *     description: Register new user
+       *     produces:
+       *       - application/json
+       *     parameters:
+       *       - name: name
+       *         description: User's name.
+       *         in: formData
+       *         required: true
+       *         type: string
+       *       - name: email
+       *         description: User's email.
+       *         in: formData
+       *         required: true
+       *         type: string
+       *       - name: password
+       *         description: User's password.
+       *         in: formData
+       *         required: true
+       *         type: string
+       *     responses:
+       *       200:
+       *         description: Register
+       */
         router.post('/register', (req: Request, res: Response) => {
             const re = /\S+@\S+\.\S+/;
 

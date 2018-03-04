@@ -44,15 +44,15 @@ class App {
           version: '1.0.0', // Version (required)
           description: 'Calculator API', // Description (optional)
         },
-        host: 'localhost:3500', // Host (optional)
-        basePath: '/', // Base path (optional)
+        //host: 'localhost:3500', // Host (optional)
+        basePath: '/v1', // Base path (optional)
       };
       // Options for the swagger docs
       let options = {
         // Import swaggerDefinitions
         swaggerDefinition: swaggerDefinition,
         // Path to the API docs
-        apis: [ './routers/user/Auth.js' ],
+        apis: [ __dirname+'/routers/user/Auth.js' ],
       };
       this.swaggerSpec = swaggerJSDoc(options);
     }
@@ -91,8 +91,8 @@ class App {
      */
     private routes(): void {
         this.express.use('/v1', routers);
-        this.express.use('/app',express.static(__dirname+"/web"));
         this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.swaggerSpec));
+        this.express.use('/web',express.static(__dirname+"/web"));
         this.express.use('/', (req, res) => {
             res.status(404).send({ error: `path doesn't exist`});
         });
