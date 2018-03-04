@@ -68,6 +68,8 @@ describe('/POST user/auth/', () => {
                      res.status.should.equal(200);
                      res.body.should.be.a('object');
                      res.body.should.have.property('success');
+                     res.body.should.have.property('user');
+                     console.debug(res.body.user);
                      done();
                   });
             });

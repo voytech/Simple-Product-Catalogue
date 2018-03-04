@@ -82,7 +82,7 @@ export class Auth extends BaseRoute {
         router.get('/profile',this.guard(), (req: Request, res: Response) => {
             return res.json({
                 success: true,
-                user: {}
+                user: req.user
             });
         });
     }
