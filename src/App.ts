@@ -4,7 +4,9 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as passport from 'passport';
-import * as swagger  from 'swagger-express';
+//import * as swagger  from 'swagger-express';
+import * as swaggerUi from 'swagger-ui-express';
+import * as swaggerJSDoc from 'swagger-jsdoc';
 
 import {default as routers} from './routers';
 import { PassportConfig } from './config/passport';
@@ -12,12 +14,14 @@ import { PassportConfig } from './config/passport';
 class App {
 
     public express: express.Application;
+    private swaggerSpec : any;
 
     constructor() {
         this.setEnvironment();
         this.express = express();
         this.database();
         this.middleware();
+        this.swagger();
         this.routes();
     }
 
@@ -34,22 +38,23 @@ class App {
     }
 
     private swagger(): void {
-      //first do webpack.
-      /*this.express.use(swagger.init(this.express, {
-            apiVersion: '1.0',
-            swaggerVersion: '1.0',
-            swaggerURL: '/swagger',
-            swaggerJSON: '/api-docs.json',
-            swaggerUI: './public/swagger/',
-            basePath: 'http://localhost:3000',
-            info: {
-              title: 'swagger-express sample app',
-              description: 'Swagger + Express = {swagger-express}'
-            },
-            apis: ['./api.js', './api.yml'],
-            middleware: function(req, res){}
-          }));
-          */
+      let swaggerDefinition = {
+        info: { // API informations (required)
+          title: 'Calculator', // Title (required)
+          version: '1.0.0', // Version (required)
+          description: 'Calculator API', // Description (optional)
+        },
+        host: 'localhost:3500', // Host (optional)
+        basePath: '/', // Base path (optional)
+      };
+      // Options for the swagger docs
+      let options = {
+        // Import swaggerDefinitions
+        swaggerDefinition: swaggerDefinition,
+        // Path to the API docs
+        apis: [ './routers/user/Auth.js' ],
+      };
+      this.swaggerSpec = swaggerJSDoc(options);
     }
     /**
      * http(s) request middleware
@@ -87,6 +92,7 @@ class App {
     private routes(): void {
         this.express.use('/v1', routers);
         this.express.use('/app',express.static(__dirname+"/web"));
+        this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.swaggerSpec));
         this.express.use('/', (req, res) => {
             res.status(404).send({ error: `path doesn't exist`});
         });
