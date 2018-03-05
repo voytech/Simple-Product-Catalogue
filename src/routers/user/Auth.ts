@@ -61,6 +61,11 @@ export class Auth extends BaseRoute {
        *         in: formData
        *         required: true
        *         type: string
+       *       - name: role
+       *         description: User's role.
+       *         in: formData
+       *         required: true
+       *         type: string
        *       - name: password
        *         description: User's password.
        *         in: formData
@@ -128,7 +133,25 @@ export class Auth extends BaseRoute {
     }
 
     public profileAction(router: Router): void {
-        router.get('/profile',this.guard(), (req: Request, res: Response) => {
+      /**
+       * @swagger
+       * /user/auth/profile:
+       *   post:
+       *     description: Gets current user profile
+       *     produces:
+       *       - application/json
+       *     parameters:
+       *     - name: Authorization
+       *       in: header
+       *       description: jwt
+       *       required: true
+       *       type: string
+       *       format: string
+       *     responses:
+       *       200:
+       *         description: Register
+       */
+        router.get('/profile',this.restrict(["USER","ADMIN"]), (req: Request, res: Response) => {
             return res.json({
                 success: true,
                 user: req.user

@@ -39,19 +39,16 @@ class App {
 
     private swagger(): void {
       let swaggerDefinition = {
-        info: { // API informations (required)
-          title: 'Calculator', // Title (required)
-          version: '1.0.0', // Version (required)
-          description: 'Calculator API', // Description (optional)
+        info: {
+          title: 'Calculator',
+          version: '1.0.0',
+          description: 'Calculator API',
         },
         //host: 'localhost:3500', // Host (optional)
-        basePath: '/v1', // Base path (optional)
+        basePath: '/v1',
       };
-      // Options for the swagger docs
       let options = {
-        // Import swaggerDefinitions
         swaggerDefinition: swaggerDefinition,
-        // Path to the API docs
         apis: [ __dirname+'/routers/user/Auth.js' ],
       };
       this.swaggerSpec = swaggerJSDoc(options);
