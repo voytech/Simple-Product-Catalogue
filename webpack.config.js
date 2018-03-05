@@ -1,7 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: "./src/web/index.ts",
+    entry: "./src/web/index.tsx",
     output: {
         filename: "app.js",
         path: __dirname + "/dist/web"
@@ -9,6 +9,8 @@ module.exports = {
     plugins: [
          new HtmlWebpackPlugin({
              hash: true,
+             title: 'React with Webpack',
+             template : 'template.html',
              filename: __dirname + '/dist/web/index.html' //relative to root of the application
          })
     ],
@@ -29,8 +31,8 @@ module.exports = {
     // assume a corresponding global variable exists and use that instead.
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
-    externals: {
+    /*externals: {
         "react": "React",
         "react-dom": "ReactDOM"
-    },
+    },*/
 };

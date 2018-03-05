@@ -12,8 +12,7 @@ export abstract class BaseRoute {
     router: Router;
     logger: any;
 
-    private passportAuthRequest() {
-      return (req :Request, res :Response, next : NextFunction) => {
+    private passportAuthRequest(req :Request, res :Response, next : NextFunction){
         passport.authenticate("bearer",(err, user, info) => {
           if (err) return next(err);
           if (!user) {
@@ -23,13 +22,12 @@ export abstract class BaseRoute {
             return next();
           }
         })(req, res, next);
-      };
     }
 
     constructor() {
         this.logger = winston;
         this.guard = new AuthGuard({
-          authenticateRequest : this.passportAuthRequest(),
+          authenticateRequest : this.passportAuthRequest,
           roleExtractor : ((req : Request) => [req.user.role])
         });
         this.onInit();

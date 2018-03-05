@@ -13,7 +13,7 @@ export class AuthGuard {
 
   public guard(roles : string[]) {
     return (req : Request, res : Response, next : NextFunction) => {
-      let wrapNext : NextFunction = (err :any) => {         
+      let wrapNext : NextFunction = (err :any) => {
         let userRoles : string[] = this.roleExtractor(req);
         if (userRoles){
           let permitted = userRoles.every(role => roles.indexOf(role) !== -1);
