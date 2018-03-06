@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { Router, Request, Response } from 'express';
-import { User } from '../../models/user';
+import { User } from '../../models/User';
 import { BaseRoute } from '../BaseRoute';
 import * as passport from 'passport';
 
@@ -105,7 +105,6 @@ export class Auth extends BaseRoute {
                         email: email,
                         password: password,
                     });
-
                     User.createUser(user, (err, user)=>{
                         if (err) {
                             this.logger.error(err.toString());
