@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import * as winston from 'winston';
 import * as passport from 'passport';
 import * as jwt from 'jsonwebtoken';
-import { AuthGuard } from '../middleware/AuthGuard';
+import { AuthGuard, InjectRolesFunction } from '../middleware/AuthGuard';
 
 
 export abstract class BaseRoute {
@@ -12,24 +12,20 @@ export abstract class BaseRoute {
     router: Router;
     logger: any;
 
-    private passportAuthRequest(req :Request, res :Response, next : NextFunction){
+    private passportAuthRequest(req :Request, res :Response, injectRole : InjectRolesFunction){
         passport.authenticate("bearer",(err, user, info) => {
-          if (err) return next(err);
           if (!user) {
             return res.status(401).json({ status: 'error', code: 'unauthorized' });
           } else {
             req.user = user;
-            return next();
+            injectRole([req.user.role])
           }
-        })(req, res, next);
+        })(req, res, null);
     }
 
     constructor() {
         this.logger = winston;
-        this.guard = new AuthGuard({
-          authenticateRequest : this.passportAuthRequest,
-          roleExtractor : ((req : Request) => [req.user.role])
-        });
+        this.guard = new AuthGuard(this.passportAuthRequest);
         this.onInit();
         this.router = Router();
         this.initRoutes();

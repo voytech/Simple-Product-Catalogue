@@ -80,6 +80,7 @@ export class Auth extends BaseRoute {
 
             let name = req.body.name,
                 email = req.body.email,
+                role = req.body.role,
                 password = req.body.password;
 
             if (!name || !re.test(email) || !password || password.length < 6) {
@@ -104,6 +105,7 @@ export class Auth extends BaseRoute {
                         name : name,
                         email: email,
                         password: password,
+                        role : role || "USER"
                     });
                     User.createUser(user, (err, user)=>{
                         if (err) {

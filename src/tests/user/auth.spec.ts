@@ -3,12 +3,12 @@ import { BaseTest } from '../BaseTest';
 describe('/POST user/auth/', () => {
 
     const   test = new BaseTest(),
-            random = Math.floor(Math.random() * 1000);
+            random = () => Math.floor(Math.random() * 1000);
 
     const user = {
         name: 'test user',
-        email: `test${random}@mailinator.com`,
-        password: '123456'
+        email: `test${random()}@mailinator.com`,
+        password: '123456',
     };
 
 
@@ -72,6 +72,31 @@ describe('/POST user/auth/', () => {
                      console.debug(res.body.user);
                      done();
                   });
+            });
+    });
+
+    it('it should register, login, then NOT authorize next request', (done) => {
+        let email = `unknown${random()}@mailinator.com`;
+        test.chai.request(test.server)
+            .post(`${test.route}user/auth/register`)
+            .send({name:'Unknown',password:'123456',email:email,role:'Unknown'})
+            .end((err, res) => {
+                res.status.should.equal(200);
+                test.chai.request(test.server)
+                    .post(`${test.route}user/auth/login`)
+                    .send({email: email, passwd: '123456'})
+                    .end((err, res) => {
+                        res.status.should.equal(200);
+                        let token = res.body.token;
+                        test.chai.request(test.server)
+                          .get(`${test.route}user/auth/profile`)
+                          .set("Authorization","Bearer "+token)
+                          .send({full:true})
+                          .end((err, res) => {
+                             res.status.should.equal(403);
+                             done();
+                          });
+                    });
             });
     });
 
