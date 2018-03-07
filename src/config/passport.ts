@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Passport } from "passport";
 import * as jwt from 'jsonwebtoken';
 
-import { User } from '../models/user';
+import { User } from '../models/User';
 
 /**
  * passport jwt configuration

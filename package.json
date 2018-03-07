@@ -38,10 +38,6 @@
     "@types/passport-local": "^1.0.32",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.2",
-    "gulp-typescript": "^3.2.4",
-    "gulp-yaml": "^1.0.1",
     "mocha": "^3.5.3",
     "mocha-typescript": "^1.1.12",
     "ntypescript": "1.201706190042.1",
@@ -55,9 +51,9 @@
     "@types/react-dom": "^16.0.4"
   },
   "scripts": {
-    "run": "ntsc & node dist/index.js",
+    "start": "ntsc & node dist/index.js",
     "dev": "ntsc --watch & nodemon dist/index.js",
-    "build-all": "build & build-web",
+    "build-all": "npm run build & npm run build-web",
     "build-web": "webpack",
     "build": "ntsc",
     "test": "ntsc && mocha dist/**/*.spec.js",

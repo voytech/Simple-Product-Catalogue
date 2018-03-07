@@ -1,4 +1,11 @@
-# Node.ts
+# Simple Product Catalogue
+
+A very simple and minimal tangible product and simple service catalogue. A pet project - mainly for educational purposes (node ecosystem).
+Minimal set of features:
+- simple product structure
+  * tangible and simple (manual) service products,
+  * price lists and price list items
+- API for providing downstream systems with catalogue definitions  
 
 ## TypeScript Node.js REST example
 
@@ -8,28 +15,26 @@ Running Locally
 
 Make sure you have Node.js and gulp installed.
 
-## Tip
-Install gulp using
-<code>npm install -g gulp</code> command.
+## Running instruction
+First You need to download node. Then You are able to execute:
+    npm install
 
-Use nodemon to have your server restart 
-on file changes. Install nodemon using 
-<code>npm install -g nodemon</code>.
- 
-Then start your server with nodemon index.js.
+Once You have all your dependencies in node_modules you can build:
+    npm run build
+or
+    npm run build-web
+or        
+    npm run build-all
 
-    npm i
-    gulp build
+and then run the app:     
     npm start
 
 Your app should now be running on localhost:3500.
 
 ## Configuration
 
-Create **.env** file in root directory 
+Create **.env** file in root directory
 using **.env.example** file.
-
-
 
 ## Run Test.
 
