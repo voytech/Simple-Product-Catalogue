@@ -7,14 +7,6 @@ Minimal set of features:
   * price lists and price list items
 - API for providing downstream systems with catalogue definitions  
 
-## TypeScript Node.js REST example
-
-Node.ts uses Typescript, Node.js, Express and MongoDB.
-
-Running Locally
-
-Make sure you have Node.js and gulp installed.
-
 ## Running instruction
 First You need to download node. Then You are able to execute:
     npm install
