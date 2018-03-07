@@ -9,17 +9,15 @@ Minimal set of features:
 
 ## Running instruction
 First You need to download node. Then You are able to execute:
-    npm install
+- npm install
 
 Once You have all your dependencies in node_modules you can build backend:
-    npm run build
-or
-    npm run build-web
-or        
-    npm run build-all
+- npm run build or
+- npm run build-web or        
+- npm run build-all
 
 and then run the app:     
-    npm start
+- npm start
 
 Your app should now be running on localhost:3500.
 
@@ -29,11 +27,12 @@ Create **.env** file in root directory
 
 With following content:
 
-APP_NAME=SPC
+```APP_NAME=SPC
 API_VERSION=v1
 APPLICATION_SECRET=<your secret goes here>
 PORT=<3500 or different>
 MONGODB_URI=mongodb://<your mongodb connection string goes here>
+```
 
 ## Run Test.
 
