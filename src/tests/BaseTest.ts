@@ -1,5 +1,6 @@
 import * as chai from 'chai';
 import * as chaiHttp from 'chai-http';
+import * as mongoose from 'mongoose';
 
 import { server } from '../index'
 
@@ -17,5 +18,9 @@ export class BaseTest {
         this.chai = chai;
         this.chai.use(chaiHttp);
         this.should = chai.should();
+    }
+    
+    public clearCollection(coll:string){
+      mongoose.connection.db.dropCollection(coll);
     }
 }
