@@ -1,5 +1,7 @@
-import {Schema, Model, Document, model} from 'mongoose';
-
+import {Schema, Model, Document, model, connection} from 'mongoose';
+import * as streamBuffers from 'stream-buffers';
+import {binaryCollections, GridFSModel } from '../BinaryCollections'
+import app from '../App';
 let ObjectId =  Schema.Types.ObjectId;
 
 export interface IProperty extends Document{
@@ -15,9 +17,12 @@ export interface IProduct extends Document {
     type: string;
     tags: string[];
     properties : IProperty[];
+    images : string[];
+    attachments : string[];
     addProperty(property : IProperty, callback : Function): void
     addTag(tag : string, callback : Function): void
-
+    addImage(imageName: string, imageContent:string, callback : Function):void
+    addAttachment(attachmentName : string, attachmentContent:string, callback : Function):void
 }
 
 export interface IProductModel {
@@ -45,7 +50,8 @@ const productSchema = new Schema({
     },
     code: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     description : {
       type: String
@@ -61,6 +67,12 @@ const productSchema = new Schema({
     tags: [{
       type: String
     }],
+    images: [{
+      type: String
+    }],
+    attachments: [{
+      type: String
+    }],
     properties: [propertySchema]
 });
 
@@ -73,7 +85,7 @@ productSchema.static('findByName', (name: string, callback: Function) => {
 });
 
 productSchema.static('withAllPropertiesPopulated',function(name : string, callback : (err: any, product : IProduct) => void){
-  Product.findOne({name:name}).populate('properties').exec(callback);
+    Product.findOne({name:name}).populate('properties').exec(callback);
 });
 
 productSchema.method('addProperty',function(property : IProperty, callback : (err: any, product: IProduct) => void){
@@ -83,6 +95,48 @@ productSchema.method('addProperty',function(property : IProperty, callback : (er
 
 productSchema.method('addTag',function(tag : string, callback : (err: any, product: IProduct) => void){
   this.tags.push(tag);
+  this.save(callback);
+});
+
+productSchema.method('addImage',function(imageName: String, content : string, callback : (err: any, product: IProduct) => void){
+  let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
+	    frequency: 10,
+	    chunkSize: 2048
+  });
+  readableStreamBuffer.put(content);
+  let Image = binaryCollections.getBinaryCollection('Image','images');
+  Image.write({
+      filename: imageName,
+      contentType:'text/plain'
+    },
+    readableStreamBuffer,
+    (error, createdFile) => {
+        console.info("MongoDB Binary Document Has Been Created ...");
+        console.info(createdFile);
+    }
+  );
+  this.images.push(imageName);
+  this.save(callback);
+});
+
+productSchema.method('addAttachment',function(attachmentName: String, content : string, callback : (err: any, product: IProduct) => void){
+  let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
+	    frequency: 10,
+	    chunkSize: 2048
+  });
+  readableStreamBuffer.put(content);
+  let Attachment = binaryCollections.getBinaryCollection('Attachment','attachments');
+  Attachment.write({
+      filename: attachmentName,
+      contentType:'text/plain'
+    },
+    readableStreamBuffer,
+    (error, createdFile) => {
+        console.info("MongoDB Binary Document Has Been Created ...");
+        console.info(createdFile);
+    }
+  );
+  this.attachments.push(attachmentName);
   this.save(callback);
 });
 

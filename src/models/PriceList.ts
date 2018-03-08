@@ -53,7 +53,7 @@ const priceListItemSchema = new Schema({
     }
 });
 
-priceListItemSchema.static('createItem', (priceListItem: IPriceListItem, callback:  (err: any, product: IPriceListItem, numAffected: number) => void) => {
+priceListItemSchema.static('createItem', (priceListItem: IPriceListItem, callback:  (err: any, product: IPriceListItem) => void) => {
     priceListItem.save(callback);
 });
 
@@ -76,7 +76,7 @@ const priceListSchema = new Schema({
     }
 });
 
-priceListSchema.static('createPriceList', (priceList: IPriceList, callback:  (err: any, product: IPriceList, numAffected: number) => void) => {
+priceListSchema.static('createPriceList', (priceList: IPriceList, callback:  (err: any, product: IPriceList) => void) => {
     priceList.save(callback);
 });
 

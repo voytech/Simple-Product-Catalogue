@@ -6,7 +6,6 @@ import * as mongoose from 'mongoose';
 import * as passport from 'passport';
 import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerJSDoc from 'swagger-jsdoc';
-
 import {default as routers} from './routers';
 import { PassportConfig } from './config/passport';
 
@@ -24,7 +23,6 @@ class App {
         this.routes();
     }
 
-
     /**
      * database connection
      */
@@ -34,16 +32,16 @@ class App {
             console.log('MongoDB connection error. Please make sure MongoDB is running.');
             process.exit();
         });
+        //mongoose.connection.on('connected',callback);
     }
 
     private swagger(): void {
       let swaggerDefinition = {
         info: {
-          title: 'Calculator',
+          title: 'Simple Product Catalogue',
           version: '1.0.0',
-          description: 'Calculator API',
+          description: 'Simple Product Catalogue API',
         },
-        //host: 'localhost:3500', // Host (optional)
         basePath: '/v1',
       };
       let options = {
@@ -96,4 +94,5 @@ class App {
 
 }
 
-export default new App().express;
+const app = new App().express;
+export default app;

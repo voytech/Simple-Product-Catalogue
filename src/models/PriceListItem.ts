@@ -39,7 +39,7 @@ const priceListItemSchema = new Schema({
     }
 });
 
-priceListItemSchema.static('createItem', (priceListItem: IPriceListItem, callback:  (err: any, product: IPriceListItem, numAffected: number) => void) => {
+priceListItemSchema.static('createItem', (priceListItem: IPriceListItem, callback:  (err: any, product: IPriceListItem) => void) => {
     priceListItem.save(callback);
 });
 

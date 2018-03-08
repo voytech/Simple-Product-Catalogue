@@ -12,6 +12,8 @@
     "iconv-lite": "^0.4.19",
     "jsonwebtoken": "^7.4.3",
     "mongoose": "^5.0.9",
+    "mongoose-gridfs": "^0.3.2",
+    "stream-buffers": "^3.0.1",
     "morgan": "^1.9.0",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",

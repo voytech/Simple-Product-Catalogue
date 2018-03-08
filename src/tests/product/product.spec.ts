@@ -4,13 +4,13 @@ import { expect } from 'chai';
 
 describe('Product management', () => {
     const test = new BaseTest();
-    beforeEach((done) => {
+    /*beforeEach((done) => {
       done();
     });
     afterEach((done) => {
-      //test.clearCollection('products');
       done();
-    })
+    })*/
+
     let product = new Product({
       name:'Kitchen Wall Plate 40x25 HOUSESMART',
       code:'001_8829912CD',
