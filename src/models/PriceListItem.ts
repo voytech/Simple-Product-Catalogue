@@ -24,7 +24,8 @@ const priceListItemSchema = new Schema({
         required: true
     },
     productRef: {
-       type: String, // needs to be subdomain
+       type: Schema.Types.ObjectId, // needs to be subdomain
+       ref: 'Product',
        required: true
     },
     description : {

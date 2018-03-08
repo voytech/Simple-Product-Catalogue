@@ -13,7 +13,7 @@ export type GridFSModel = Model<IGridFS> & IGridFSModel;
 
 class BinaryCollections{
 
-  private binaryCollections : {};
+  private binaryCollections : any = {};
 
   public getBinaryCollection(modelName:string, collection:string) : GridFSModel{
     let gridFS =  this.binaryCollections[collection];

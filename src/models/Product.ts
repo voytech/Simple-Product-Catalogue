@@ -28,8 +28,6 @@ export interface IProduct extends Document {
 export interface IProductModel {
     createProduct(item: IProduct, callback: Function): void
     findByName(name: string, callback: Function): void
-    addTag(tag : String, callback : Function): void
-    withAllPropertiesPopulated(name: string, callback : Function): void
 }
 
 const propertySchema = new Schema({
@@ -98,7 +96,7 @@ productSchema.method('addTag',function(tag : string, callback : (err: any, produ
   this.save(callback);
 });
 
-productSchema.method('addImage',function(imageName: String, content : string, callback : (err: any, product: IProduct) => void){
+productSchema.method('addImage',function(imageName: string, content : string, callback : (err: any, product: IProduct) => void){
   let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
 	    frequency: 10,
 	    chunkSize: 2048

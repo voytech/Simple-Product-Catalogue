@@ -94,5 +94,5 @@ class App {
 
 }
 
-const app = new App().express;
-export default app;
+export default new App().express;
+//export default app;

@@ -1,15 +1,17 @@
 import { BaseTest } from '../BaseTest';
 import { Product , Property } from '../../models/Product';
 import { expect } from 'chai';
+import { img } from './SmapleImage'
 
 describe('Product management', () => {
     const test = new BaseTest();
-    /*beforeEach((done) => {
+    before((done) => {
       done();
     });
-    afterEach((done) => {
+
+    after((done) => {
       done();
-    })*/
+    });
 
     let product = new Product({
       name:'Kitchen Wall Plate 40x25 HOUSESMART',
@@ -20,14 +22,14 @@ describe('Product management', () => {
 
     it('it should add new product definition', (done) => {
       console.info('About to create new product ...');
-      console.info('New product document has been created ...');
       product.save((err, result) => {
-        console.info('Product has been created ... '+result.id);
+        console.info('Product has been created ... ' + result.id);
         expect(result).to.be.not.null;
         expect(result).property('id').to.be.not.null;
         done();
+        console.info('done');
       });
-    });
+    }).timeout(5000);
 
     it('it should add properties ', (done) => {
       console.info('About to add new product properties...');
@@ -51,12 +53,23 @@ describe('Product management', () => {
       });
     });
 
+    it('it should add image', (done) => {
+      console.info('About to add new product image...');
+      product.addImage('image1',img,(err,result)=>{
+        console.info("New image added into Product images string array")
+        expect(result).to.be.not.null;
+        expect(result).property('tags').to.be.not.null;
+        expect(result).property('tags').to.be.not.empty;
+        expect(result).property('images').to.be.not.empty;
+        done();
+      });
+    });
+
     it('it should find product by name',(done)=>{
       console.info('About query product by name...');
       Product.findByName('Kitchen Wall Plate 40x25 HOUSESMART',(err,result)=>{
         console.info('found a product');
         expect(result).to.be.not.null;
-        console.info(result);
         done();
       })
     });
