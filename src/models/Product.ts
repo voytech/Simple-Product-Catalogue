@@ -2,7 +2,8 @@ import {Schema, Model, Document, model, connection} from 'mongoose';
 import * as streamBuffers from 'stream-buffers';
 import {binaryCollections, GridFSModel } from '../BinaryCollections'
 import {ResourceDescriptorSchema, IResourceDescriptor} from './ResourceDescriptor'
-import app from '../App';
+import { v1 as uuid } from 'uuid';
+
 let ObjectId =  Schema.Types.ObjectId;
 
 export interface IProperty extends Document{
@@ -52,7 +53,8 @@ const productSchema = new Schema({
     code: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+      default: uuid()
     },
     description : {
       type: String
