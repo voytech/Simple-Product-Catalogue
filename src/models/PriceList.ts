@@ -15,6 +15,7 @@ export interface IPriceList extends Document {
 
 export interface IPriceListModel {
     findByName(name: string, callback: Function): void
+    findByNameWithItems(name: string, callback: Function): void
 }
 
 const priceListSchema = new Schema({
@@ -39,21 +40,30 @@ const priceListSchema = new Schema({
 
 
 priceListSchema.static('findByName', (name: string, callback: Function) => {
+    PriceList.findOne({name: name},callback);
+});
+
+priceListSchema.static('findByNameWithItems', (name: string, callback: Function) => {
     PriceList.findOne({name: name}, (err,priceList)=>{
       PriceListItem.find({priceList:priceList.id}).exec((err,coll)=>{
-        console.log(coll)
-        //priceList.items.push(coll);
-        callback(priceList);
+        priceList.items = coll;
+        callback(err,priceList);
       })
     });
 });
 
+//WHY BELOW NOT WORKING !?
+priceListSchema.virtual('allItems').get(async obj =>
+  await PriceListItem.find({priceList:this.id}).exec()
+);
+
 priceListSchema.method('addItem', function(productName: string, price :number, callback: (err,priceListItem)=>void){
+    let self = this;
     Product.findByName(productName,function(err, product){
       let item : IPriceListItem = new PriceListItem({
-        name : product.name +" [ "+this.name+" ]",
+        name : product.name +" [ "+self.name+" ]",
         code : uuid(),
-        priceList: this.id,
+        priceList: self.id,
         product: product.id,
         price : price
       });

@@ -31,9 +31,10 @@ describe('PriceList management', function(){
     }).timeout(5000);
 
     it('it should add new PriceListItem to pricelist', (done) => {
-      console.info('About to create new PriceList ...');
+      console.info('About to add new PriceListItem ...');
       samplePriceList.addItem(product.name,545,(err, result) => {
-        console.info('PriceList has been created ... ' + result.id);
+        console.info('PriceListItem has been added ... ' + result.id);
+        console.info(result);
         expect(result).to.be.not.null;
         expect(result).property('id').to.be.not.null;
         done();
@@ -43,8 +44,19 @@ describe('PriceList management', function(){
     it('it should find PriceList by name',(done)=>{
       console.info('About query PriceList by name...');
       PriceList.findByName('Castorama P1',(err,result)=>{
-        console.info('found a PriceList');
         expect(result).to.be.not.null;
+        done();
+      })
+    }).timeout(5000);
+
+    it('it should find PriceList by name with items',(done)=>{
+      console.info('About query PriceList by name...');
+      //console.info('PriceList items are');
+      //console.info(samplePriceList.items);
+      PriceList.findByNameWithItems('Castorama P1',(err,result)=>{
+        expect(result).to.be.not.null;
+        expect(result).property('items').to.be.not.null;
+        expect(result).property('items').to.be.not.empty;
         done();
       })
     }).timeout(5000);
