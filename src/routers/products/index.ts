@@ -6,6 +6,6 @@ import { Products } from './Products';
 
 const products = express.Router();
 
-products.use('/products', new Products().getRoutes());
+products.use('/', new Products().getRoutes());
 
 export default products;

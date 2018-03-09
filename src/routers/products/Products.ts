@@ -1,9 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { Router, Request, Response } from 'express';
-import { User } from '../../models/User';
 import { BaseRoute } from '../BaseRoute';
 import { Product, IProduct } from '../../models/Product';
-import * as passport from 'passport';
 
 export class Products extends BaseRoute {
 
@@ -61,6 +59,9 @@ export class Products extends BaseRoute {
               return res.json(result.toJSON());
             })
         });
+    }
+    
+    public getAllProductsAction(router: Router): void {
         /**
          * @swagger
          * /products/all:
@@ -85,4 +86,5 @@ export class Products extends BaseRoute {
           })
         });
     }
+
 }
