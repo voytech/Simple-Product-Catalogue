@@ -1,17 +1,21 @@
-import {Schema, Model, Document, model} from 'mongoose';
+import { Schema, Model, Document, model } from 'mongoose';
+import { IProduct } from './Product'
 
 export interface IPriceListItem extends Document {
     name: string;
     code: string;
-    product : string;
+    product : IProduct;
     priceList : Schema.Types.ObjectId;
     price: number;
 }
 
 export interface IPriceListItemModel {
     createItem(item: IPriceListItem, callback: Function): void
-    findByname(name: string, callback: Function): void
+    findByName(name: string, callback: Function): void
+    pFindByName(name: string, populate:string[], callback: Function): void
 }
+
+
 
 const priceListItemSchema = new Schema({
     name: {
@@ -44,6 +48,10 @@ priceListItemSchema.static('createItem', (priceListItem: IPriceListItem, callbac
 
 priceListItemSchema.static('findByName', (name: string, callback: Function) => {
     PriceListItem.findOne({name: name}, callback);
+});
+
+priceListItemSchema.static('pFindByName', (name: string,populate:string[],callback: Function) => {
+    PriceListItem.findOne({name: name}).populate(populate).exec(callback);
 });
 
 export type PriceListItemModel = Model<IPriceListItem> & IPriceListItemModel & IPriceListItem;

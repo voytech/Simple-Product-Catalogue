@@ -60,6 +60,7 @@
     "build-web": "webpack",
     "build": "ntsc",
     "test": "ntsc && mocha dist/**/*.spec.js",
+    "test-one": "ntsc && mocha dist/**/PriceListItem.spec.js",
     "lint": "eslint src --ext ts",
     "tsc": "ntsc"
   },

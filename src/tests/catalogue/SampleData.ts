@@ -17,11 +17,11 @@ export const samplePriceList = new PriceList({
       category:'kitchen'
 });
 
-export function createSamplePriceListItem(product: IProduct, priceList : IPriceList) :Document {
+export function createSamplePriceListItem(product: Document, priceList : Document, options : any) :Document {
   return new PriceListItem({
     name:'Kitchen Wall Plate 40x25 HOUSESMART',
     code:'001_9929912CF',
-    product : product.id,
+    product : product,
     priceList : priceList.id,
     price : 100.99
   });

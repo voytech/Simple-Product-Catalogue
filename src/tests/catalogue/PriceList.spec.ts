@@ -15,7 +15,7 @@ describe('PriceList management', () => {
     });
 
     it('it should add new PriceList definition', (done) => {
-      console.info('About to create new PriceList ...');
+      console.info('About to create new PriceList ...');      
       samplePriceList.save((err, result) => {
         console.info('PriceList has been created ... ' + result.id);
         expect(result).to.be.not.null;
