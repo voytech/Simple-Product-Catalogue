@@ -1,6 +1,11 @@
 import { BaseTest } from '../BaseTest';
+import { connection } from 'mongoose';
 
 describe('/POST user/auth/', () => {
+
+    after((done) => {
+      connection.db.dropDatabase().then(()=> done());
+    });
 
     const   test = new BaseTest(),
             random = () => Math.floor(Math.random() * 1000);

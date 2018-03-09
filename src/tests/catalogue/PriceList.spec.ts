@@ -1,7 +1,8 @@
 import { BaseTest } from '../BaseTest';
 import { PriceList } from '../../models/PriceList';
 import { expect } from 'chai';
-import { img } from './SmapleImage'
+import { samplePriceList } from './SampleData';
+import { connection } from 'mongoose'
 
 describe('PriceList management', () => {
     const test = new BaseTest();
@@ -10,19 +11,12 @@ describe('PriceList management', () => {
     });
 
     after((done) => {
-      done();
-    });
-
-    let priceList = new PriceList({
-      name:'Castorama P1',
-      description: 'Castorama Products PriceList',
-      code:'001_9929912CD',
-      category:'kitchen'
+      connection.db.dropDatabase().then(()=> done());
     });
 
     it('it should add new PriceList definition', (done) => {
       console.info('About to create new PriceList ...');
-      priceList.save((err, result) => {
+      samplePriceList.save((err, result) => {
         console.info('PriceList has been created ... ' + result.id);
         expect(result).to.be.not.null;
         expect(result).property('id').to.be.not.null;
@@ -37,5 +31,5 @@ describe('PriceList management', () => {
         expect(result).to.be.not.null;
         done();
       })
-    });
+    }).timeout(5000);
 });
