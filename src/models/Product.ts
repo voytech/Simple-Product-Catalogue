@@ -17,7 +17,7 @@ export interface IProduct extends Document {
     type: string;
     tags: string[];
     properties : IProperty[];
-    images : string[];
+    images : Schema.Types.ObjectId[];
     attachments : string[];
     addProperty(property : IProperty, callback : Function): void
     addTag(tag : string, callback : Function): void
@@ -66,13 +66,31 @@ const productSchema = new Schema({
       type: String
     }],
     images: [{
-      type: String
+      type: Schema.Types.ObjectId,
+      ref : 'Image'
     }],
     attachments: [{
       type: String
     }],
     properties: [propertySchema]
 });
+
+function addBinary(binaryName:string, binaryContent:string,  model:string,collection:string,cb:(error,createdFile)=> void){
+  let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
+      frequency: 10,
+      chunkSize: 2048
+  });
+  readableStreamBuffer.put(binaryContent);
+  readableStreamBuffer.stop();
+  let Binary = binaryCollections.getBinaryCollection(model,collection);
+  Binary.write({
+      filename: binaryName,
+      contentType:'text/plain'
+    },
+    readableStreamBuffer,
+    cb
+  );
+}
 
 productSchema.static('createProduct', (product: IProduct, callback:  (err: any, product: IProduct) => void) => {
     product.save(callback);
@@ -97,45 +115,19 @@ productSchema.method('addTag',function(tag : string, callback : (err: any, produ
 });
 
 productSchema.method('addImage',function(imageName: string, content : string, callback : (err: any, product: IProduct) => void){
-  let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
-	    frequency: 10,
-	    chunkSize: 2048
+  addBinary(imageName ,content ,'Image' ,'images',
+           (error, createdFile) => {
+             this.images.push(createdFile._id);
+             this.save(callback);
   });
-  readableStreamBuffer.put(content);
-  let Image = binaryCollections.getBinaryCollection('Image','images');
-  Image.write({
-      filename: imageName,
-      contentType:'text/plain'
-    },
-    readableStreamBuffer,
-    (error, createdFile) => {
-        console.info("MongoDB Binary Document Has Been Created ...");
-        console.info(createdFile);
-    }
-  );
-  this.images.push(imageName);
-  this.save(callback);
 });
 
-productSchema.method('addAttachment',function(attachmentName: String, content : string, callback : (err: any, product: IProduct) => void){
-  let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
-	    frequency: 10,
-	    chunkSize: 2048
+productSchema.method('addAttachment',function(attachmentName: string, content : string, callback : (err: any, product: IProduct) => void){
+  addBinary(attachmentName ,content ,'Attachment' ,'Attachments',
+           (error, createdFile) => {             
+             this.attachments.push(attachmentName);
+             this.save(callback);
   });
-  readableStreamBuffer.put(content);
-  let Attachment = binaryCollections.getBinaryCollection('Attachment','attachments');
-  Attachment.write({
-      filename: attachmentName,
-      contentType:'text/plain'
-    },
-    readableStreamBuffer,
-    (error, createdFile) => {
-        console.info("MongoDB Binary Document Has Been Created ...");
-        console.info(createdFile);
-    }
-  );
-  this.attachments.push(attachmentName);
-  this.save(callback);
 });
 
 export type ProductModel = Model<IProduct> & IProductModel & IProduct;

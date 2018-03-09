@@ -3,7 +3,8 @@ import {Schema, Model, Document, model} from 'mongoose';
 export interface IPriceListItem extends Document {
     name: string;
     code: string;
-    productRef : string;
+    product : string;
+    priceList : string;
     description: string;
     price: string;
     tags: string;
@@ -23,10 +24,15 @@ const priceListItemSchema = new Schema({
         type: String,
         required: true
     },
-    productRef: {
-       type: Schema.Types.ObjectId, // needs to be subdomain
+    product: {
+       type: Schema.Types.ObjectId,
        ref: 'Product',
        required: true
+    },
+    priceList : {
+      type: Schema.Types.ObjectId,
+      ref: 'PriceList',
+      required: true
     },
     description : {
        type: String
