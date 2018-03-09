@@ -5,12 +5,13 @@ export interface IPriceList extends Document {
     name: string;
     description: string;
     code: string;
+    category: string;
     items : IPriceListItem[];
     tags: string;
 }
 
 export interface IPriceListModel {
-    findByname(name: string, callback: Function): void
+    findByName(name: string, callback: Function): void
 }
 
 const priceListSchema = new Schema({
@@ -24,6 +25,9 @@ const priceListSchema = new Schema({
     code: {
         type: String,
         required: true
+    },
+    category: {
+      type: String
     },
     tags: {
         type: String

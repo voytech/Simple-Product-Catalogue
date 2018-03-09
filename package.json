@@ -24,7 +24,8 @@
     "swagger-ui-express": "^2.0.15",
     "swagger-jsdoc": "^1.9.7",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "pluralize": "^7.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",

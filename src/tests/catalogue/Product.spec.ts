@@ -27,7 +27,6 @@ describe('Product management', () => {
         expect(result).to.be.not.null;
         expect(result).property('id').to.be.not.null;
         done();
-        console.info('done');
       });
     }).timeout(5000);
 
@@ -61,6 +60,16 @@ describe('Product management', () => {
         expect(result).property('tags').to.be.not.null;
         expect(result).property('tags').to.be.not.empty;
         expect(result).property('images').to.be.not.empty;
+        done();
+      });
+    });
+
+    it('it should load image', (done) => {
+      console.info('About to load product image ...');
+      Product.loadImage(product,'image1',(err,result)=>{
+        console.info("Image has been loaded ...");
+        console.info(result);
+        expect(result).to.be.not.null;
         done();
       });
     });

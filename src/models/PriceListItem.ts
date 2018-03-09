@@ -4,10 +4,8 @@ export interface IPriceListItem extends Document {
     name: string;
     code: string;
     product : string;
-    priceList : string;
-    description: string;
-    price: string;
-    tags: string;
+    priceList : Schema.Types.ObjectId;
+    price: number;
 }
 
 export interface IPriceListItemModel {
@@ -34,15 +32,9 @@ const priceListItemSchema = new Schema({
       ref: 'PriceList',
       required: true
     },
-    description : {
-       type: String
-    },
     price: {
-        type: String,
+        type: Number,
         required: true
-    },
-    tags: {
-        type: String
     }
 });
 
