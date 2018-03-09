@@ -1,13 +1,19 @@
 import { BaseTest } from '../BaseTest';
 import { PriceList } from '../../models/PriceList';
+import { IProduct, Product } from '../../models/Product';
 import { expect } from 'chai';
-import { samplePriceList } from './SampleData';
-import { connection } from 'mongoose'
+import { samplePriceList, createSampleProduct } from './SampleData';
+import { connection, Document } from 'mongoose'
 
-describe('PriceList management', () => {
+describe('PriceList management', function(){
     const test = new BaseTest();
-    before((done) => {
-      done();
+    let product : any = createSampleProduct({});
+
+    before(function(done){
+      this.timeout(5000);
+      product.save().then(()=>{
+        done();
+      });
     });
 
     after((done) => {
@@ -15,8 +21,18 @@ describe('PriceList management', () => {
     });
 
     it('it should add new PriceList definition', (done) => {
-      console.info('About to create new PriceList ...');      
+      console.info('About to create new PriceList ...');
       samplePriceList.save((err, result) => {
+        console.info('PriceList has been created ... ' + result.id);
+        expect(result).to.be.not.null;
+        expect(result).property('id').to.be.not.null;
+        done();
+      });
+    }).timeout(5000);
+
+    it('it should add new PriceListItem to pricelist', (done) => {
+      console.info('About to create new PriceList ...');
+      samplePriceList.addItem(product.name,545,(err, result) => {
         console.info('PriceList has been created ... ' + result.id);
         expect(result).to.be.not.null;
         expect(result).property('id').to.be.not.null;

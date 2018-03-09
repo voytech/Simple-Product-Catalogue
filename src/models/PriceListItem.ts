@@ -1,5 +1,6 @@
 import { Schema, Model, Document, model } from 'mongoose';
 import { IProduct } from './Product'
+import { v1 as uuid } from 'uuid';
 
 export interface IPriceListItem extends Document {
     name: string;
@@ -24,7 +25,8 @@ const priceListItemSchema = new Schema({
     },
     code: {
         type: String,
-        required: true
+        required: true,
+        default: uuid()
     },
     product: {
        type: Schema.Types.ObjectId,
