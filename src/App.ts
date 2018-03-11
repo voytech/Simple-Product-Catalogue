@@ -46,7 +46,8 @@ class App {
       };
       let options = {
         swaggerDefinition: swaggerDefinition,
-        apis: [ __dirname+'/routers/user/Auth.js' ],
+        apis: [ __dirname+'/routers/user/Auth.js',
+                __dirname+'/routers/products/Products.js' ],
       };
       this.swaggerSpec = swaggerJSDoc(options);
     }

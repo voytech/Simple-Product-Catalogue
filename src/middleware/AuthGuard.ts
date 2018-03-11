@@ -10,8 +10,6 @@ export interface AuthenticateRequestFunction {
 
 export class AuthGuard {
 
-  private roleExtractor : Function;
-
   private authenticateRequest : AuthenticateRequestFunction;
 
   constructor(authenticateRequest: AuthenticateRequestFunction){

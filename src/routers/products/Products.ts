@@ -60,7 +60,7 @@ export class Products extends BaseRoute {
             })
         });
     }
-    
+
     public getAllProductsAction(router: Router): void {
         /**
          * @swagger
@@ -70,19 +70,13 @@ export class Products extends BaseRoute {
          *     produces:
          *       - application/json
          *     parameters:
-         *     - name: Authorization
-         *       in: header
-         *       description: jwt
-         *       required: true
-         *       type: string
-         *       format: string
          *     responses:
          *       200:
          *         description: Got all products
          */
         router.get('/all',(req:Request,res:Response)=>{
-          Product.find((err,result)=>{
-            return res.json(result.map((e)=>e.toJSON()));
+          Product.all((err,result)=>{
+            return res.json(result.map((e) => e.toJSON()));
           })
         });
     }

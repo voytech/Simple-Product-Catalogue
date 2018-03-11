@@ -35,7 +35,7 @@ class BinaryCollections{
     return this.binaryCollections[collection].model; //<GridFSModel>model<IGridFS>(modelName,this.binaryCollections[collection].schema);
   }
 
-  public addBinary(binaryName:string, binaryContent:string,  model:string,cb:(error,createdFile)=> void){
+  public addBinary(binaryName:string, binaryContent:string,  model:string, cb:(error,createdFile)=> void){
     let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
         frequency: 10,
         chunkSize: 2048

@@ -29,6 +29,7 @@ export interface IProduct extends Document {
 
 export interface IProductModel {
     createProduct(item: IProduct, callback: Function): void
+    all(cllback : Function): void
     findByName(name: string, callback: Function): void
     loadImage(product: IProduct,name: string, callback: Function): void
     loadAttachment(product: IProduct,name: string, callback: Function): void
@@ -79,9 +80,6 @@ const productSchema = new Schema({
     properties: [propertySchema]
 });
 
-
-
-
 productSchema.static('createProduct', (product: IProduct, callback:  (err: any, product: IProduct) => void) => {
     product.save(callback);
 });
@@ -90,14 +88,17 @@ productSchema.static('findByName', (name: string, callback: Function) => {
     Product.findOne({name: name}, callback);
 });
 
+productSchema.static('all', (callback: Function) => {
+    Product.find(callback);
+});
+
+
 productSchema.static('withAllPropertiesPopulated',function(name : string, callback : (err: any, product : IProduct) => void){
     Product.findOne({name:name}).populate('properties').exec(callback);
 });
 
 productSchema.static('loadImage',function(product: IProduct, filename: string, callback: (err, image) => void){
     let meta = product.images.filter((e)=>e.name = filename);
-    console.log("loadImage metadata");
-    console.log(meta);
     binaryCollections.loadResource('Image', meta, callback);
 });
 

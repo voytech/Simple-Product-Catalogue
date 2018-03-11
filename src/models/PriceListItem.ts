@@ -16,8 +16,6 @@ export interface IPriceListItemModel {
     pFindByName(name: string, populate:string[], callback: Function): void
 }
 
-
-
 const priceListItemSchema = new Schema({
     name: {
         type: String,
