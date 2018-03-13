@@ -34,31 +34,21 @@ module.exports = {
                     use: [{
                       loader: 'css-loader',
                       options: {
-                          modules: true,
-                          importLoaders: 1,
-                          camelCase: true,
-                          localIdentName: '[name]_[local]_[hash:base64:5]'
+                          modules: false,
+                          //importLoaders: 1,
+                          //camelCase: true,
+                          //localIdentName: '[name]_[local]_[hash:base64:5]'
                       }
                     }]
                 })
-            }
-            /*{ test: /\.css$/, loaders: [
-                {
-                    loader: "file-loader",
-                    options: {
-                        name: "[name].[ext]",
-                    },
-                },
-                {
-                    loader: "extract-loader",
-                    options: {
-                        publicPath: null,
-                    }
-                },
-                {
-                    loader: "css-loader",
-                }
-              ]
+            },
+            {
+              test: /\.(eot|svg|ttf|woff|woff2)$/,
+              loader: 'file-loader?name=public/fonts/[name].[ext]'
+            }/*,
+            {
+               test: /bootstrap.+\.(jsx|js)$/,
+               loader: 'imports?jQuery=jquery,$=jquery,this=>window'
             }*/
         ]
     },

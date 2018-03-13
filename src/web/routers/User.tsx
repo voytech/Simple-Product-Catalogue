@@ -1,6 +1,5 @@
 import * as  React from 'react';
 import * as  ReactDOM  from 'react-dom';
-import { Container, Row, Col } from 'reactstrap';
 import { Link, Switch, Route, Redirect, RouteProps, RouteComponentProps } from 'react-router-dom';
 import { LoginView } from '../views/user/LoginView';
 import { RegisterView } from '../views/user/RegisterView';
