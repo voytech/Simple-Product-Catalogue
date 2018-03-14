@@ -1,5 +1,5 @@
 import * as  React from 'react';
-import { FormGroup, FormControl, ControlLabel, Col, Panel  } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
 
 interface IState{
@@ -40,6 +40,12 @@ export class LoginView extends React.Component<any,IState>{
                    <FormGroup>
                       <ControlLabel>Enter Password</ControlLabel>
                       <FormControl type="text" value={this.state.userPassword} onChange={this.setUserPassword}></FormControl>
+                   </FormGroup>
+                   <FormGroup>
+                     <ButtonToolbar>
+                       <Button bsStyle="primary" type="submit">Login</Button>
+                       <Button href="#/user/register" type="submit">Sign in</Button>
+                     </ButtonToolbar>
                    </FormGroup>
                  </form>
                  </Panel.Body>

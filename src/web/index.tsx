@@ -11,15 +11,15 @@ import { HeaderComponent } from './components/HeaderComponent'
 //
 class App extends React.Component{
   render(){
-    return <div className="container-fluid">
-               <HeaderComponent title='Simple Product Catalogue'></HeaderComponent>
-               <HashRouter>
+    return <HashRouter>
+             <div className="container-fluid">
+                 <HeaderComponent title='Simple Product Catalogue'></HeaderComponent>
                  <Switch>
                    <Route path="/user" name="User" component={User}/>
                    <Route path="/" name="Home" component={Main}/>
                  </Switch>
-               </HashRouter>
-          </div>;
+             </div>
+          </HashRouter>;
   }
 }
 ReactDOM.render(<App />,document.getElementById("container"));

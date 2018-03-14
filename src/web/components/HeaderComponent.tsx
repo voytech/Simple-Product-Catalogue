@@ -1,4 +1,5 @@
 import * as  React from 'react';
+import { Link } from 'react-router-dom';
 import { Container,
          Row,
          Col,
@@ -56,7 +57,7 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
          </Nav>
          <Nav pullRight>
            <NavDropdown eventKey={3} title="Profile" id="basic-nav-dropdown">
-             <MenuItem eventKey={3.1}>Login</MenuItem>
+             <MenuItem href="#/user/login" eventKey={3.1}>Login</MenuItem>
              <MenuItem eventKey={3.2}>Details</MenuItem>
              <MenuItem eventKey={3.3}>Settings</MenuItem>
              <MenuItem divider />
