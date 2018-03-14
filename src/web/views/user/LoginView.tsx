@@ -1,5 +1,5 @@
 import * as  React from 'react';
-import { FormGroup, FormControl, ControlLabel, Col  } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Col, Panel  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
 
 interface IState{
@@ -27,16 +27,23 @@ export class LoginView extends React.Component<any,IState>{
               <Col sm={4} smOffset={4}
                    md={4} mdOffset={4}
                    lg={4} lgOffset={4} >
-                <form>
-                 <FormGroup>
-                    <ControlLabel>Enter Login</ControlLabel>
-                    <FormControl type="text" value={this.state.userName} onChange={this.setUserName}></FormControl>
-                 </FormGroup>
-                 <FormGroup>
-                    <ControlLabel>Enter Password</ControlLabel>
-                    <FormControl type="text" value={this.state.userPassword} onChange={this.setUserPassword}></FormControl>
-                 </FormGroup>
-               </form>
+                <Panel>
+                  <Panel.Heading>
+                    <Panel.Title componentClass="h3">Please Login</Panel.Title>
+                  </Panel.Heading>
+                  <Panel.Body>
+                  <form>
+                   <FormGroup>
+                      <ControlLabel>Enter Username</ControlLabel>
+                      <FormControl type="text" value={this.state.userName} onChange={this.setUserName}></FormControl>
+                   </FormGroup>
+                   <FormGroup>
+                      <ControlLabel>Enter Password</ControlLabel>
+                      <FormControl type="text" value={this.state.userPassword} onChange={this.setUserPassword}></FormControl>
+                   </FormGroup>
+                 </form>
+                 </Panel.Body>
+               </Panel>
               </Col>
            </div>
   }
