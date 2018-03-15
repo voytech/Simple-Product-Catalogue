@@ -1,56 +1,53 @@
 import * as  React from 'react';
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
+import { FormComponent, IFieldData, IFormData, Field, fields } from '../../components/FormComponent';
+import { CenteredPanel } from '../../components/CenteredPanel';
 
-interface IState{
-    userName:string;
-    userPassword:string;
+interface ILoginState{
+    email:string;
+    passwd:string;
 }
 
-export class LoginView extends React.Component<any,IState>{
+export class LoginView extends React.Component<any,ILoginState>{
 
   constructor(props){
     super(props);
-    this.state =  {userName:'',userPassword:''};
+    this.state =  {email:'', passwd:''};
   }
 
-  private setUserName = (e : FormEvent) => {
-    this.setState({userName: e.currentTarget.value})
-  }
+private onChange = (field : IFieldData, form : IFormData) => {
+  let formData = {
+    email: FormComponent.getValue(form,'userEmail'),
+    passwd : FormComponent.getValue(form,'userPassword'),
+  };
+  console.info(formData);
+  this.setState(formData);
+}
 
-  private setUserPassword = (e : FormEvent) => {
-    this.setState({userPassword: e.currentTarget.value})
+
+  private login = () => {
+    fetch("v1/user/auth/login",{
+      method: 'post',
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify(this.state)
+    }).then(response => {
+      console.info(response.json);
+    });
   }
 
   render(){
-    return <div className="row">
-              <Col sm={4} smOffset={4}
-                   md={4} mdOffset={4}
-                   lg={4} lgOffset={4} >
-                <Panel>
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h3">Please Login</Panel.Title>
-                  </Panel.Heading>
-                  <Panel.Body>
-                  <form>
-                   <FormGroup>
-                      <ControlLabel>Enter Username</ControlLabel>
-                      <FormControl type="text" value={this.state.userName} onChange={this.setUserName}></FormControl>
-                   </FormGroup>
-                   <FormGroup>
-                      <ControlLabel>Enter Password</ControlLabel>
-                      <FormControl type="text" value={this.state.userPassword} onChange={this.setUserPassword}></FormControl>
-                   </FormGroup>
-                   <FormGroup>
-                     <ButtonToolbar>
-                       <Button bsStyle="primary" type="submit">Login</Button>
-                       <Button href="#/user/register" type="submit">Sign in</Button>
-                     </ButtonToolbar>
-                   </FormGroup>
-                 </form>
-                 </Panel.Body>
-               </Panel>
-              </Col>
-           </div>
+    return <CenteredPanel title='Please Login'>
+              <FormComponent
+                definition={fields(new Field('userEmail','Enter User Email','text',''),
+                                   new Field('userPassword','Enter Password','password',''))}
+                onChange={this.onChange} />
+              <ButtonToolbar>
+                <Button bsStyle="primary" type="submit" onClick={this.login}>Login</Button>
+                <Button href="#/user/register" type="submit">Sign In</Button>
+              </ButtonToolbar>
+           </CenteredPanel>
   }
 }

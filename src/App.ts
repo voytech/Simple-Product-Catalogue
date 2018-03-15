@@ -87,10 +87,7 @@ class App {
     private routes(): void {
         this.express.use('/v1', routers);
         this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.swaggerSpec));
-        this.express.use('/web',express.static(__dirname+"/web"));
-        this.express.use('/', (req, res) => {
-            res.status(404).send({ error: `path doesn't exist`});
-        });
+        this.express.use('/',express.static(__dirname+"/web"));        
     }
 
 }
