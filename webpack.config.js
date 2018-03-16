@@ -1,19 +1,24 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
     entry: "./src/web/index.tsx",
     output: {
         filename: "app.js",
-        path: __dirname + "/dist/web"
+        path: __dirname + "/dist/src/web"
     },
     plugins: [
+         new CleanWebpackPlugin([ __dirname + "/dist/src/web" ]),
          new HtmlWebpackPlugin({
              hash: true,
              title: 'React with Webpack',
              template : 'template.html',
-             filename: __dirname + '/dist/web/index.html' //relative to root of the application
+             filename: __dirname + '/dist/src/web/index.html'
          }),
+         new webpack.HotModuleReplacementPlugin(),
+         new webpack.NoEmitOnErrorsPlugin(),
          new ExtractTextPlugin({
             filename: '[name].[hash:8].css',
             allChunks: true
@@ -51,14 +56,5 @@ module.exports = {
                loader: 'imports?jQuery=jquery,$=jquery,this=>window'
             }*/
         ]
-    },
-
-    // When importing a module whose path matches one of the following, just
-    // assume a corresponding global variable exists and use that instead.
-    // This is important because it allows us to avoid bundling all of our
-    // dependencies, which allows browsers to cache those libraries between builds.
-    /*externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
-    },*/
+    }
 };

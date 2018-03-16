@@ -34,7 +34,7 @@ private onChange = (field : IFieldData, form : IFormData) => {
       },
       body: JSON.stringify(this.state)
     }).then(response => {
-      console.info(response.json);
+      console.info("Works ? ");
     });
   }
 

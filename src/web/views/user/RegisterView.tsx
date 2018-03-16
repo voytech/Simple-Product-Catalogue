@@ -28,7 +28,6 @@ export class RegisterView extends React.Component<any,IRegisterState>{
       name : FormComponent.getValue(form,'userName'),
       password : FormComponent.getValue(form,'userPassword')
     };
-    console.info(formData);
     this.setState(formData);
   }
 
@@ -40,7 +39,9 @@ export class RegisterView extends React.Component<any,IRegisterState>{
       },
       body: JSON.stringify(this.state)
     }).then(response => {
-      console.info(response.json);
+      console.info("Hellow!");
+
+      this.props.history.push('/');
     });
   }
 

@@ -25,7 +25,6 @@ class Server {
 
     }
 
-
     private debugMod(): void {
         debug('ts-express:server');
         winston.add(winston.transports.File, { filename: 'application.log' });

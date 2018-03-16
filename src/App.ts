@@ -9,6 +9,11 @@ import * as swaggerJSDoc from 'swagger-jsdoc';
 import {default as routers} from './routers';
 import { PassportConfig } from './config/passport';
 
+import * as webpack  from 'webpack' ;
+import * as webpackconfig from '../webpack.config';
+import * as webpackMiddleware from  'webpack-dev-middleware';
+import * as webpackHotMiddleware from 'webpack-hot-middleware';
+
 class App {
 
     public express: express.Application;
@@ -19,10 +24,18 @@ class App {
         this.express = express();
         this.database();
         this.middleware();
+        this.webpackDevServer();
         this.swagger();
         this.routes();
     }
 
+    private webpackDevServer(): void{
+      let webpackCompiler = webpack(webpackconfig);
+      let wpmw = webpackMiddleware(webpackCompiler,{});
+      this.express.use(wpmw);
+      let wphmw = webpackHotMiddleware(webpackCompiler);
+      this.express.use(wphmw)
+    }
     /**
      * database connection
      */
@@ -87,7 +100,7 @@ class App {
     private routes(): void {
         this.express.use('/v1', routers);
         this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(this.swaggerSpec));
-        this.express.use('/',express.static(__dirname+"/web"));        
+        this.express.use('/',express.static(__dirname+"/web"));
     }
 
 }
