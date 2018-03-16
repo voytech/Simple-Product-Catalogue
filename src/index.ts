@@ -2,7 +2,7 @@ import * as http from 'http';
 import * as debug from 'debug';
 import * as winston from 'winston';
 import App  from './App';
-
+import * as reload from 'reload';
 
 class Server {
 
@@ -42,6 +42,7 @@ class Server {
 
     private createServer() {
       this.server = http.createServer(App);
+      reload(App);
       this.server.listen(this.port);
 
       this.server.on('listening', () => {

@@ -10,7 +10,7 @@ import {default as routers} from './routers';
 import { PassportConfig } from './config/passport';
 
 import * as webpack  from 'webpack' ;
-import * as webpackconfig from '../webpack.config';
+import * as webpackconfig from '../webpack.config.js';
 import * as webpackMiddleware from  'webpack-dev-middleware';
 import * as webpackHotMiddleware from 'webpack-hot-middleware';
 
@@ -31,7 +31,13 @@ class App {
 
     private webpackDevServer(): void{
       let webpackCompiler = webpack(webpackconfig);
-      let wpmw = webpackMiddleware(webpackCompiler,{});
+      let wpmw = webpackMiddleware(webpackCompiler,{
+        publicPath: webpackconfig.output.publicPath,
+        noInfo: true,
+        stats: {
+            colors: true
+        }
+      });
       this.express.use(wpmw);
       let wphmw = webpackHotMiddleware(webpackCompiler);
       this.express.use(wphmw)

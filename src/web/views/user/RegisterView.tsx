@@ -39,8 +39,6 @@ export class RegisterView extends React.Component<any,IRegisterState>{
       },
       body: JSON.stringify(this.state)
     }).then(response => {
-      console.info("Hellow!");
-
       this.props.history.push('/');
     });
   }
@@ -48,9 +46,9 @@ export class RegisterView extends React.Component<any,IRegisterState>{
   render(){
     return <CenteredPanel title='Please Register'>
               <FormComponent
-                definition={fields(new Field('userName','Enter User Name','text',''),
-                                   new Field('userPassword','Enter Password','password',''),
-                                   new Field('userEmail','Enter User Email','text',''))}
+                definition={fields(new Field('userName','User Name','text',''),
+                                   new Field('userEmail','User Email','text',''),
+                                   new Field('userPassword','Password','password',''))}
                 onChange={this.onChange} />
               <ButtonToolbar>
                 <Button bsStyle="primary" type="submit" onClick={this.register}>Sign In</Button>

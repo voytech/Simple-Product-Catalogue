@@ -33,15 +33,19 @@ private onChange = (field : IFieldData, form : IFormData) => {
         "Content-type": "application/json"
       },
       body: JSON.stringify(this.state)
-    }).then(response => {
-      console.info("Works ? ");
-    });
+    }).then(response => console.info("Works ?")
+     ).catch(error => console.error(error));
+  }
+
+  private emailValidate = (input : string) => {
+    let regex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    return regex.test(input) ? false : 'Email is invalid';
   }
 
   render(){
     return <CenteredPanel title='Please Login'>
               <FormComponent
-                definition={fields(new Field('userEmail','Enter User Email','text',''),
+                definition={fields(new Field('userEmail','User Email','text','',[this.emailValidate]),
                                    new Field('userPassword','Enter Password','password',''))}
                 onChange={this.onChange} />
               <ButtonToolbar>

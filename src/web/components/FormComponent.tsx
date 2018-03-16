@@ -1,5 +1,11 @@
 import * as  React from 'react';
-import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
+import { FormGroup,
+         FormControl,
+         HelpBlock,
+         ControlLabel,
+         Col, Panel,
+         Button,
+         ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../utils/FormUtils';
 
 export interface IFormFieldDef{
@@ -7,26 +13,22 @@ export interface IFormFieldDef{
    fieldDisplay : string;
    fieldType : string;
    defaultValue : string;
+   validators ?: ((value: any) => false | string)[]
 }
 
 export class Field implements IFormFieldDef {
-
-  fieldName: string;
-  fieldDisplay: string;
-  fieldType: string;
-  defaultValue : string;
-
-  constructor(fieldName :string,fieldDisplay: string,fieldType: string,defaultValue:string){
-    this.fieldName = fieldName;
-    this.fieldDisplay = fieldDisplay;
-    this.fieldType = fieldType;
-    this.defaultValue = defaultValue;
-  }
+  constructor(
+    public fieldName :string,
+    public fieldDisplay: string,
+    public fieldType: string,
+    public defaultValue:string,
+    public validators ?: ((value: any) => false | string)[]){}
 }
 
 export interface IFieldData {
   fieldName : string;
   value : any;
+  validationMessage ?: string;
 }
 
 export interface IFormData {
@@ -75,6 +77,28 @@ export class FormComponent extends React.Component<IFormProperties,IFormData>{
     }
   }
 
+  private validate(field){
+    let fieldData = this.state.data.filter(e => e.fieldName === field.fieldName)[0];
+    let fieldMeta = this.props.definition.filter(e => e.fieldName === field.fieldName)[0];
+    if (fieldMeta.validators){
+      let vResults = fieldMeta.validators.map(v => v(fieldData.value));
+      fieldData.validationMessage = vResults.filter(Boolean).join('\n');
+      if (fieldData.validationMessage && fieldData.validationMessage.length > 0){
+        return 'error'
+      } else {
+        return 'success'
+      }
+    }
+    return 'success';
+  }
+
+  private fieldValidationResult(field){
+    let fieldData = this.state.data.filter(e => e.fieldName === field.fieldName)[0];
+    if (fieldData){
+      return fieldData.validationMessage || '';
+    }
+  }
+
   static getValue(form: IFormData,fieldName: String) : any {
     let fieldData = form.data.filter(e => fieldName === e.fieldName)[0];
     if (fieldData){
@@ -85,9 +109,11 @@ export class FormComponent extends React.Component<IFormProperties,IFormData>{
   }
 
   buildField = (field: IFormFieldDef) => {
-    return  <FormGroup key={field.fieldName}>
+    return  <FormGroup key={field.fieldName}
+                       validationState={this.validate(field)}>
                <ControlLabel>{field.fieldDisplay}</ControlLabel>
                <FormControl type={field.fieldType} value={this.getFieldData(field)} onChange={this.updateDataFunction(field)}></FormControl>
+               <HelpBlock>{this.fieldValidationResult(field)}</HelpBlock>
             </FormGroup>
   }
 
