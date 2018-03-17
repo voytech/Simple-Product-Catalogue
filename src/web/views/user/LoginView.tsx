@@ -3,6 +3,7 @@ import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar
 import { FormEvent } from '../../utils/FormUtils';
 import { FormComponent, IFieldData, IFormData, Field, fields } from '../../components/FormComponent';
 import { CenteredPanel } from '../../components/CenteredPanel';
+import { emailValidation, emptyValidation } from '../../components/FormValidators';
 
 interface ILoginState{
     email:string;
@@ -21,7 +22,6 @@ private onChange = (field : IFieldData, form : IFormData) => {
     email: FormComponent.getValue(form,'userEmail'),
     passwd : FormComponent.getValue(form,'userPassword'),
   };
-  console.info(formData);
   this.setState(formData);
 }
 
@@ -33,20 +33,16 @@ private onChange = (field : IFieldData, form : IFormData) => {
         "Content-type": "application/json"
       },
       body: JSON.stringify(this.state)
-    }).then(response => console.info("Works ?")
+    }).then(response => this.props.history.push('/')
      ).catch(error => console.error(error));
-  }
-
-  private emailValidate = (input : string) => {
-    let regex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    return regex.test(input) ? false : 'Email is invalid';
   }
 
   render(){
     return <CenteredPanel title='Please Login'>
               <FormComponent
-                definition={fields(new Field('userEmail','User Email','text','',[this.emailValidate]),
-                                   new Field('userPassword','Enter Password','password',''))}
+                definition={fields(new Field('userEmail','User Email','text','',[emailValidation,
+                                                                                 emptyValidation]),
+                                   new Field('userPassword','Enter Password','password','',[emptyValidation]))}
                 onChange={this.onChange} />
               <ButtonToolbar>
                 <Button bsStyle="primary" type="submit" onClick={this.login}>Login</Button>

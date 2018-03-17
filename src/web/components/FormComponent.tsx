@@ -79,10 +79,9 @@ export class FormComponent extends React.Component<IFormProperties,IFormData>{
 
   private validate(field){
     let fieldData = this.state.data.filter(e => e.fieldName === field.fieldName)[0];
-    let fieldMeta = this.props.definition.filter(e => e.fieldName === field.fieldName)[0];
-    if (fieldMeta.validators){
-      let vResults = fieldMeta.validators.map(v => v(fieldData.value));
-      fieldData.validationMessage = vResults.filter(Boolean).join('\n');
+    if (field.validators){
+      let vResults = field.validators.map(v => v(fieldData.value));
+      fieldData.validationMessage = vResults.filter(Boolean).join(', ');
       if (fieldData.validationMessage && fieldData.validationMessage.length > 0){
         return 'error'
       } else {

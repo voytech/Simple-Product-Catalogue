@@ -3,7 +3,7 @@ import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar
 import { FormComponent, IFieldData, IFormData, Field, fields } from '../../components/FormComponent';
 import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
-
+import { emailValidation, emptyValidation } from '../../components/FormValidators';
 
 interface IRegisterState{
     name: string;
@@ -46,9 +46,9 @@ export class RegisterView extends React.Component<any,IRegisterState>{
   render(){
     return <CenteredPanel title='Please Register'>
               <FormComponent
-                definition={fields(new Field('userName','User Name','text',''),
-                                   new Field('userEmail','User Email','text',''),
-                                   new Field('userPassword','Password','password',''))}
+                definition={fields(new Field('userName','User Name','text','',[emptyValidation]),
+                                   new Field('userEmail','User Email','text','',[emailValidation,emptyValidation]),
+                                   new Field('userPassword','Password','password','',[emptyValidation]))}
                 onChange={this.onChange} />
               <ButtonToolbar>
                 <Button bsStyle="primary" type="submit" onClick={this.register}>Sign In</Button>
