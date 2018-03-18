@@ -1,40 +1,50 @@
 import * as  React from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { store } from '../../Store';
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
 import { FormComponent, IFieldData, IFormData, Field, fields } from '../../components/FormComponent';
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { emailValidation, emptyValidation } from '../../components/FormValidators';
+import { loginAction } from '../../actions/user/LoginAction';
 
 interface ILoginState{
     email:string;
     passwd:string;
 }
 
-export class LoginView extends React.Component<any,ILoginState>{
+interface ILoginProps {
+    token: string;
+    history : string[];
+    doLogin : (email:string, password:string) => void;
+}
+
+class _LoginView_ extends React.Component<ILoginProps,ILoginState>{
 
   constructor(props){
     super(props);
     this.state =  {email:'', passwd:''};
   }
 
-private onChange = (field : IFieldData, form : IFormData) => {
-  let formData = {
-    email: FormComponent.getValue(form,'userEmail'),
-    passwd : FormComponent.getValue(form,'userPassword'),
-  };
-  this.setState(formData);
-}
+  componentWillReceiveProps(props) {
+    if (props.token) {
+      console.info('User Logged In, Redirecting to dashboard...');
+      this.props.history.push('/')
+      //store.dispatch(push('/'));
+    }
+  }
 
+  private onChange = (field : IFieldData, form : IFormData) => {
+    let formData = {
+      email: FormComponent.getValue(form,'userEmail'),
+      passwd : FormComponent.getValue(form,'userPassword'),
+    };
+    this.setState(formData);
+  }
 
   private login = () => {
-    fetch("v1/user/auth/login",{
-      method: 'post',
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify(this.state)
-    }).then(response => this.props.history.push('/')
-     ).catch(error => console.error(error));
+    this.props.doLogin(this.state.email,this.state.passwd);
   }
 
   render(){
@@ -51,3 +61,15 @@ private onChange = (field : IFieldData, form : IFormData) => {
            </CenteredPanel>
   }
 }
+
+const mapStateToProps = (state) => {
+  return ({...state.global.auth});
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  doLogin : (email: string, password: string) => {
+    dispatch(loginAction(email,password));
+  }
+});
+
+export const LoginView = connect(mapStateToProps, mapDispatchToProps)(_LoginView_);

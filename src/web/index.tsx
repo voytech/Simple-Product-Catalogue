@@ -10,7 +10,8 @@ import { User } from './routers/User'
 import { Link, Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 import { HeaderComponent } from './components/HeaderComponent'
 import { Provider } from 'react-redux';
-import { store } from './Store'
+import { ConnectedRouter } from 'react-router-redux';
+import { store, history } from './Store'
 //
 class App extends React.Component{
   render(){

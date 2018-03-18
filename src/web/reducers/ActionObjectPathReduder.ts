@@ -1,8 +1,10 @@
-export class ActionObjectPathReduder{
-  static reduce(state = {}, action){
-    return {
-       ... state,
-       ... action.payload
-     };
-  }
+export function reduce(state = {}, action){
+  console.info({
+     ... state,
+     ... action.payload
+  });
+  return {
+     ... state,
+     ... action.payload
+   };
 }

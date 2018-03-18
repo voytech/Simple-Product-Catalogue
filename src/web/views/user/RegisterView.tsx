@@ -1,9 +1,12 @@
 import * as  React from 'react';
+import { connect } from 'react-redux';
+
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormComponent, IFieldData, IFormData, Field, fields } from '../../components/FormComponent';
 import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { emailValidation, emptyValidation } from '../../components/FormValidators';
+import { registerAction } from '../../actions/user/RegisterAction';
 
 interface IRegisterState{
     name: string;
@@ -11,7 +14,7 @@ interface IRegisterState{
     email: string;
 }
 
-export class RegisterView extends React.Component<any,IRegisterState>{
+export class _RegisterView_ extends React.Component<any,IRegisterState>{
 
   constructor(props){
     super(props);
@@ -31,16 +34,12 @@ export class RegisterView extends React.Component<any,IRegisterState>{
     this.setState(formData);
   }
 
-  private register = () => {
-    fetch("v1/user/auth/register",{
-      method: 'post',
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify(this.state)
-    }).then(response => {
-      this.props.history.push('/');
-    });
+  private doRegister = () => {
+     this.props.doRegister(
+       this.state.name,
+       this.state.email,
+       this.state.password
+     );
   }
 
   render(){
@@ -51,9 +50,21 @@ export class RegisterView extends React.Component<any,IRegisterState>{
                                    new Field('userPassword','Password','password','',[emptyValidation]))}
                 onChange={this.onChange} />
               <ButtonToolbar>
-                <Button bsStyle="primary" type="submit" onClick={this.register}>Sign In</Button>
+                <Button bsStyle="primary" type="submit" onClick={this.doRegister}>Sign In</Button>
                 <Button href="#/user/login" type="submit">Login</Button>
               </ButtonToolbar>
             </CenteredPanel>
   }
 }
+
+const mapStateToProps = (state) => ({
+  ...state.auth
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  doRegister : (name:string, email: string, password: string) => {
+    dispatch(registerAction(name,email,password));
+  }
+});
+
+export const RegisterView = connect(mapStateToProps, mapDispatchToProps)(_RegisterView_);
