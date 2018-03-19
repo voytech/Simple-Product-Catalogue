@@ -20,3 +20,10 @@ const getMiddleware = () => {
 };
 
 export const store = createStore(reducers, getMiddleware());
+
+export class StoreUtils { // Add store state typings somewhere !
+
+  public static getAuthentication(){
+    return (store.getState() as any).global.auth; // remove this any ! use some strict typings.
+  }
+}

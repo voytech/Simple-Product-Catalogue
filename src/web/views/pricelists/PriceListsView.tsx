@@ -1,6 +1,6 @@
 import * as  React from 'react';
 
-export class ProductListView extends React.Component{
+export class PriceListsView extends React.Component{
   render(){
       return <div></div>;
   }
