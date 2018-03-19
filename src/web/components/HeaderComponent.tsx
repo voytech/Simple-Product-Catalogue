@@ -42,16 +42,16 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
            <NavItem eventKey={1} href="#">
              Info
            </NavItem>
-           <NavItem eventKey={2} href="#">
+           <NavItem eventKey={2} href="#/products">
              Products
            </NavItem>
-           <NavItem eventKey={2} href="#">
+           <NavItem eventKey={2} href="#/pricelists">
              Price Lists
            </NavItem>
-           <NavItem eventKey={2} href="#">
+           <NavItem eventKey={2} href="#/promotions">
              Promotions
            </NavItem>
-           <NavItem eventKey={2} href="#">
+           <NavItem eventKey={2} href="#/discounts">
              Dicounts
            </NavItem>
          </Nav>

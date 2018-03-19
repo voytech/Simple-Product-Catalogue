@@ -4,7 +4,7 @@ import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import { DashboardView } from '../views/DashboardView';
 
 
-export class Main extends React.Component<any> {
+export class MainRoutes extends React.Component<any> {
 
   render(){
     return <Switch>

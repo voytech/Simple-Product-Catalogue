@@ -11,8 +11,8 @@ export function loginAction(email:string, password:string){
               response.json().then((result) =>
                                      dispatch({type: LOGIN, payload: {
                                                                 auth: {
-                                                                  state: response.status,
-                                                                  token: result.token
+                                                                  ... result,
+                                                                  state: response.status,                                                                  
                                                                 }
                                                               }
                                                             })))

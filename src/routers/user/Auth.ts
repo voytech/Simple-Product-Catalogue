@@ -35,7 +35,8 @@ export class Auth extends BaseRoute {
             if (!user) {
               return res.status(401).json({ status: 'error', code: 'unauthorized' });
             } else {
-              return res.json({ token: jwt.sign({id: user._id}, process.env.APPLICATION_SECRET)});
+              let {password, _id, _v, ...rest} = user._doc;
+              return res.json({...rest, token: jwt.sign({id: user._id}, process.env.APPLICATION_SECRET)});
             }
           })(req,res,next);
         });

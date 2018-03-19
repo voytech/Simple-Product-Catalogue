@@ -14,15 +14,14 @@ export class GuardedRoute extends React.Component<IGueardedRouterState> {
 
   render(){
       let { check, loginPath, component : Component, ...rest } = this.props;
-      let render = (props) => {}
       return <Route
                 {... rest}
                 render={(props) => {
-                   check() ? <Component {...props}/> :
-                             <Redirect to={{
-                                          pathname: loginPath,
-                                          state: { from: props.location }
-                                        }}/>
+                   return check() ? <Component {...props}/> :
+                                    <Redirect to={{
+                                              pathname: loginPath,
+                                              state: { from: props.location }
+                                    }}/>
                 }} />
   }
 }

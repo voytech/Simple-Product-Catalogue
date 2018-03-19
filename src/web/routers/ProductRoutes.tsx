@@ -5,7 +5,7 @@ import { AuthRoute } from '../components/AuthRoute';
 import { CreateProductView } from '../views/products/CreateProductView';
 import { ProductListView } from '../views/products/ProductListView';
 
-export class User extends React.Component<RouteComponentProps<any>> {
+export class ProductRoutes extends React.Component<RouteComponentProps<any>> {
 
   constructor(props){
     super(props);
@@ -18,8 +18,8 @@ export class User extends React.Component<RouteComponentProps<any>> {
   render(){
      return <Switch>
               <AuthRoute path={this.path("/create")}   component={CreateProductView}/>
-              <AuthRoute path={this.path("/products")} component={ProductListView}/>
-              <Redirect from={this.path("/")} to={this.path("/browse")}/>
+              <AuthRoute path={this.path("/list")} component={ProductListView}/>
+              <Redirect from={this.path("/")} to={this.path("/list")}/>
             </Switch>
   }
 }

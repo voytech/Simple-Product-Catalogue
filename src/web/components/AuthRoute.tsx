@@ -10,11 +10,10 @@ export class AuthRoute extends React.Component<RouteProps> {
   }
 
   private check = () => {
-    let auth = StoreUtils.getAuthentication();
-    return auth && auth.token
+    return StoreUtils.isAuthenticated();
   }
 
   render(){
-      return <GuardedRoute check={this.check()} loginPath={'/user/login'} {...this.props} />
+      return <GuardedRoute check={this.check} loginPath={'/user/login'} {...this.props} />
   }
 }

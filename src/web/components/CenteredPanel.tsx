@@ -19,7 +19,7 @@ export class CenteredPanel extends React.Component<ICenteredPanelProps,any>{
                    lg={4} lgOffset={4} >
                 <Panel>
                   <Panel.Heading>
-                    <Panel.Title componentClass="h3">{this.props.title}</Panel.Title>
+                    <Panel.Title componentClass="h2">{this.props.title}</Panel.Title>
                   </Panel.Heading>
                   <Panel.Body>
                      {this.props.children}

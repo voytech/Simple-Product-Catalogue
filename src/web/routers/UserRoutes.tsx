@@ -5,7 +5,7 @@ import { LoginView } from '../views/user/LoginView';
 import { RegisterView } from '../views/user/RegisterView';
 import { ProfileView } from '../views/user/ProfileView';
 
-export class User extends React.Component<RouteComponentProps<any>> {
+export class UserRoutes extends React.Component<RouteComponentProps<any>> {
 
   constructor(props){
     super(props);

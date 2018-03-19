@@ -5,8 +5,11 @@ const Style = require('bootstrap/dist/css/bootstrap.css');
 import * as  React from 'react';
 import * as  ReactDOM  from 'react-dom';
 import { Container, Row, Col } from 'react-bootstrap';
-import { Main } from './routers/Main'
-import { User } from './routers/User'
+
+import { MainRoutes } from './routers/MainRoutes'
+import { UserRoutes } from './routers/UserRoutes'
+import { ProductRoutes } from './routers/ProductRoutes'
+
 import { Link, Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 import { HeaderComponent } from './components/HeaderComponent'
 import { Provider } from 'react-redux';
@@ -20,8 +23,9 @@ class App extends React.Component{
                  <div className="container-fluid">
                      <HeaderComponent title='Simple Product Catalogue'></HeaderComponent>
                      <Switch>
-                       <Route path="/user" name="User" component={User}/>
-                       <Route path="/" name="Home" component={Main}/>
+                       <Route path="/user"  component={UserRoutes}/>
+                       <Route path="/products"  component={ProductRoutes}/>
+                       <Route path="/"  component={MainRoutes}/>
                      </Switch>
                  </div>
               </HashRouter>
