@@ -30,7 +30,7 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
   render() {
     return (
       <header className="navbar">
-      <Navbar inverse collapseOnSelect>
+      <Navbar fluid inverse collapseOnSelect>
        <Navbar.Header>
          <Navbar.Brand>
            <a href="#brand">{this.props.title}</a>

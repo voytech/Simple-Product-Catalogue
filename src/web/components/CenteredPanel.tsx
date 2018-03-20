@@ -3,7 +3,11 @@ import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar
 
 
 interface ICenteredPanelProps {
-    title:string;
+    title?:string;
+    headerClass?:string;
+    sm?:number;
+    md?:number;
+    lg?:number;
 }
 
 export class CenteredPanel extends React.Component<ICenteredPanelProps,any>{
@@ -12,15 +16,38 @@ export class CenteredPanel extends React.Component<ICenteredPanelProps,any>{
     super(props);
   }
 
+  renderHeading = () => {
+    return this.props.title ?
+              <Panel.Heading>
+                <Panel.Title componentClass={this.props.headerClass || "h2"}>{this.props.title}</Panel.Title>
+              </Panel.Heading>
+              :
+              undefined;
+  }
+
+  sm = () => {
+    return this.props.sm || 4;
+  }
+
+  md = () => {
+    return this.props.md || 4;
+  }
+
+  lg = () => {
+    return this.props.lg || 4;
+  }
+
+  calcOffset = (size : number) => {
+    return (12 - size) / 2;
+  }
+
   render(){
     return <div className="row">
-              <Col sm={4} smOffset={4}
-                   md={4} mdOffset={4}
-                   lg={4} lgOffset={4} >
+              <Col sm={this.sm()} smOffset={this.calcOffset(this.sm())}
+                   md={this.md()} mdOffset={this.calcOffset(this.md())}
+                   lg={this.lg()} lgOffset={this.calcOffset(this.lg())}>
                 <Panel>
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h2">{this.props.title}</Panel.Title>
-                  </Panel.Heading>
+                  {this.renderHeading()}
                   <Panel.Body>
                      {this.props.children}
                  </Panel.Body>
