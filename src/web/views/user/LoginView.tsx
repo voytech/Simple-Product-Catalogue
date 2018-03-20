@@ -53,8 +53,8 @@ class _LoginView_ extends React.Component<ILoginProps,ILoginState>{
               onSubmit={(values: IFormLoginProps) => this.login(values.email,values.passwd)}
               render={(props : FormikProps<IFormLoginProps>) => (
                 <Form onSubmit={props.handleSubmit}>
-                  <VFormGroup field='email' display='Email' value={props.values.email} type='text' onChange={props.handleChange} />
-                  <VFormGroup field='passwd' display='Password' value={props.values.passwd} type='password' onChange={props.handleChange} />
+                  <VFormGroup name='email' display='Email' value={props.values.email} type='text' onChange={props.handleChange} />
+                  <VFormGroup name='passwd' display='Password' value={props.values.passwd} type='password' onChange={props.handleChange} />
                   <ButtonToolbar>
                     <Button bsStyle="primary" type="submit" >Login</Button>
                     <Button href="#/user/register" type="submit">Sign In</Button>

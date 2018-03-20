@@ -37,9 +37,9 @@ export class _RegisterView_ extends React.Component<IRegisterViewProps>{
               onSubmit={(values: IFormRegisterProps) => this.doRegister(values)}
               render={(props : FormikProps<IFormRegisterProps>) => (
                 <Form onSubmit={props.handleSubmit}>
-                  <VFormGroup field='name' display='Name' value={props.values.name} type='text' onChange={props.handleChange} />
-                  <VFormGroup field='email' display='Email' value={props.values.email} type='password' onChange={props.handleChange} />
-                  <VFormGroup field='password' display='Password' value={props.values.password} type='text' onChange={props.handleChange} />
+                  <VFormGroup name='name' display='Name' value={props.values.name} type='text' onChange={props.handleChange} />
+                  <VFormGroup name='email' display='Email' value={props.values.email} type='password' onChange={props.handleChange} />
+                  <VFormGroup name='password' display='Password' value={props.values.password} type='text' onChange={props.handleChange} />
                   <ButtonToolbar>
                     <Button bsStyle="primary" type="submit" >Register</Button>
                     <Button href="#/user/login" type="submit">Log In</Button>
