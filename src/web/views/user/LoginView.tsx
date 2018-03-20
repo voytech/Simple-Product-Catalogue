@@ -7,7 +7,6 @@ import { push } from 'react-router-redux';
 import { store } from '../../Store';
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
-import { FormComponent, IFieldData, IFormData, fields } from '../../components/FormComponent';
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { emailValidation, emptyValidation } from '../../components/FormValidators';
 import { loginAction } from '../../actions/user/LoginAction';
@@ -54,25 +53,14 @@ class _LoginView_ extends React.Component<ILoginProps,ILoginState>{
               onSubmit={(values: IFormLoginProps) => this.login(values.email,values.passwd)}
               render={(props : FormikProps<IFormLoginProps>) => (
                 <Form onSubmit={props.handleSubmit}>
-                  <Field
-                    name="email"
-                    render = { (fieldProps : FieldProps<IFormLoginProps>) => {
-                        return <VFormGroup field='email' display='Email' value={props.values.email} type='text' onChange={props.handleChange}/>}
-                    }
-                  />
-                  <Field
-                    name="passwd"
-                    render = { (fieldProps : FieldProps<IFormLoginProps>) => {
-                        return <VFormGroup field='passwd' display='Password' value={props.values.passwd} type='password' onChange={props.handleChange}/>}
-                    }
-                  />
+                  <VFormGroup field='email' display='Email' value={props.values.email} type='text' onChange={props.handleChange} />
+                  <VFormGroup field='passwd' display='Password' value={props.values.passwd} type='password' onChange={props.handleChange} />
                   <ButtonToolbar>
                     <Button bsStyle="primary" type="submit" >Login</Button>
                     <Button href="#/user/register" type="submit">Sign In</Button>
                   </ButtonToolbar>
                 </Form>
-              )}
-            />
+              )}/>
   }
 
   render(){
@@ -81,13 +69,7 @@ class _LoginView_ extends React.Component<ILoginProps,ILoginState>{
            </CenteredPanel>
   }
 }
-/*
-<FormComponent
-  definition={fields(new Field('userEmail','User Email','text','',[emailValidation,
-                                                                   emptyValidation]),
-                     new Field('userPassword','Enter Password','password','',[emptyValidation]))}
-  onChange={this.onChange} />
-*/
+
 const mapStateToProps = (state) => {
   return ({...state.global.auth});
 };

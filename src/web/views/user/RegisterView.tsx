@@ -1,58 +1,56 @@
 import * as  React from 'react';
+import { Formik, Form, FormikProps, Field, FieldProps  } from 'formik';
+import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { connect } from 'react-redux';
 
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
-import { FormComponent, IFieldData, IFormData, Field, fields } from '../../components/FormComponent';
 import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { emailValidation, emptyValidation } from '../../components/FormValidators';
 import { registerAction } from '../../actions/user/RegisterAction';
 
-interface IRegisterState{
+interface IFormRegisterProps{
     name: string;
     password: string;
     email: string;
 }
 
-export class _RegisterView_ extends React.Component<any,IRegisterState>{
+interface IRegisterViewProps{
+  doRegister: (obj : IFormRegisterProps) => void;
+}
+
+export class _RegisterView_ extends React.Component<IRegisterViewProps>{
 
   constructor(props){
     super(props);
-    this.state =  {
-      name:'',
-      password:'',
-      email:''
-    };
   }
 
-  private onChange = (field : IFieldData, form : IFormData) => {
-    let formData = {
-      email: FormComponent.getValue(form,'userEmail'),
-      name : FormComponent.getValue(form,'userName'),
-      password : FormComponent.getValue(form,'userPassword')
-    };
-    this.setState(formData);
+
+  private doRegister = (obj : IFormRegisterProps) => {
+     this.props.doRegister(obj);
   }
 
-  private doRegister = () => {
-     this.props.doRegister(
-       this.state.name,
-       this.state.email,
-       this.state.password
-     );
+  private renderForm(){
+    return  <Formik
+              initialValues={{ name: '', password: '', email:''}}
+              validate={values => {}}
+              onSubmit={(values: IFormRegisterProps) => this.doRegister(values)}
+              render={(props : FormikProps<IFormRegisterProps>) => (
+                <Form onSubmit={props.handleSubmit}>
+                  <VFormGroup field='name' display='Name' value={props.values.name} type='text' onChange={props.handleChange} />
+                  <VFormGroup field='email' display='Email' value={props.values.email} type='password' onChange={props.handleChange} />
+                  <VFormGroup field='password' display='Password' value={props.values.password} type='text' onChange={props.handleChange} />
+                  <ButtonToolbar>
+                    <Button bsStyle="primary" type="submit" >Register</Button>
+                    <Button href="#/user/login" type="submit">Log In</Button>
+                  </ButtonToolbar>
+                </Form>
+              )}
+            />
   }
-
   render(){
     return <CenteredPanel title='Please Register'>
-              <FormComponent
-                definition={fields(new Field('userName','User Name','text','',[emptyValidation]),
-                                   new Field('userEmail','User Email','text','',[emailValidation,emptyValidation]),
-                                   new Field('userPassword','Password','password','',[emptyValidation]))}
-                onChange={this.onChange} />
-              <ButtonToolbar>
-                <Button bsStyle="primary" type="submit" onClick={this.doRegister}>Sign In</Button>
-                <Button href="#/user/login" type="submit">Login</Button>
-              </ButtonToolbar>
+              {this.renderForm()}
             </CenteredPanel>
   }
 }
@@ -62,8 +60,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  doRegister : (name:string, email: string, password: string) => {
-    dispatch(registerAction(name,email,password));
+  doRegister : (obj: IFormRegisterProps) => {
+    dispatch(registerAction(obj.name, obj.email, obj.password));
   }
 });
 
