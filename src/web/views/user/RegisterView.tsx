@@ -59,7 +59,7 @@ const mapStateToProps = (state) => ({
   ...state.auth
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = () => ({
   doRegister : (obj: IFormRegisterProps) => {
     registerAction(obj.name, obj.email, obj.password);
   }

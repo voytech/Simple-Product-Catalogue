@@ -2,13 +2,30 @@ import * as  React from 'react';
 import { Table   } from 'react-bootstrap';
 
 interface IColumn {
-
+  name : string,
+  title : string,
 }
+
 interface IListViewProps {
-  columns : string [];
+  columns : IColumn [];
   rows ?: object [];
   select ?: Function;
   fetch ?: Function;
+}
+
+export class Column implements IColumn {
+  constructor(public name : string, public title : string) {}
+}
+
+export class Columns {
+    columns : IColumn[];
+    constructor(...columns : IColumn[]){
+      this.columns = columns;
+    }
+}
+
+export function columns(... cols : Column[]){
+  return cols;
 }
 
 export class ListViewComponent extends React.Component<IListViewProps>{
@@ -17,16 +34,22 @@ export class ListViewComponent extends React.Component<IListViewProps>{
     super(props);
   }
 
-  createHeader(columns : string[]){
+  createHeader(columns : IColumn[]){
     return <tr>
-            {columns.map(col=> <th>{col}</th>)}
+            {columns.map(col=> <th>{col.title}</th>)}
            </tr>
   }
 
   createRows(){
-    return <tr>
-            {this.props.columns.map(col=> <th>{col}</th>)}
-          </tr>
+    return <tbody>
+             {this.props.rows && this.props.rows.map((row,idx) => {
+              console.log('dupa');
+              console.log(row);
+              return <tr key={idx}>
+                      {this.props.columns.map((col,idx2) =>{ return <td key={idx2}>{row[col.name]}</td> })}
+                     </tr>
+            })}
+           </tbody>
   }
 
   render(){
@@ -34,9 +57,7 @@ export class ListViewComponent extends React.Component<IListViewProps>{
                 <thead>
                   {this.createHeader(this.props.columns)}
                 </thead>
-                <tbody>
-                  {this.createRows()}
-                </tbody>
+                {this.createRows()}
               </Table>;
   }
 }

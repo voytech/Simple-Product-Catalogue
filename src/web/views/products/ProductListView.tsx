@@ -13,11 +13,12 @@ import { FormGroup,
          ButtonToolbar  } from 'react-bootstrap';
 import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
-import { ListViewComponent } from '../../components/lists/ListViewComponent'
+import { ListViewComponent, columns, Column } from '../../components/lists/ListViewComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { push } from 'react-router-redux';
 import { store } from '../../Store';
 import { createProduct } from '../../actions/products/CreateProductAction';
+import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 
 
 interface IProperty {
@@ -43,6 +44,7 @@ interface IProduct {
 
 interface IProductListViewProps{
   createProduct : (product : IProduct) => void;
+  loadProducts : () => void;
   products : IProduct[];
 }
 
@@ -53,7 +55,13 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
   }
 
   componentDidMount(){
+    console.log("did mount");
+    this.props.loadProducts();
+  }
 
+  componentWillReceiveProps(props){
+    console.log("received props");
+    console.log(props);
   }
 
   private renderDetails(){
@@ -90,22 +98,22 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
                     <div>Attachments</div>
                   </EditorStep>
                  </EditorComponent>
-                 <ListViewComponent columns={["Name","Description","Start Date","End Date"]}></ListViewComponent>
+                 <ListViewComponent columns={columns(new Column('name','Name'),new Column('description','Description'))} rows={this.props.products}></ListViewComponent>
              </CenteredPanel>
   }
 
 }
 
-const mapStateToProps = (state) => {
-  return ({...state.global.products});
-};
+const mapStateToProps = (state) => ({
+  products: state.global.products
+});
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = () => ({
   createProduct : (product : IProduct) => {
     createProduct(product);
   },
-  loadProducts : () => {
-    //dispatch(loadProductsAction());
+  loadProducts  : () => {
+    loadProductsAction();
   }
 });
 
