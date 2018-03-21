@@ -1,7 +1,7 @@
 import { LOGIN } from '../../consts/Actions';
 import { StoreUtils } from '../../Store'
 
-export const loginAction =  StoreUtils.createActions({loginAction: (email:string, password:string) => {
+export const loginAction =  StoreUtils.createAction((email:string, password:string) => {
     let authUrl = (suffix) => 'v1/user/auth/'+suffix;
     return (dispatch) => {
       fetch(authUrl('login'),{
@@ -19,4 +19,4 @@ export const loginAction =  StoreUtils.createActions({loginAction: (email:string
                                                               })))
         .catch(error => console.error(error));
     }
-  }}).loginAction;
+  });

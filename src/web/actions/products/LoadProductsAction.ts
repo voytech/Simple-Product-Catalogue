@@ -2,7 +2,7 @@ import { LOAD_PRODUCTS } from '../../consts/Actions';
 import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 
-export const loadProductsAction = StoreUtils.createActions({loadProductsAction: (product : any)=>{
+export const loadProductsAction = StoreUtils.createAction((product : any)=>{
     let productsUrl = (suffix) => 'v1/products/'+suffix;
     return (dispatch) => {
       fetch(productsUrl('all'),{
@@ -15,4 +15,4 @@ export const loadProductsAction = StoreUtils.createActions({loadProductsAction: 
                                        dispatch({type: LOAD_PRODUCTS, payload: { products: result }})))
         .catch(error => console.error(error));
     }
-  }}).loadProductsAction;
+  });

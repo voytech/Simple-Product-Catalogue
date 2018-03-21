@@ -57,9 +57,8 @@ const productSchema = new Schema({
     },
     code: {
       type: String,
-      required: true,
-      unique: true,
-      default: uuid()
+      //required: true,
+      //unique: true
     },
     description : {
       type: String
@@ -98,6 +97,11 @@ const productSchema = new Schema({
       type: ResourceDescriptorSchema
     }],
     properties: [propertySchema]
+});
+
+productSchema.pre('save', function(next) {
+  this.code = uuid();
+  next()
 });
 
 productSchema.static('createProduct', (product: IProduct, callback:  (err: any, product: IProduct) => void) => {

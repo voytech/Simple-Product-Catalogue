@@ -1,4 +1,4 @@
-import { reduce } from './ActionObjectPathReduder'
+import { reduce } from './global'
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 

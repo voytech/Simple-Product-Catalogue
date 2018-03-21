@@ -1,7 +1,7 @@
 import { REGISTER } from '../../consts/Actions';
 import { StoreUtils } from '../../Store'
 
-export const registerAction = StoreUtils.createActions({registerAction: (username:string, email:string, password:string)=>{
+export const registerAction = StoreUtils.createAction((username:string, email:string, password:string)=>{
     let authUrl = (suffix) => 'v1/user/auth/'+suffix;
     return (dispatch) => {
       fetch(authUrl('register'),{
@@ -13,4 +13,4 @@ export const registerAction = StoreUtils.createActions({registerAction: (usernam
                                        dispatch({type: REGISTER, payload: {auth: result}})))
 
     }
-  }}).registerAction;
+  });

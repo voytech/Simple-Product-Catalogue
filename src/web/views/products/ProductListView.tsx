@@ -55,7 +55,6 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
   }
 
   componentDidMount(){
-    console.log("did mount");
     this.props.loadProducts();
   }
 
@@ -98,7 +97,11 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
                     <div>Attachments</div>
                   </EditorStep>
                  </EditorComponent>
-                 <ListViewComponent columns={columns(new Column('name','Name'),new Column('description','Description'))} rows={this.props.products}></ListViewComponent>
+                 <ListViewComponent columns={columns(new Column('name','Name'),
+                                                     new Column('type','Type'),
+                                                     new Column('description','Description'),
+                                                     new Column('startDate','Start Date'),
+                                                     new Column('endDate','Expiry Date'))} rows={this.props.products}></ListViewComponent>
              </CenteredPanel>
   }
 

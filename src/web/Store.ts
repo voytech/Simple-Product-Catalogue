@@ -1,5 +1,5 @@
 
-import { applyMiddleware, createStore, ActionCreatorsMapObject } from 'redux';
+import { applyMiddleware, createStore, ActionCreatorsMapObject, ActionCreator } from 'redux';
 import { reducers } from './reducers';
 import  thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux'
@@ -40,9 +40,13 @@ export class StoreUtils { // Add store state typings somewhere !
   public static call(action){
     store.dispatch(action);
   }
- //ActionCreatorsMapObject
+
   public static createActions(actions : ActionCreatorsMapObject){
     return bindActionCreators(actions,store.dispatch);
+  }
+
+  public static createAction(action : ActionCreator<any>){
+    return bindActionCreators(action,store.dispatch);
   }
 
   public static getAuthentication(){

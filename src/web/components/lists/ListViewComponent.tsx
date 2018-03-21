@@ -43,8 +43,6 @@ export class ListViewComponent extends React.Component<IListViewProps>{
   createRows(){
     return <tbody>
              {this.props.rows && this.props.rows.map((row,idx) => {
-              console.log('dupa');
-              console.log(row);
               return <tr key={idx}>
                       {this.props.columns.map((col,idx2) =>{ return <td key={idx2}>{row[col.name]}</td> })}
                      </tr>
