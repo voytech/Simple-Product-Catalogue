@@ -74,9 +74,9 @@ const mapStateToProps = (state) => {
   return ({...state.global.auth});
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = () => ({
   doLogin : (email: string, password: string) => {
-    dispatch(loginAction(email,password));
+    loginAction(email,password);
   }
 });
 

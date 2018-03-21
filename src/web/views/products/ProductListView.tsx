@@ -52,6 +52,10 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
     super(props)
   }
 
+  componentDidMount(){
+
+  }
+
   private renderDetails(){
     return  <Formik
               initialValues={{ }}
@@ -98,7 +102,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   createProduct : (product : IProduct) => {
-    dispatch(createProduct(product));
+    createProduct(product);
+  },
+  loadProducts : () => {
+    //dispatch(loadProductsAction());
   }
 });
 

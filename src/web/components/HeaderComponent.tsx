@@ -1,5 +1,7 @@
 import * as  React from 'react';
 import { Link } from 'react-router-dom';
+import { logoutAction } from '../actions/user/LogoutAction';
+
 import { Container,
          Row,
          Col,
@@ -61,7 +63,7 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
              <MenuItem eventKey={3.2}>Details</MenuItem>
              <MenuItem eventKey={3.3}>Settings</MenuItem>
              <MenuItem divider />
-             <MenuItem eventKey={3.3}>Logout</MenuItem>
+             <MenuItem href="#/user/login" onClick={logoutAction} eventKey={3.3}>Logout</MenuItem>
            </NavDropdown>
          </Nav>
        </Navbar.Collapse>
