@@ -1,9 +1,12 @@
 import * as  React from 'react';
 import { Table   } from 'react-bootstrap';
 
+interface IColumn {
+
+}
 interface IListViewProps {
   columns : string [];
-  rows : object [];
+  rows ?: object [];
   select ?: Function;
   fetch ?: Function;
 }
@@ -22,13 +25,7 @@ export class ListViewComponent extends React.Component<IListViewProps>{
 
   createRows(){
     return <tr>
-            <td>1</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
+            {this.props.columns.map(col=> <th>{col}</th>)}
           </tr>
   }
 

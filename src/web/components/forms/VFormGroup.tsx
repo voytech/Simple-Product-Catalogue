@@ -2,10 +2,7 @@ import * as  React from 'react';
 import { FormGroup,
          FormControl,
          HelpBlock,
-         ControlLabel,
-         Col, Panel,
-         Button,
-         ButtonToolbar  } from 'react-bootstrap';
+         ControlLabel } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
 
 export interface IFormGroupProperties{

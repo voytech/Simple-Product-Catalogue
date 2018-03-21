@@ -1,6 +1,7 @@
 global['jQuery'] = require('jquery');
 import 'bootstrap';
 const Style = require('bootstrap/dist/css/bootstrap.css');
+const AppStyle = require('./styles/app.css');
 
 import * as  React from 'react';
 import * as  ReactDOM  from 'react-dom';
