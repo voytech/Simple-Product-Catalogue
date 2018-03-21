@@ -1,4 +1,6 @@
 import * as  React from 'react';
+import { connect } from 'react-redux';
+
 import { Formik, Form, FormikProps, Field, FieldProps  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
@@ -13,9 +15,10 @@ import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
 import { ListViewComponent } from '../../components/lists/ListViewComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
-import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { store } from '../../Store';
+import { createProduct } from '../../actions/products/CreateProductAction';
+
 
 interface IProperty {
   name : string;
@@ -24,6 +27,7 @@ interface IProperty {
 
 interface IProduct {
   name: string;
+  type: string;
   code: string;
   category : string;
   description: string;
@@ -31,31 +35,41 @@ interface IProduct {
   effectiveStartDate : string;
   endDate : string;
   effectiveEndDate : string;
-  type: string;
   tags: string[];
   properties : IProperty[];
   images : string[];
   attachments : string[];
 }
 
-export class ProductListView extends React.Component {
+interface IProductListViewProps{
+  createProduct : (product : IProduct) => void;
+  products : IProduct[];
+}
+
+class _ProductListView_ extends React.Component<IProductListViewProps> {
+
+  constructor(props){
+    super(props)
+  }
 
   private renderDetails(){
     return  <Formik
               initialValues={{ }}
               validate={values => {}}
-              onSubmit={(values: IProduct) => console.log(values)}
+              onSubmit={(values: IProduct) => this.props.createProduct(values)}
               render={(props : FormikProps<IProduct>) => (
                 <Form className="form-horizontal" onSubmit={props.handleSubmit}>
                   <Row className='mt-2'>
-                  <HFormGroup name='name' display='Product Name' value={props.values.name} type='text' onChange={props.handleChange} controlWidth={4}/>
-                  <HFormGroup name='description' display='Description' value={props.values.description} type='text' componentClass='textarea' onChange={props.handleChange} controlWidth={6}/>
-                  <HFormGroup name='category' display='Category' value={props.values.category} type='text' onChange={props.handleChange} controlWidth={4} />
-                  <HFormGroup name='startDate' display='Start Date' value={props.values.startDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                  <HFormGroup name='endDate' display='End Date' value={props.values.endDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                  <HFormGroup name='effectiveStartDate' display='Effective Start Date' value={props.values.effectiveStartDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                  <HFormGroup name='effectiveEndDate' display='Effective End Date' value={props.values.effectiveEndDate} type='date' onChange={props.handleChange} controlWidth={4} />
+                    <HFormGroup name='name' display='Product Name' value={props.values.name} type='text' onChange={props.handleChange} controlWidth={4}/>
+                    <HFormGroup name='type' display='Type' value={props.values.type || 'tangible'} type='text' onChange={props.handleChange} controlWidth={4}/>
+                    <HFormGroup name='description' display='Description' value={props.values.description} type='text' componentClass='textarea' onChange={props.handleChange} controlWidth={6}/>
+                    <HFormGroup name='category' display='Category' value={props.values.category} type='text' onChange={props.handleChange} controlWidth={4} />
+                    <HFormGroup name='startDate' display='Start Date' value={props.values.startDate} type='date' onChange={props.handleChange} controlWidth={4} />
+                    <HFormGroup name='endDate' display='End Date' value={props.values.endDate} type='date' onChange={props.handleChange} controlWidth={4} />
+                    <HFormGroup name='effectiveStartDate' display='Effective Start Date' value={props.values.effectiveStartDate} type='date' onChange={props.handleChange} controlWidth={4} />
+                    <HFormGroup name='effectiveEndDate' display='Effective End Date' value={props.values.effectiveEndDate} type='date' onChange={props.handleChange} controlWidth={4} />
                   </Row>
+                  <Button bsStyle="primary" type="submit" >Create</Button>
                 </Form>
               )}/>
   }
@@ -76,7 +90,16 @@ export class ProductListView extends React.Component {
              </CenteredPanel>
   }
 
-  /*
-
-  */
 }
+
+const mapStateToProps = (state) => {
+  return ({...state.global.products});
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  createProduct : (product : IProduct) => {
+    dispatch(createProduct(product));
+  }
+});
+
+export const ProductListView = connect(mapStateToProps, mapDispatchToProps)(_ProductListView_);

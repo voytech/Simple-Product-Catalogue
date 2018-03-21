@@ -27,6 +27,10 @@ export class StoreUtils { // Add store state typings somewhere !
     return (store.getState() as any).global.auth; // remove this any ! use some strict typings.
   }
 
+  public static getAuthToken(){
+    return StoreUtils.getAuthentication() && StoreUtils.getAuthentication().token; // remove this any ! use some strict typings.
+  }
+
   public static isAuthenticated(){
     let auth =  StoreUtils.getAuthentication()
     return auth !== undefined && auth.token !== undefined;

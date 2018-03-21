@@ -49,14 +49,12 @@ export class Products extends BaseRoute {
        *         description: New product added
        */
         router.post('/create',this.restrict(['ADMIN']), (req: Request, res: Response) => {
-            let product = new Product({
-              name:req.body.name,
-              description:req.body.description,
-              category:req.body.category,
-              type:req.body.type
-            });
-            product.save((err,result)=>{
-              return res.json(result.toJSON());
+            new Product({ ... req.body }).save((err,result)=>{
+              if (err){
+                return res.status(500).json(err);
+              } else {
+                return res.json(result.toJSON());
+              }
             })
         });
     }
