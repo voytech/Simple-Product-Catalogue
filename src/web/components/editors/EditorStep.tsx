@@ -19,8 +19,6 @@ export class EditorStep extends React.Component<IEditorStepProps,IEditorStepStat
 
 
   render(){
-      return <div className='ml-10 mt-10 mb-10 mr-10'>
-                {this.props.children}
-             </div>
+      return <>{this.props.children}</>
   }
 }

@@ -16,20 +16,23 @@ import { HeaderComponent } from './components/HeaderComponent'
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { store, history } from './Store'
+import { AppContainer } from './components/AppContainer';
 //
 class App extends React.Component{
   render(){
     return <Provider store={store}>
-              <HashRouter>
-                 <div className="container-fluid">
-                     <HeaderComponent title='Simple Product Catalogue'></HeaderComponent>
-                     <Switch>
-                       <Route path="/user"  component={UserRoutes}/>
-                       <Route path="/products"  component={ProductRoutes}/>
-                       <Route path="/"  component={MainRoutes}/>
-                     </Switch>
-                 </div>
-              </HashRouter>
+              <AppContainer>
+                <HashRouter>
+                   <div className="container-fluid">
+                       <HeaderComponent title='Simple Product Catalogue'></HeaderComponent>
+                       <Switch>
+                         <Route path="/user"  component={UserRoutes}/>
+                         <Route path="/products"  component={ProductRoutes}/>
+                         <Route path="/"  component={MainRoutes}/>
+                       </Switch>
+                   </div>
+                </HashRouter>
+            </AppContainer>
            </Provider>;
   }
 }

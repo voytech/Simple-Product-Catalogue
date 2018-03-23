@@ -8,7 +8,7 @@ export class MainRoutes extends React.Component<any> {
 
   render(){
     return <Switch>
-              <Route path="/dashboard" name="Dashboard" component={DashboardView}/>
+              <Route path="/dashboard" component={DashboardView}/>
               <Redirect from="/" to="/dashboard"/>
            </Switch>
 

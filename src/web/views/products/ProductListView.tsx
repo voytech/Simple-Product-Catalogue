@@ -10,10 +10,18 @@ import { FormGroup,
          ControlLabel,
          Col, Row,
          Button,
+         Glyphicon,
          ButtonToolbar  } from 'react-bootstrap';
 import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
-import { ListViewComponent, columns, Column } from '../../components/lists/ListViewComponent'
+import { TableComponent,
+         columns,
+         Column,
+         Cell,
+         TableColumn,
+         TableColumnActions,
+         TableCellActions,
+         TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { push } from 'react-router-redux';
 import { store } from '../../Store';
@@ -65,14 +73,14 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
 
   private renderDetails(){
     return  <Formik
-              initialValues={{ }}
+              initialValues={{ type : 'tangible' }}
               validate={values => {}}
               onSubmit={(values: IProduct) => this.props.createProduct(values)}
               render={(props : FormikProps<IProduct>) => (
                 <Form className="form-horizontal" onSubmit={props.handleSubmit}>
                   <Row className='mt-2'>
                     <HFormGroup name='name' display='Product Name' value={props.values.name} type='text' onChange={props.handleChange} controlWidth={4}/>
-                    <HFormGroup name='type' display='Type' value={props.values.type || 'tangible'} type='text' onChange={props.handleChange} controlWidth={4}/>
+                    <HFormGroup name='type' display='Type' value={props.values.type} type='text' onChange={props.handleChange} controlWidth={4}/>
                     <HFormGroup name='description' display='Description' value={props.values.description} type='text' componentClass='textarea' onChange={props.handleChange} controlWidth={6}/>
                     <HFormGroup name='category' display='Category' value={props.values.category} type='text' onChange={props.handleChange} controlWidth={4} />
                     <HFormGroup name='startDate' display='Start Date' value={props.values.startDate} type='date' onChange={props.handleChange} controlWidth={4} />
@@ -97,11 +105,26 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
                     <div>Attachments</div>
                   </EditorStep>
                  </EditorComponent>
-                 <ListViewComponent columns={columns(new Column('name','Name'),
-                                                     new Column('type','Type'),
-                                                     new Column('description','Description'),
-                                                     new Column('startDate','Start Date'),
-                                                     new Column('endDate','Expiry Date'))} rows={this.props.products}></ListViewComponent>
+                 <TableComponent columns={[new TableColumn('Name','name'),
+                                           new TableColumn('Type','type'),
+                                           new TableColumn('Description','description'),
+                                           new TableColumn('Start Date','startDate'),
+                                           new TableColumn('Expiry','endDate'),
+                                           new TableColumn('Edit')]}
+                                     rows={this.props.products}
+                                     renderColumn={(column : Column, actions: TableColumnActions) =>
+                                       <th>{column.title}</th>
+                                     }
+                                     renderCell={(cell : Cell, actions : TableCellActions) => {
+                                       switch (cell.column.title){
+                                         case 'Edit' : return <td>
+                                                                <Button bsSize="xsmall">
+                                                                  <Glyphicon glyph="pencil" />
+                                                                </Button>
+                                                              </td>
+                                         default     : return <td>{cell.value}</td>
+                                       }
+                                     }}/>
              </CenteredPanel>
   }
 
