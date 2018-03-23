@@ -26,6 +26,7 @@ import { CenteredPanel } from '../../components/CenteredPanel';
 import { push } from 'react-router-redux';
 import { store } from '../../Store';
 import { createProduct } from '../../actions/products/CreateProductAction';
+import { removeProductAction } from '../../actions/products/RemoveProductAction';
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 
 
@@ -93,7 +94,7 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
               )}/>
   }
   render(){
-      return <CenteredPanel lg={10} sm={6} md={10}>
+      return <CenteredPanel lg={12} sm={12} md={12}>
                 <EditorComponent title="Create New Product">
                   <EditorStep title="Basic Details" step={1}>
                     {this.renderDetails()}
@@ -110,21 +111,35 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
                                            new TableColumn('Description','description'),
                                            new TableColumn('Start Date','startDate'),
                                            new TableColumn('Expiry','endDate'),
-                                           new TableColumn('Edit')]}
-                                     rows={this.props.products}
-                                     renderColumn={(column : Column, actions: TableColumnActions) =>
-                                       <th>{column.title}</th>
-                                     }
-                                     renderCell={(cell : Cell, actions : TableCellActions) => {
-                                       switch (cell.column.title){
-                                         case 'Edit' : return <td>
-                                                                <Button bsSize="xsmall">
-                                                                  <Glyphicon glyph="pencil" />
-                                                                </Button>
-                                                              </td>
-                                         default     : return <td>{cell.value}</td>
-                                       }
-                                     }}/>
+                                           new TableColumn('Edit'),
+                                           new TableColumn('X')]}
+                                 rows={this.props.products}
+                                 onRemove={ (product) => removeProductAction(product) }
+                                 renderColumn={(column : Column, actions: TableColumnActions) => {
+                                   switch  (column.title) {
+                                     case 'X' : return <th>
+                                                         <Button bsStyle='danger' bsSize='xsmall' onClick={() => alert('removing all')}>
+                                                           <Glyphicon glyph='trash' />
+                                                         </Button>
+                                                       </th>
+                                     default  : return <th>{column.title}</th>
+                                   }
+                                 }}
+                                 renderCell={(cell : Cell, actions : TableCellActions) => {
+                                   switch (cell.column.title){
+                                     case 'Edit' : return <td>
+                                                            <Button bsSize='xsmall' onClick={() => actions.editRow()}>
+                                                              <Glyphicon glyph='pencil' />
+                                                            </Button>
+                                                          </td>
+                                     case 'X' : return <td>
+                                                          <Button bsSize='xsmall' onClick={() => actions.removeRow()}>
+                                                            <Glyphicon glyph='trash' />
+                                                          </Button>
+                                                        </td>
+                                     default     : return <td>{cell.value}</td>
+                                   }
+                                 }}/>
              </CenteredPanel>
   }
 

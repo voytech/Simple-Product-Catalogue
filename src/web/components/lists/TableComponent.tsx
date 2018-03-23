@@ -16,17 +16,18 @@ export interface Cell  {
 }
 
 export interface TableRowActions {
-  editRow : () => {};
-  removeRow : () => {};
+  editRow : () => void;
+  removeRow : () => void;
 }
 
-export interface TableCellActions {
-  editCell : () => {};
+export interface TableCellActions extends TableRowActions {
+  editValue : () => void;
 }
 
 export interface TableColumnActions {
-  applyFilter : () => {};
-  sortItems : () => {};
+  applyFilter : () => void;
+  sortItems : () => void;
+  removeData : () => void;
 }
 
 interface RenderColumns {
@@ -44,6 +45,9 @@ interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
 interface TableProps<Row> {
   columns : Column[];
   rows : Row[];
+  onEdit   ?: (row : any) => void;
+  onRemove ?: (row : any) => void;
+  onRemoveMany ?: (options : any) => void;
   renderHeader ?: (columns : RenderColumns) => React.ReactNode;
   renderColumn : ((column : Column, actions: TableColumnActions) => React.ReactNode);
   renderBody ? : (rowsRender : RenderRows) => React.ReactNode;
@@ -93,20 +97,32 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
       </thead>
   }
 
-  private renderCells = (cells : Cell[]) : React.ReactNode => {
+  private renderCells = (cells : Cell[], actions : TableCellActions) : React.ReactNode => {
     return <>
-            {cells.map((cell) => this.props.renderCell(cell,null))}
+            {cells.map((cell) => this.props.renderCell(cell,actions))}
            </>;
   }
 
+  private withThrow = (action , arg) => {
+    if (!action){
+      throw Error('action handler not set on TableComponent '+action);
+    }
+    action(arg);
+  }
+
   private partialRenderCells = (row, idx : number) : RenderCells => {
+    let contextAwareActions : TableCellActions = {
+        editValue : () => { this.withThrow(this.props.onEdit,row) },
+        editRow :   () => { this.withThrow(this.props.onEdit,row) },
+        removeRow : () => { this.withThrow(this.props.onRemove,row) }
+    }
     let values : Cell[] = this.props.columns.map((col) => {
       return {
         value  : col.name && row[col.name],
         column : col
       }
-    });
-    return  () => { return this.renderCells(values) }
+    })
+    return  () => { return this.renderCells(values,contextAwareActions) }
   }
 
   private renderRows = () => {

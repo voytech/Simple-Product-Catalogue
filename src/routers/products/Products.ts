@@ -79,4 +79,14 @@ export class Products extends BaseRoute {
         });
     }
 
+    public removeProductAction(router: Router): void {
+
+        router.post('/remove',(req:Request,res:Response)=>{
+          Product.remove(req.body).then((err)=>{
+             
+            return res.json({status: 'removed'});
+          })
+        });
+    }
+
 }
