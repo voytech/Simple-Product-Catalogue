@@ -2,7 +2,7 @@ import { CREATE_PRODUCT } from '../../consts/Actions';
 import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 
-export const createProduct = StoreUtils.createAction((product : any) => {
+export const createProductAction = StoreUtils.createAction((product : any) => {
     let productsUrl = (suffix) => 'v1/products/'+suffix;
     return (dispatch) => {
       fetch(productsUrl('create'),{

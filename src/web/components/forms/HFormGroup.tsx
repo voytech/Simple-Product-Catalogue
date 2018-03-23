@@ -27,12 +27,12 @@ export class HFormGroup extends React.Component<IFormGroupProperties>{
   }
 
   render(){
-    let {display, errors, children, ...rest} = this.props;
+    let {display, errors, children, labelWidth, controlWidth, ...rest} = this.props;
     return <FormGroup key={this.props.name}>
-              <Col componentClass={ControlLabel} sm={this.props.labelWidth || 2}>
+              <Col componentClass={ControlLabel} sm={labelWidth || 2}>
                 {this.props.display}
               </Col>
-              <Col sm={this.props.controlWidth || 10}>
+              <Col sm={controlWidth || 10}>
                 {children !== undefined ? children : <FormControl {... rest} />}
                 {errors && <HelpBlock>{errors}</HelpBlock> }
               </Col>

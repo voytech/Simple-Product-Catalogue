@@ -4,11 +4,7 @@ import { connect } from 'react-redux';
 import { Formik, Form, FormikProps, Field, FieldProps  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
-import { FormGroup,
-         FormControl,
-         HelpBlock,
-         ControlLabel,
-         Col, Row,
+import { Col, Row,
          Button,
          Glyphicon,
          ButtonToolbar  } from 'react-bootstrap';
@@ -21,88 +17,51 @@ import { TableComponent,
          TableColumn,
          TableColumnActions,
          TableCellActions,
+         RenderCells,
          TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { push } from 'react-router-redux';
 import { store } from '../../Store';
-import { createProduct } from '../../actions/products/CreateProductAction';
+import { createProductAction } from '../../actions/products/CreateProductAction';
 import { removeProductAction } from '../../actions/products/RemoveProductAction';
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
+import { ProductEditor, Product, ProductProperty } from './ProductEditor';
 
 
-interface IProperty {
-  name : string;
-  value : string;
-}
-
-interface IProduct {
-  name: string;
-  type: string;
-  code: string;
-  category : string;
-  description: string;
-  startDate : string;
-  effectiveStartDate : string;
-  endDate : string;
-  effectiveEndDate : string;
-  tags: string[];
-  properties : IProperty[];
-  images : string[];
-  attachments : string[];
-}
-
-interface IProductListViewProps{
-  createProduct : (product : IProduct) => void;
+interface ProductListViewProps{
+  createProduct : (product : Product) => void;
   loadProducts : () => void;
-  products : IProduct[];
+  products : Product[];
 }
 
-class _ProductListView_ extends React.Component<IProductListViewProps> {
+interface ProductListViewState {
+  selection ?: Product;
+}
+
+class _ProductListView_ extends React.Component<ProductListViewProps, ProductListViewState> {
 
   constructor(props){
-    super(props)
+    super(props);
+    this.state = {};
   }
 
   componentDidMount(){
     this.props.loadProducts();
   }
 
-  componentWillReceiveProps(props){
-    console.log("received props");
-    console.log(props);
-  }
-
-  private renderDetails(){
-    return  <Formik
-              initialValues={{ type : 'tangible' }}
-              validate={values => {}}
-              onSubmit={(values: IProduct) => this.props.createProduct(values)}
-              render={(props : FormikProps<IProduct>) => (
-                <Form className="form-horizontal" onSubmit={props.handleSubmit}>
-                  <Row className='mt-2'>
-                    <HFormGroup name='name' display='Product Name' value={props.values.name} type='text' onChange={props.handleChange} controlWidth={4}/>
-                    <HFormGroup name='type' display='Type' value={props.values.type} type='text' onChange={props.handleChange} controlWidth={4}/>
-                    <HFormGroup name='description' display='Description' value={props.values.description} type='text' componentClass='textarea' onChange={props.handleChange} controlWidth={6}/>
-                    <HFormGroup name='category' display='Category' value={props.values.category} type='text' onChange={props.handleChange} controlWidth={4} />
-                    <HFormGroup name='startDate' display='Start Date' value={props.values.startDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                    <HFormGroup name='endDate' display='End Date' value={props.values.endDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                    <HFormGroup name='effectiveStartDate' display='Effective Start Date' value={props.values.effectiveStartDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                    <HFormGroup name='effectiveEndDate' display='Effective End Date' value={props.values.effectiveEndDate} type='date' onChange={props.handleChange} controlWidth={4} />
-                  </Row>
-                  <Button bsStyle="primary" type="submit" >Create</Button>
-                </Form>
-              )}/>
-  }
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
-                <EditorComponent title="Create New Product">
+                <EditorComponent title='' createText='Create New Product'>
                   <EditorStep title="Basic Details" step={1}>
-                    {this.renderDetails()}
+                    <ProductEditor editMode={true} saveProduct={this.props.createProduct} product={this.state.selection}/>
                   </EditorStep>
                   <EditorStep title="Images" step={2}>
                     <div>Images</div>
                   </EditorStep>
-                  <EditorStep title="Attachments" step={3}>
+                  <EditorStep title="3d Visualisation" step={3}>
+                    <div>3D Models</div>
+                  </EditorStep>
+                  <EditorStep title="Attachments" step={4}>
                     <div>Attachments</div>
                   </EditorStep>
                  </EditorComponent>
@@ -114,6 +73,7 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
                                            new TableColumn('Edit'),
                                            new TableColumn('X')]}
                                  rows={this.props.products}
+                                 onEdit={ (product) => this.setState({ selection: product }) }
                                  onRemove={ (product) => removeProductAction(product) }
                                  renderColumn={(column : Column, actions: TableColumnActions) => {
                                    switch  (column.title) {
@@ -139,6 +99,19 @@ class _ProductListView_ extends React.Component<IProductListViewProps> {
                                                         </td>
                                      default     : return <td>{cell.value}</td>
                                    }
+                                 }}
+                                 renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
+                                   return <>
+                                            <tr>{rowRender()}</tr>
+                                            {this.state.selection && (this.state.selection == row) &&
+                                              <tr>
+                                                <td colSpan={7}>
+                                                  <ProductEditor editMode={true}
+                                                                 saveProduct={() => actions.commit()}
+                                                                 product={this.state.selection}/>
+                                                </td>
+                                              </tr>}
+                                          </>
                                  }}/>
              </CenteredPanel>
   }
@@ -150,8 +123,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = () => ({
-  createProduct : (product : IProduct) => {
-    createProduct(product);
+  createProduct : (product : Product) => {
+    createProductAction(product);
   },
   loadProducts  : () => {
     loadProductsAction();

@@ -18,9 +18,12 @@ export interface Cell  {
 export interface TableRowActions {
   editRow : () => void;
   removeRow : () => void;
+  commit : () => void;
 }
 
-export interface TableCellActions extends TableRowActions {
+export interface TableCellActions {
+  editRow : () => void;
+  removeRow : () => void;
   editValue : () => void;
 }
 
@@ -30,7 +33,7 @@ export interface TableColumnActions {
   removeData : () => void;
 }
 
-interface RenderColumns {
+export interface RenderColumns {
    (columns : Column[]) : React.ReactNode;
 }
 
@@ -38,9 +41,9 @@ interface PartiallyAppliedNoArgMarkerInterface{
   () : React.ReactNode
 }
 
-interface RenderCells extends PartiallyAppliedNoArgMarkerInterface {};
+export interface RenderCells extends PartiallyAppliedNoArgMarkerInterface {};
 
-interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
+export interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
 
 interface TableProps<Row> {
   columns : Column[];
@@ -51,7 +54,7 @@ interface TableProps<Row> {
   renderHeader ?: (columns : RenderColumns) => React.ReactNode;
   renderColumn : ((column : Column, actions: TableColumnActions) => React.ReactNode);
   renderBody ? : (rowsRender : RenderRows) => React.ReactNode;
-  renderRow ?: ((rowRender : RenderCells, actions: TableRowActions) => React.ReactNode);
+  renderRow ?: ((rowRender : RenderCells, row : any, actions: TableRowActions) => React.ReactNode);
   renderCell : (value : Cell, actions : TableCellActions) => React.ReactNode;
 }
 
@@ -125,11 +128,19 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
     return  () => { return this.renderCells(values,contextAwareActions) }
   }
 
+  private createContextAwareRowActions = (row, idx : number) => {
+    return {
+        commit : () => { alert('TODO'); },
+        editRow :   () => { this.withThrow(this.props.onEdit,row) },
+        removeRow : () => { this.withThrow(this.props.onRemove,row) }
+    }
+  }
+
   private renderRows = () => {
     return <>{this.props.rows && this.props.rows.map((row, idx : number) => {
             return this.props.renderRow
                    ?
-                   this.props.renderRow(this.partialRenderCells(row,idx),null)
+                   this.props.renderRow(this.partialRenderCells(row,idx),row,this.createContextAwareRowActions(row,idx))
                    :
                    <tr key={idx}>
                      { this.partialRenderCells(row,idx)() }
