@@ -26,9 +26,13 @@ export class HFormGroup extends React.Component<IFormGroupProperties>{
     super(props);
   }
 
+  getValidationState(){
+    return this.props.errors ? 'error' : null;
+  }
+
   render(){
     let {display, errors, children, labelWidth, controlWidth, ...rest} = this.props;
-    return <FormGroup key={this.props.name}>
+    return <FormGroup key={this.props.name} validationState={this.getValidationState()}>
               <Col componentClass={ControlLabel} sm={labelWidth || 2}>
                 {this.props.display}
               </Col>

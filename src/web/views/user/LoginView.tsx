@@ -49,12 +49,25 @@ class _LoginView_ extends React.Component<ILoginProps,ILoginState>{
   private renderForm(){
     return  <Formik
               initialValues={{ email: '', passwd: ''}}
-              validate={values => {}}
+              validate={values => {
+                let errors = {};
+                let email =  emailValidation(values.email) || emptyValidation(values.email);
+                let passwd =  emptyValidation(values.passwd);
+                if (email) errors['email'] = email;
+                if (passwd) errors['passwd'] = passwd;
+                return errors;
+              }}
               onSubmit={(values: IFormLoginProps) => this.login(values.email,values.passwd)}
               render={(props : FormikProps<IFormLoginProps>) => (
                 <Form onSubmit={props.handleSubmit}>
-                  <VFormGroup name='email' display='Email' value={props.values.email} type='text' onChange={props.handleChange} />
-                  <VFormGroup name='passwd' display='Password' value={props.values.passwd} type='password' onChange={props.handleChange} />
+                  <VFormGroup name='email' display='Email'
+                              value={props.values.email}
+                              type='text' onChange={props.handleChange}
+                              errors={props.touched.email && props.errors.email} />
+                  <VFormGroup name='passwd' display='Password'
+                              value={props.values.passwd}
+                              type='password' onChange={props.handleChange}
+                              errors={props.touched.passwd && props.errors.passwd} />
                   <ButtonToolbar>
                     <Button bsStyle="primary" type="submit" >Login</Button>
                     <Button href="#/user/register" type="submit">Sign In</Button>

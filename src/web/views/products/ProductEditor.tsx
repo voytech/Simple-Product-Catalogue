@@ -6,6 +6,7 @@ import { Col, Row,
          Button,
          Glyphicon,
          ButtonToolbar  } from 'react-bootstrap';
+import { emailValidation, emptyValidation } from '../../components/FormValidators'
 
 export interface ProductProperty {
   name : string;
@@ -63,7 +64,7 @@ export class ProductEditor extends React.Component<ProductEditorProps,ProductEdi
               validate={values => {}}
               onSubmit={(values: Product) => this.props.saveProduct(values)}
               render={(props : FormikProps<Product>) => (
-                 <Form className="form-horizontal" onSubmit={props.handleSubmit}>
+                 <Form className="form-horizontal">
                   <div className='mt-2'>
                     <Col sm={6} className='vertical-divider'>
                       <HFormGroup name='name' display='Product Name' value={props.values.name} type='text' onChange={props.handleChange} />
@@ -84,7 +85,7 @@ export class ProductEditor extends React.Component<ProductEditorProps,ProductEdi
                       </Row>
                     </Col>
                   </div>
-                  <Button bsStyle="primary" type="button" onClick={props.submitForm} >Save !</Button>
+                  <Button bsStyle="primary" type="submit" >Save !</Button>
                 </Form>
               )}/>
   }

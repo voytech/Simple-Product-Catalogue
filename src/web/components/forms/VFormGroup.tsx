@@ -21,9 +21,13 @@ export class VFormGroup extends React.Component<IFormGroupProperties>{
     super(props);
   }
 
+  getValidationState(){
+    return this.props.errors ? 'error' : null;
+  }
+
   render(){
     let {display, errors, children, ...rest} = this.props;
-    return <FormGroup key={this.props.name}>
+    return <FormGroup key={this.props.name} validationState={this.getValidationState()}>
                <ControlLabel>{this.props.display}</ControlLabel>
                {children !== undefined ? children : <FormControl {... rest} />}
                {errors && <HelpBlock>{errors}</HelpBlock> }
