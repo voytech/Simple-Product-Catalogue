@@ -4,6 +4,7 @@
   "description": "Example App uses TypeScript, Node.js, Express 4, MongoDB, Mongoose.",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "bootstrap": "^3.3.7",

@@ -18,7 +18,6 @@ export interface Cell  {
 export interface TableRowActions {
   editRow : () => void;
   removeRow : () => void;
-  commit : () => void;
 }
 
 export interface TableCellActions {
@@ -130,7 +129,6 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
 
   private createContextAwareRowActions = (row, idx : number) => {
     return {
-        commit : () => { alert('TODO'); },
         editRow :   () => { this.withThrow(this.props.onEdit,row) },
         removeRow : () => { this.withThrow(this.props.onRemove,row) }
     }

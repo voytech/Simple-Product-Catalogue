@@ -59,6 +59,16 @@ export class Products extends BaseRoute {
         });
     }
 
+    public saveProductAction(router: Router): void {
+        router.post('/save',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            let { _id, ...rest } = req.body;
+            Product.findByIdAndUpdate(_id, { $set: { ...rest }}, { new: true }, function (err, product) {
+              if (err) return res.status(500).json(err);
+              res.json(product);
+            });
+        });
+    }
+
     public getAllProductsAction(router: Router): void {
         /**
          * @swagger
@@ -83,7 +93,7 @@ export class Products extends BaseRoute {
 
         router.post('/remove',(req:Request,res:Response)=>{
           Product.remove(req.body).then((err)=>{
-             
+
             return res.json({status: 'removed'});
           })
         });

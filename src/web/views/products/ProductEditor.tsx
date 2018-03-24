@@ -41,7 +41,6 @@ interface ProductEditorState{
 export class ProductEditor extends React.Component<ProductEditorProps,ProductEditorState>{
   constructor(props){
     super(props);
-    this.state = { product : this.default() };
   }
 
   private default() : Product{
@@ -57,16 +56,10 @@ export class ProductEditor extends React.Component<ProductEditorProps,ProductEdi
     }
   }
 
-  componentWillReceiveProps(props){
-    if (props.product){
-      this.setState({product : props.product});
-    }
-  }
-
   render(){
     return <Formik
-              enableReinitialize={this.props.editMode}
-              initialValues={ this.state.product }
+              enableReinitialize={ this.props.editMode }
+              initialValues={ this.props.product }
               validate={values => {}}
               onSubmit={(values: Product) => this.props.saveProduct(values)}
               render={(props : FormikProps<Product>) => (
@@ -91,7 +84,7 @@ export class ProductEditor extends React.Component<ProductEditorProps,ProductEdi
                       </Row>
                     </Col>
                   </div>
-                  <Button bsStyle="primary" type="submit" >Create</Button>
+                  <Button bsStyle="primary" type="button" onClick={props.submitForm} >Save !</Button>
                 </Form>
               )}/>
   }

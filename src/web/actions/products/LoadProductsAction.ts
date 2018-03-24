@@ -1,18 +1,12 @@
 import { LOAD_PRODUCTS } from '../../consts/Actions';
 import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
+import { http } from '../../Config';
 
-export const loadProductsAction = StoreUtils.createAction((product : any)=>{
-    let productsUrl = (suffix) => 'v1/products/'+suffix;
+export const loadProductsAction = StoreUtils.createAction(()=>{
+    let productsUrl = (suffix) => 'products/'+suffix;
     return (dispatch) => {
-      fetch(productsUrl('all'),{
-        method: 'get',
-        headers: { "Content-type": "application/json",
-                   "Authorization": "Bearer " + StoreUtils.getAuthToken()},
-        body: JSON.stringify(product)
-      }).then(response =>
-                response.json().then((result) =>
-                                       dispatch({type: LOAD_PRODUCTS, payload: { products: result }})))
-        .catch(error => console.error(error));
+      http.get(productsUrl('all')).then(response => { dispatch({type: LOAD_PRODUCTS, payload: { products: response.data }})})
+          .catch(error => console.error(error));
     }
-  });
+});

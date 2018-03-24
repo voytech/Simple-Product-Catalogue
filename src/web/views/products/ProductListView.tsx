@@ -23,6 +23,7 @@ import { CenteredPanel } from '../../components/CenteredPanel';
 import { push } from 'react-router-redux';
 import { store } from '../../Store';
 import { createProductAction } from '../../actions/products/CreateProductAction';
+import { updateProductAction } from '../../actions/products/UpdateProductAction';
 import { removeProductAction } from '../../actions/products/RemoveProductAction';
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 import { ProductEditor, Product, ProductProperty } from './ProductEditor';
@@ -53,7 +54,8 @@ class _ProductListView_ extends React.Component<ProductListViewProps, ProductLis
       return <CenteredPanel lg={12} sm={12} md={12}>
                 <EditorComponent title='' createText='Create New Product'>
                   <EditorStep title="Basic Details" step={1}>
-                    <ProductEditor editMode={true} saveProduct={this.props.createProduct} product={this.state.selection}/>
+                    <ProductEditor saveProduct={this.props.createProduct}
+                                   product={this.state.selection}/>
                   </EditorStep>
                   <EditorStep title="Images" step={2}>
                     <div>Images</div>
@@ -97,6 +99,7 @@ class _ProductListView_ extends React.Component<ProductListViewProps, ProductLis
                                                             <Glyphicon glyph='trash' />
                                                           </Button>
                                                         </td>
+                                     case 'Start Date': case 'Expiry': return <td>{cell.value.split('T')[0]}</td>                     
                                      default     : return <td>{cell.value}</td>
                                    }
                                  }}
@@ -107,8 +110,8 @@ class _ProductListView_ extends React.Component<ProductListViewProps, ProductLis
                                               <tr>
                                                 <td colSpan={7}>
                                                   <ProductEditor editMode={true}
-                                                                 saveProduct={() => actions.commit()}
-                                                                 product={this.state.selection}/>
+                                                                 saveProduct={(product) => updateProductAction(product) }
+                                                                 product={row}/>
                                                 </td>
                                               </tr>}
                                           </>

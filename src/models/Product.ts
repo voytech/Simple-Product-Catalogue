@@ -53,7 +53,8 @@ const propertySchema = new Schema({
 const productSchema = new Schema({
     name: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     code: {
       type: String,

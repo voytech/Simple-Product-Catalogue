@@ -1,22 +1,19 @@
 import { LOGIN } from '../../consts/Actions';
 import { StoreUtils } from '../../Store'
+import { http } from '../../Config';
 
 export const loginAction =  StoreUtils.createAction((email:string, password:string) => {
-    let authUrl = (suffix) => 'v1/user/auth/'+suffix;
+    let authUrl = (suffix) => 'user/auth/'+suffix;
     return (dispatch) => {
-      fetch(authUrl('login'),{
-        method: 'post',
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({email:email, passwd: password})
-      }).then(response =>
-                response.json().then((result) =>
-                                       dispatch({type: LOGIN, payload: {
-                                                                  auth: {
-                                                                    ... result,
-                                                                    state: response.status,
-                                                                  }
-                                                                }
-                                                              })))
+      http.post(authUrl('login'),JSON.stringify({email:email, passwd: password}))
+          .then(response => { http.defaults.headers.common['Authorization'] = 'Bearer '+response.data.token;
+                              dispatch({type: LOGIN,
+                                        payload: {
+                                                  auth: {
+                                                    ... response.data,
+                                                    state: response.status,
+                                                  }
+                                        }})})
         .catch(error => console.error(error));
     }
   });
