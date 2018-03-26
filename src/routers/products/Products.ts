@@ -70,6 +70,18 @@ export class Products extends BaseRoute {
         });
     }
 
+    public addPropertyAction(router: Router): void {
+        router.post('/:productName/addProperty',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            Product.findByName(req.params.productName,(err, product) => {
+              if (err) return res.status(500).json(err);
+              product.addProperty(req.body,(err,product) => {
+                if (err) return res.status(500).json(err);
+                return res.json(product);
+              });
+            });
+        });
+    }
+
     public saveAndGetAllProductsAction(router : Router): void{
         router.post('/save/getall',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let { _id, ...rest } = req.body;

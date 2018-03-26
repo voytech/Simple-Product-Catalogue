@@ -2,6 +2,7 @@ import * as  React from 'react';
 import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
 import { ProductBasicInfoEditor } from './ProductBasicInfoEditor';
+import { ProductPropertiesEditor } from './ProductPropertiesEditor';
 import { ProductImages } from './ProductImages';
 import { Product, ProductProperty } from './Model'
 
@@ -27,8 +28,8 @@ export class ProductEditor extends React.Component<ProductEditorViewProps,Produc
               <EditorStep title="Basic Info" step={1}>
                 <ProductBasicInfoEditor saveProduct={this.props.saveProduct} product={this.props.product} editMode={this.props.editMode}/>
               </EditorStep>
-              <EditorStep title="Technical Details" step={2}>
-                <div>Properties</div>
+              <EditorStep title="Product Specification" step={2}>
+                <ProductPropertiesEditor product={this.props.product}/>
               </EditorStep>
               <EditorStep title="Images" step={3}>
                 <ProductImages product={this.props.product}/>

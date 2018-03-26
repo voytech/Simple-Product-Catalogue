@@ -23,6 +23,19 @@ export class ProductBasicInfoEditor extends React.Component<ProductBasicInfoEdit
     super(props);
   }
 
+  private formatDate(key) {
+    return this.props.product && (key in this.props.product) ? {[key] : this.props.product[key].split('T')[0]} : {}
+  }
+
+  private withFormattedDates(){
+    return {...this.props.product,
+            ...this.formatDate('startDate'),
+            ...this.formatDate('endDate'),
+            ...this.formatDate('effectiveStartDate'),
+            ...this.formatDate('effectiveEndDate'),
+          };
+  }
+
   private default() : Product{
     return {
       name: '',
@@ -39,7 +52,7 @@ export class ProductBasicInfoEditor extends React.Component<ProductBasicInfoEdit
   render(){
     return <Formik
               enableReinitialize={ this.props.editMode }
-              initialValues={ this.props.product }
+              initialValues={ this.withFormattedDates() }
               validationSchema={ productValidation }
               onSubmit={(values: Product) => this.props.saveProduct(values)}
               render={(props : FormikProps<Product>) => (

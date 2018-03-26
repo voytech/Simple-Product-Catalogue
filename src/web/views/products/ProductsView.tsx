@@ -32,17 +32,17 @@ import { ProductEditor } from './ProductEditor';
 import { Product, ProductProperty } from './Model'
 
 
-interface ProductListViewProps{
+interface ProductsViewProps{
   createProduct : (product : Product) => void;
   loadProducts : () => void;
   products : Product[];
 }
 
-interface ProductListViewState {
+interface ProductsViewState {
   selection ?: Product;
 }
 
-class _ProductListView_ extends React.Component<ProductListViewProps, ProductListViewState> {
+class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewState> {
 
   constructor(props){
     super(props);
@@ -124,4 +124,4 @@ const mapDispatchToProps = () => ({
   }
 });
 
-export const ProductListView = connect(mapStateToProps, mapDispatchToProps)(_ProductListView_);
+export const ProductsView = connect(mapStateToProps, mapDispatchToProps)(_ProductsView_);

@@ -2,8 +2,7 @@ import * as  React from 'react';
 import * as  ReactDOM  from 'react-dom';
 import { Link, Switch, Route, Redirect, RouteProps, RouteComponentProps } from 'react-router-dom';
 import { AuthRoute } from '../components/AuthRoute';
-import { CreateProductView } from '../views/products/CreateProductView';
-import { ProductListView } from '../views/products/ProductListView';
+import { ProductsView } from '../views/products/ProductsView';
 
 export class ProductRoutes extends React.Component<RouteComponentProps<any>> {
 
@@ -17,8 +16,7 @@ export class ProductRoutes extends React.Component<RouteComponentProps<any>> {
 
   render(){
      return <Switch>
-              <AuthRoute path={this.path("/create")}   component={CreateProductView}/>
-              <AuthRoute path={this.path("/list")} component={ProductListView}/>
+              <AuthRoute path={this.path("/list")} component={ProductsView}/>
               <Redirect from={this.path("/")} to={this.path("/list")}/>
             </Switch>
   }
