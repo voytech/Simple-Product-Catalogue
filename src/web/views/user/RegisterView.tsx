@@ -8,6 +8,7 @@ import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { emailValidation, emptyValidation } from '../../components/FormValidators';
 import { registerAction } from '../../actions/user/RegisterAction';
+import yup from 'yup';
 
 interface IFormRegisterProps{
     name: string;
@@ -33,13 +34,35 @@ export class _RegisterView_ extends React.Component<IRegisterViewProps>{
   private renderForm(){
     return  <Formik
               initialValues={{ name: '', password: '', email:''}}
-              validate={values => {}}
+              validationSchema={ yup.object().shape({
+                name:  yup.string().required().min(5).max(25),
+                email: yup.string().email().required(),
+                password: yup.string().required().min(8)
+                             .matches(/[A-Z]/,'Password must contain uppercase letters')
+                             .matches(/[0-9]/,'Password must contain numbers')
+                             .matches(/\W/,'Password must contain non alphanumeric characters')
+              })}
               onSubmit={(values: IFormRegisterProps) => this.doRegister(values)}
               render={(props : FormikProps<IFormRegisterProps>) => (
                 <Form onSubmit={props.handleSubmit}>
-                  <VFormGroup name='name' display='Name' value={props.values.name} type='text' onChange={props.handleChange} />
-                  <VFormGroup name='email' display='Email' value={props.values.email} type='password' onChange={props.handleChange} />
-                  <VFormGroup name='password' display='Password' value={props.values.password} type='text' onChange={props.handleChange} />
+                  <VFormGroup name='name'
+                              display='Name'
+                              value={props.values.name}
+                              type='text'
+                              onChange={props.handleChange}
+                              errors={props.touched.name && props.errors.name} />
+                  <VFormGroup name='email'
+                              display='Email'
+                              value={props.values.email}
+                              type='text'
+                              onChange={props.handleChange}
+                              errors={props.touched.email && props.errors.email} />
+                  <VFormGroup name='password'
+                              display='Password'
+                              value={props.values.password}
+                              type='password'
+                              onChange={props.handleChange}
+                              errors={props.touched.password && props.errors.password} />
                   <ButtonToolbar>
                     <Button bsStyle="primary" type="submit" >Register</Button>
                     <Button href="#/user/login" type="submit">Log In</Button>

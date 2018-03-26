@@ -26,7 +26,7 @@ export class HFormGroup extends React.Component<IFormGroupProperties>{
     super(props);
   }
 
-  getValidationState(){
+  getValidationState = () => {
     return this.props.errors ? 'error' : null;
   }
 

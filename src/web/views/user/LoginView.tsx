@@ -10,6 +10,7 @@ import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { emailValidation, emptyValidation } from '../../components/FormValidators';
 import { loginAction } from '../../actions/user/LoginAction';
+import yup from 'yup';
 
 interface ILoginState{
     email:string;
@@ -49,14 +50,10 @@ class _LoginView_ extends React.Component<ILoginProps,ILoginState>{
   private renderForm(){
     return  <Formik
               initialValues={{ email: '', passwd: ''}}
-              validate={values => {
-                let errors = {};
-                let email =  emailValidation(values.email) || emptyValidation(values.email);
-                let passwd =  emptyValidation(values.passwd);
-                if (email) errors['email'] = email;
-                if (passwd) errors['passwd'] = passwd;
-                return errors;
-              }}
+              validationSchema={ yup.object().shape({
+                passwd:    yup.string().required(),
+                email:     yup.string().email().required()
+              })}
               onSubmit={(values: IFormLoginProps) => this.login(values.email,values.passwd)}
               render={(props : FormikProps<IFormLoginProps>) => (
                 <Form onSubmit={props.handleSubmit}>

@@ -2,6 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import { Router, Request, Response } from 'express';
 import { BaseRoute } from '../BaseRoute';
 import { Product, IProduct } from '../../models/Product';
+import { Resource } from '../../models/Resource';
 
 export class Products extends BaseRoute {
 
@@ -69,6 +70,57 @@ export class Products extends BaseRoute {
         });
     }
 
+    public saveAndGetAllProductsAction(router : Router): void{
+        router.post('/save/getall',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            let { _id, ...rest } = req.body;
+            Product.findByIdAndUpdate(_id, { $set: { ...rest }}, { new: true }, function (err, product) {
+              if (err) return res.status(500).json(err);
+              Product.all((err,result)=>{
+                if (err) return res.status(500).json(err);
+                return res.json(result.map((e) => e.toJSON()));
+              })
+            });
+        });
+    }
+
+    public uploadImageAction(router : Router): void{
+        router.post('/uploadImage',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            let { product, image } = req.body;
+            Product.findByName(product.name,(err, rproduct) => {
+              if (err) return res.status(500).json(err);
+              rproduct.addImage(image.filename,image.data,(err,result)=>{
+                if (err) return res.status(500).json(err);
+                return res.json(result);
+              });
+            });
+        });
+    }
+
+    public loadImageAction(router : Router): void {
+      router.post('/image',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+          let { product, name } = req.body;
+          Product.findByName(product.name,(err, rproduct) => {
+            if (err) return res.status(500).json(err);
+            Product.loadImage(rproduct,name,(err,image)=>{
+              if (err) return res.status(500).json(err);
+              return res.json(image);
+            });
+          });
+      });
+    }
+
+    public loadImagesAction(router : Router): void {
+      router.get('/:productName/images',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+          Product.findByName(req.params.productName,(err, rproduct) => {
+            if (err) return res.status(500).json(err);
+            Product.loadImages(rproduct,(err,images)=>{
+              if (err) return res.status(500).json(err);
+              return res.json(images.map(img => {return new Resource(img.name,img.data.toString('utf8'))}));
+            });
+          });
+      });
+    }
+
     public getAllProductsAction(router: Router): void {
         /**
          * @swagger
@@ -93,9 +145,19 @@ export class Products extends BaseRoute {
 
         router.post('/remove',(req:Request,res:Response)=>{
           Product.remove(req.body).then((err)=>{
-
             return res.json({status: 'removed'});
           })
+        });
+    }
+
+    public removeAndGetAllProductsAction(router : Router): void{
+        router.post('/remove/getall',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            let { _id, ...rest } = req.body;
+            Product.remove(req.body).then((err)=>{
+              Product.all((err,result)=>{
+                return res.json(result.map((e) => e.toJSON()));
+              })
+            })
         });
     }
 

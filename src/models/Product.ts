@@ -36,6 +36,7 @@ export interface IProductModel {
     all(cllback : Function): void
     findByName(name: string, callback: Function): void
     loadImage(product: IProduct,name: string, callback: Function): void
+    loadImages(product: IProduct,callback: Function): void
     loadAttachment(product: IProduct,name: string, callback: Function): void
 }
 
@@ -125,6 +126,10 @@ productSchema.static('withAllPropertiesPopulated',function(name : string, callba
 productSchema.static('loadImage',function(product: IProduct, filename: string, callback: (err, image) => void){
     let meta = product.images.filter((e)=>e.name = filename);
     binaryCollections.loadResource('Image', meta, callback);
+});
+
+productSchema.static('loadImages',function(product: IProduct, callback: (err, images) => void){
+    binaryCollections.loadResources('Image', product.images, callback);
 });
 
 productSchema.static('loadAttachment',function(product: IProduct, filename: string, callback: (err, attachment) => void){

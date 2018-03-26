@@ -1,6 +1,7 @@
 import * as GridFS  from 'mongoose-gridfs';
 import * as streamBuffers from 'stream-buffers';
 import {Schema, Model, Document, model, connection} from 'mongoose';
+import { Resource } from './models/Resource'
 import * as pluralize from 'pluralize';
 
 export interface IGridFS extends Document{
@@ -59,6 +60,18 @@ class BinaryCollections{
   public loadResource(resourceModel:string,resourceMeta:any,cb: (error, fileContent)=>void){
     let Binary = this.getBinaryCollection(resourceModel);
     Binary.readById(resourceMeta.refId,cb);
+  }
+
+  public loadResources(resourceModel:string,resourceMeta:any[],cb: (error, files : Resource[])=>void){
+    let Binary = this.getBinaryCollection(resourceModel);
+    let promises : Promise<Resource>[] = resourceMeta.map((meta) => {
+      return new Promise<Resource>((resolve) => {        
+        return Binary.readById(meta.refId,(err,image) => {
+          return resolve(new Resource(meta.name,image))
+        })
+      })
+    });
+    Promise.all(promises).then(resources => cb(null,resources))
   }
 }
 

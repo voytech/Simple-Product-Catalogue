@@ -4,7 +4,7 @@ import { StoreUtils } from './Store'
 export const http = axios.create({
  baseURL: 'http://localhost:3500/v1/',
  timeout: 3000,
- headers: { "Content-type": "application/json" }
+ headers: { "Content-Type": "application/json" }
 })
 
 http.interceptors.request.use(function (config) {
