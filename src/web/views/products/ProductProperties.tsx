@@ -1,5 +1,4 @@
 import * as  React from 'react';
-import ReactList from 'react-list';
 import { Formik, Form, FormikProps, Field, FieldProps  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
@@ -10,15 +9,15 @@ import { Product, ImageData, ProductProperty, productValidation } from './Model'
 import { uploadImageAction } from '../../actions/products/UploadImageAction'
 import { http } from '../../Config'
 
-interface ProductPropertiesEditorProps{
+interface ProductPropertiesProps{
    product ?: Product;
 }
 
-interface ProductPropertiesEditorState{
+interface ProductPropertiesState{
    properties ?: ProductProperty[]
 }
 
-export class ProductPropertiesEditor extends React.Component<ProductPropertiesEditorProps,ProductPropertiesEditorState>{
+export class ProductProperties extends React.Component<ProductPropertiesProps,ProductPropertiesState>{
   constructor(props){
     super(props);
     this.state = {};
@@ -61,13 +60,7 @@ export class ProductPropertiesEditor extends React.Component<ProductPropertiesEd
               <b>{item.name}</b> : {item.value}
            </ListGroupItem>;
   }
-/*
-<ReactList
-  itemRenderer={this.renderItem}
-  length={(this.props.product && this.props.product.properties) ? this.props.product.properties.length : 0}
-  type='uniform'
- />
-*/
+
   render(){
     return  <Panel>
               <Panel.Heading>

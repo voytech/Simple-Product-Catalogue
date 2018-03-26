@@ -8,17 +8,17 @@ import { Col, Row,
          ButtonToolbar  } from 'react-bootstrap';
 import { Product, ProductProperty, productValidation } from './Model'
 
-interface ProductBasicInfoEditorProps{
+interface ProductBasicInfoProps{
   saveProduct : (product : Product) => void;
   product ?: Product;
   editMode ?: boolean;
 }
 
-interface ProductBasicInfoEditorState{
+interface ProductBasicInfoState{
   product ?: Product;
 }
 
-export class ProductBasicInfoEditor extends React.Component<ProductBasicInfoEditorProps,ProductBasicInfoEditorState>{
+export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,ProductBasicInfoState>{
   constructor(props){
     super(props);
   }

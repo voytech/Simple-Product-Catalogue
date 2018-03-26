@@ -1,9 +1,11 @@
 import yup from 'yup';
 
-export interface ImageData {
+export interface ResourceData {
   name : string;
   data? : any;
 }
+
+export interface ImageData extends ResourceData {}
 
 export interface ProductProperty {
   name : string;

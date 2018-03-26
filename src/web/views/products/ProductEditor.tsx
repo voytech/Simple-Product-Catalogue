@@ -1,10 +1,11 @@
 import * as  React from 'react';
-import { EditorComponent } from '../../components/editors/EditorComponent'
-import { EditorStep } from '../../components/editors/EditorStep'
-import { ProductBasicInfoEditor } from './ProductBasicInfoEditor';
-import { ProductPropertiesEditor } from './ProductPropertiesEditor';
+import { EditorComponent } from '../../components/editors/EditorComponent';
+import { EditorStep } from '../../components/editors/EditorStep';
+import { ProductBasicInfo } from './ProductBasicInfo';
+import { ProductProperties } from './ProductProperties';
+import { ProductAttachments } from './ProductAttachments';
 import { ProductImages } from './ProductImages';
-import { Product, ProductProperty } from './Model'
+import { Product, ProductProperty } from './Model';
 
 interface ProductEditorViewProps{
   saveProduct : (product : Product) => void;
@@ -26,19 +27,16 @@ export class ProductEditor extends React.Component<ProductEditorViewProps,Produc
   render(){
     return <EditorComponent withHeading={this.props.withHeading} toggleText='New Product'>
               <EditorStep title="Basic Info" step={1}>
-                <ProductBasicInfoEditor saveProduct={this.props.saveProduct} product={this.props.product} editMode={this.props.editMode}/>
+                <ProductBasicInfo saveProduct={this.props.saveProduct} product={this.props.product} editMode={this.props.editMode}/>
               </EditorStep>
               <EditorStep title="Product Specification" step={2}>
-                <ProductPropertiesEditor product={this.props.product}/>
+                <ProductProperties product={this.props.product}/>
               </EditorStep>
               <EditorStep title="Images" step={3}>
                 <ProductImages product={this.props.product}/>
               </EditorStep>
-              <EditorStep title="3d" step={4}>
-                <div>3D Models</div>
-              </EditorStep>
-              <EditorStep title="Attachments" step={5}>
-                <div>Attachments</div>
+              <EditorStep title="Attachments" step={4}>
+                <ProductAttachments product={this.props.product}/>
               </EditorStep>
            </EditorComponent>
   }

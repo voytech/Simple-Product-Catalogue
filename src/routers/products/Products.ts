@@ -95,6 +95,18 @@ export class Products extends BaseRoute {
         });
     }
 
+    public uploadAttachmentAction(router: Router): void {
+        router.post('/:productName/uploadAttachment',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            Product.findByName(req.params.productName,(err, product) => {
+              if (err) return res.status(500).json(err);
+              product.addAttachment(req.body,(err,product) => {
+                if (err) return res.status(500).json(err);
+                return res.json(product);
+              });
+            });
+        });
+    }
+
     public uploadImageAction(router : Router): void{
         router.post('/uploadImage',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let { product, image } = req.body;
@@ -133,6 +145,18 @@ export class Products extends BaseRoute {
       });
     }
 
+    public loadAttachmentsAction(router : Router): void {
+      router.get('/:productName/attachments',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+          Product.findByName(req.params.productName,(err, product) => {
+            if (err) return res.status(500).json(err);
+            Product.loadAttachments(product,(err,attachments)=>{
+              if (err) return res.status(500).json(err);
+              return res.json(attachments.map(att => {return new Resource(att.name,att.data.toString('utf8'))}));
+            });
+          });
+      });
+    }
+
     public getAllProductsAction(router: Router): void {
         /**
          * @swagger
@@ -154,7 +178,6 @@ export class Products extends BaseRoute {
     }
 
     public removeProductAction(router: Router): void {
-
         router.post('/remove',(req:Request,res:Response)=>{
           Product.remove(req.body).then((err)=>{
             return res.json({status: 'removed'});

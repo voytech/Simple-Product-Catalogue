@@ -38,6 +38,8 @@ export interface IProductModel {
     loadImage(product: IProduct,name: string, callback: Function): void
     loadImages(product: IProduct,callback: Function): void
     loadAttachment(product: IProduct,name: string, callback: Function): void
+    loadAttachments(product: IProduct, callback: Function): void
+
 }
 
 const propertySchema = new Schema({
@@ -135,6 +137,10 @@ productSchema.static('loadImages',function(product: IProduct, callback: (err, im
 productSchema.static('loadAttachment',function(product: IProduct, filename: string, callback: (err, attachment) => void){
     let meta = product.attachments.filter((e)=>e.name = filename);
     binaryCollections.loadResource('Attachment', meta, callback);
+});
+
+productSchema.static('loadAttachments',function(product: IProduct, callback: (err, images) => void){
+    binaryCollections.loadResources('Attachment', product.attachments, callback);
 });
 
 productSchema.method('addProperty',function(property : IProperty, callback : (err: any, product: IProduct) => void){
