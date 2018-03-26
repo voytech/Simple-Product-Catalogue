@@ -97,9 +97,10 @@ export class Products extends BaseRoute {
 
     public uploadAttachmentAction(router: Router): void {
         router.post('/:productName/uploadAttachment',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            let { name, data } = req.body;
             Product.findByName(req.params.productName,(err, product) => {
               if (err) return res.status(500).json(err);
-              product.addAttachment(req.body,(err,product) => {
+              product.addAttachment(name,data,(err,product) => {
                 if (err) return res.status(500).json(err);
                 return res.json(product);
               });

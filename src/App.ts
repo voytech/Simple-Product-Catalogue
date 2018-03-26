@@ -70,13 +70,15 @@ class App {
       };
       this.swaggerSpec = swaggerJSDoc(options);
     }
+
     /**
      * http(s) request middleware
      */
     private middleware(): void {
         this.express.use(logger('dev'));
-        this.express.use(bodyParser.json());
-        this.express.use(bodyParser.urlencoded({ extended: false }));
+
+        this.express.use(bodyParser.json({limit: process.env.PAYLOAD_LIMIT}));
+        this.express.use(bodyParser.urlencoded({ limit: process.env.PAYLOAD_LIMIT, extended: false }));
         this.express.use((req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*'); // dev only
             res.header('Access-Control-Allow-Methods', 'OPTIONS,GET,PUT,POST,DELETE');
