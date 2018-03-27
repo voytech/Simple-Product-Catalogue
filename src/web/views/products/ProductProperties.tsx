@@ -7,6 +7,8 @@ import { Col, Row, Panel, Button, FormGroup, ControlLabel, FormControl,
          Glyphicon, Label, ButtonToolbar, Image, ListGroupItem, ListGroup } from 'react-bootstrap';
 import { Product, ImageData, ProductProperty, productValidation } from './Model'
 import { uploadImageAction } from '../../actions/products/UploadImageAction'
+import { removePropertyAction } from '../../actions/products/RemovePropertyAction'
+
 import { http } from '../../Config'
 
 interface ProductPropertiesProps{
@@ -55,9 +57,12 @@ export class ProductProperties extends React.Component<ProductPropertiesProps,Pr
               )}/>
   }
 
-  renderListItem(item,index) {
+  renderListItem = (item,index) => {
     return <ListGroupItem key={index}>
               <b>{item.name}</b> : {item.value}
+              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => removePropertyAction(this.props.product.name,item.name)}>
+                <Glyphicon glyph='trash'/>
+              </Button>
            </ListGroupItem>;
   }
 

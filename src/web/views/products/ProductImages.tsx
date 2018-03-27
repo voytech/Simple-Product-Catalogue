@@ -7,9 +7,10 @@ import { Col, Row, Panel,
          Button, FormGroup, ControlLabel, FormControl,
          Glyphicon, Label,
          ButtonToolbar,
-         Image } from 'react-bootstrap';
+         Image, Thumbnail } from 'react-bootstrap';
 import { Product, ImageData, ProductProperty, productValidation } from './Model'
 import { uploadImageAction } from '../../actions/products/UploadImageAction'
+import { removeImageAction } from '../../actions/products/RemoveImageAction'
 import { http } from '../../Config'
 
 interface ProductImagesProps{
@@ -55,13 +56,25 @@ export class ProductImages extends React.Component<ProductImagesProps,ProductIma
     reader.readAsDataURL(file);
   }
 
+  removeImage(e : any){
+    removeImageAction()
+  }
+
+  thumbnail(image : ImageData){
+    return <div key={image.name} className='pull-left thumbnail-view'>
+              <Image height={100} width={100} src={image.data}/>
+              <Button className='thumbnail-remove' bsSize='xsmall' bsStyle="danger" onClick={(e) => removeImageAction(this.props.product.name,image.name)}>
+                <Glyphicon glyph='trash'/>
+              </Button>
+           </div>
+  }
   render(){
     return  <Panel>
               <Panel.Heading>
                 <FileButton title='Upload a File' buttonClass='btn-primary' onChange={this.handleFileUpload}/>
               </Panel.Heading>
               <Panel.Body>
-                {this.state.images && this.state.images.map(img => <Image key={img.name} height={100} width={100} alt={img.name} src={img.data} thumbnail/>)}
+                {this.state.images && this.state.images.map(img => this.thumbnail(img))}
               </Panel.Body>
             </Panel>
 

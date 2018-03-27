@@ -42,9 +42,9 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
        <Navbar.Collapse>
          <Nav>
            <NavItem eventKey={1} href="#">
-             Info
+             Dictionaries
            </NavItem>
-           <NavItem eventKey={2} href="#/products">
+           <NavItem active eventKey={2} href="#/products">
              Products
            </NavItem>
            <NavItem eventKey={2} href="#/pricelists">

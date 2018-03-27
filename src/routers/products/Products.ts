@@ -158,6 +158,36 @@ export class Products extends BaseRoute {
       });
     }
 
+    public removeImageAction(router : Router): void {
+      router.delete('/:productName/images/:imageName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+          Product.findByName(req.params.productName,(err, product) => {
+            if (err) return res.status(500).json(err);
+            product.removeImage(req.params.imageName)
+                   .then((product) => res.json(product));
+          });
+      });
+    }
+
+    public removePropertyAction(router : Router): void {
+      router.delete('/:productName/properties/:propName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+          Product.findByName(req.params.productName,(err, product) => {
+            if (err) return res.status(500).json(err);
+            product.removeProperty(req.params.propName)
+                    .then((product) => res.json(product));
+          });
+      });
+    }
+    public removeAttachmentAction(router : Router): void {
+      router.delete('/:productName/attachments/:attachmentName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+          Product.findByName(req.params.productName,(err, product) => {
+            if (err) return res.status(500).json(err);
+            product.removeAttachment(req.params.attachmentName)
+                   .then((product) => res.json(product))
+
+          });
+      });
+    }
+
     public getAllProductsAction(router: Router): void {
         /**
          * @swagger

@@ -5,6 +5,7 @@ import { Panel, Button, FormGroup, ControlLabel, FormControl,
 import { Product, ResourceData, ProductProperty } from './Model'
 import { http } from '../../Config'
 import { uploadAttachmentAction } from '../../actions/products/UploadAttachmentAction'
+import { removeAttachmentAction} from '../../actions/products/RemoveAttachmentAction'
 
 interface ProductAttachmentsProps{
    product ?: Product;
@@ -40,9 +41,13 @@ export class ProductAttachments extends React.Component<ProductAttachmentsProps,
     reader.readAsDataURL(file);
   }
 
-  renderListItem(item,index) {
+
+  renderListItem = (item, index) => {
     return <ListGroupItem key={index}>
-              <b>{item.name}</b>
+              <b>{item.name}</b> : {item.value}
+              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => removeAttachmentAction(this.props.product.name,item.name)}>
+                <Glyphicon glyph='trash'/>
+              </Button>
            </ListGroupItem>;
   }
 
@@ -55,6 +60,7 @@ export class ProductAttachments extends React.Component<ProductAttachmentsProps,
                 <div style={{overflow: 'auto', maxHeight: 400}}>
                   <ListGroup>
                     {this.state.attachments && this.state.attachments.map(this.renderListItem)}
+
                   </ListGroup>
                 </div>
               </Panel.Body>

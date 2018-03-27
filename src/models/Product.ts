@@ -29,6 +29,9 @@ export interface IProduct extends Document {
     addTag(tag : string, callback : Function): void
     addImage(imageName: string, imageContent:string, callback : Function):void
     addAttachment(attachmentName : string, attachmentContent:string, callback : Function):void
+    removeImage(name : String) : any;
+    removeProperty(name : String) : any;
+    removeAttachment(name : String) : any;
 }
 
 export interface IProductModel {
@@ -163,6 +166,30 @@ productSchema.method('addAttachment',function(attachmentName: string, content : 
                                                                               this.attachments.push({name:attachmentName, refId:createdFile._id});
                                                                               this.save(callback);
   });
+});
+
+productSchema.method('removeImage',function(name: string){
+  let image = this.images.filter(image => image.name === name)[0];
+  this.images.id(image._id).remove();
+  return this.save();
+});
+
+productSchema.method('removeAttachment',function(name: string){
+  let obj = this.attachments.filter(obj => obj.name === name)[0];
+  obj.remove();
+  return this.save();
+});
+
+productSchema.method('removeProperty',function(name: string){
+  let obj = this.properties.filter(obj => obj.name === name)[0];
+  obj.remove();
+  return this.save();
+});
+
+productSchema.method('removeTag',function(name: string){
+  let obj = this.tags.filter(obj => obj.name === name)[0];
+  obj.remove();
+  return this.save();
 });
 
 export type ProductModel = Model<IProduct> & IProductModel & IProduct;
