@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
-import { emailValidation, emptyValidation } from '../../components/FormValidators';
 import { registerAction } from '../../actions/user/RegisterAction';
 import yup from 'yup';
 

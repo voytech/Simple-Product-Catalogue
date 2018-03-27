@@ -8,7 +8,6 @@ import { store } from '../../Store';
 import { FormGroup, FormControl, ControlLabel, Col, Panel, Button, ButtonToolbar  } from 'react-bootstrap';
 import { FormEvent } from '../../utils/FormUtils';
 import { CenteredPanel } from '../../components/CenteredPanel';
-import { emailValidation, emptyValidation } from '../../components/FormValidators';
 import { loginAction } from '../../actions/user/LoginAction';
 import yup from 'yup';
 

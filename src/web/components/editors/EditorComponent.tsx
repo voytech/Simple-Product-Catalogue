@@ -54,10 +54,14 @@ export class EditorComponent extends React.Component<IEditorProps,IEditorState>{
                                                                     : this.getDefaultHeaderRender(this.props.toggleText)())}
                 <Panel.Collapse>
                     <Panel.Body>
-                      <Tabs id='editor-component-steps'>
-                        {React.Children.map(this.props.children,(child, idx) => {
-                            return <Tab key={idx} title={(child as any).props.title} eventKey={(child as any).props.step}>{child}</Tab>})}
-                      </Tabs>
+                      { this.props.children && React.Children.count(this.props.children) > 1 ?
+                        <Tabs id='editor-component-steps'>
+                          {React.Children.map(this.props.children,(child, idx) => {
+                              return <Tab key={idx} title={(child as any).props.title} eventKey={(child as any).props.step}>{child}</Tab>})}
+                        </Tabs>
+                        :
+                        this.props.children
+                      }
                     </Panel.Body>
                 </Panel.Collapse>
             </Panel>

@@ -170,7 +170,7 @@ productSchema.method('addAttachment',function(attachmentName: string, content : 
 
 productSchema.method('removeImage',function(name: string){
   let image = this.images.filter(image => image.name === name)[0];
-  this.images.id(image._id).remove();
+  image.remove();
   return this.save();
 });
 

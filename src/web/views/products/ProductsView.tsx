@@ -20,7 +20,6 @@ import { TableComponent,
          RenderCells,
          TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
-import { push } from 'react-router-redux';
 import { store } from '../../Store';
 import { createProductAction } from '../../actions/products/CreateProductAction';
 import { updateProductAction,
@@ -29,6 +28,7 @@ import { removeProductAction,
          removeAndLoadProductsAction} from '../../actions/products/RemoveProductAction';
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 import { ProductEditor } from './ProductEditor';
+import { ProductBasicInfo } from './ProductBasicInfo'
 import { Product, ProductProperty } from './Model'
 
 
@@ -50,12 +50,15 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
   }
 
   componentDidMount(){
+    console.log('did mount');
     this.props.loadProducts();
   }
 
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
-               <ProductEditor withHeading={true} saveProduct={this.props.createProduct} />
+               <EditorComponent withHeading={true} toggleText='New Product'>
+                 <ProductBasicInfo saveProduct={this.props.createProduct} />
+               </EditorComponent>
                <TableComponent columns={[new TableColumn('Name','name'),
                                          new TableColumn('Type','type'),
                                          new TableColumn('Description','description'),
@@ -64,11 +67,11 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                          new TableColumn('Edit'),
                                          new TableColumn('X')]}
                                rows={this.props.products}
-                               onEdit={ (product) => this.setState({ selection: product }) }
+                               onEdit={ (product) => this.setState({ selection: product.name }) }
                                onRemove={ (product) => removeAndLoadProductsAction(product) }
                                renderColumn={(column : Column, actions: TableColumnActions) => {
                                  switch  (column.title) {
-                                   case 'X' : return <th>
+                                   case 'X' : return <th key={column.title}>
                                                        <Button bsStyle='danger' bsSize='xsmall' onClick={() => alert('removing all')}>
                                                          <Glyphicon glyph='trash' />
                                                        </Button>
@@ -78,30 +81,30 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                }}
                                renderCell={(cell : Cell, actions : TableCellActions) => {
                                  switch (cell.column.title){
-                                   case 'Edit' : return <td>
+                                   case 'Edit' : return <td key={cell.column.title}>
                                                           <Button bsSize='xsmall' onClick={() => actions.editRow()}>
                                                             <Glyphicon glyph='pencil' />
                                                           </Button>
                                                         </td>
-                                   case 'X' : return <td>
+                                   case 'X' : return <td key={cell.column.title}>
                                                         <Button bsSize='xsmall'  type='button' onClick={(e) => actions.removeRow()}>
                                                           <Glyphicon glyph='trash' />
                                                         </Button>
                                                       </td>
-                                   case 'Start Date': case 'Expiry': return <td>{cell.value.split('T')[0]}</td>
-                                   default     : return <td>{cell.value}</td>
+                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{cell.value.split('T')[0]}</td>
+                                   default     : return <td key={cell.column.title}>{cell.value}</td>
                                  }
                                }}
                                renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
                                  return <>
                                           <tr>{rowRender()}</tr>
-                                          {this.state.selection && (this.state.selection == row) &&
+                                          {this.state.selection && (this.state.selection == row.name) &&
                                             <tr>
                                               <td colSpan={7}>
                                                 <ProductEditor withHeading={false}
                                                                editMode={true}
                                                                saveProduct={(product) => updateAndLoadProductsAction(product) }
-                                                               product={this.state.selection}/>
+                                                               product={row}/>
                                               </td>
                                             </tr>}
                                         </>

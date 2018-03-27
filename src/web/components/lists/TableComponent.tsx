@@ -95,7 +95,7 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
       <thead>
         <tr>
          { this.renderColumns() }
-       </tr>
+        </tr>
       </thead>
   }
 

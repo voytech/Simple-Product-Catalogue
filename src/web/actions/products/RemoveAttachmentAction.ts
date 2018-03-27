@@ -1,4 +1,4 @@
-import { REMOVE_ATTACHMENT } from '../../consts/Actions';
+import { UPDATE_PRODUCT } from '../../consts/Actions';
 import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
@@ -7,7 +7,7 @@ export const removeAttachmentAction = StoreUtils.createAction((productName : str
     let url = (productName:string, attachmentName:string) => 'products/'+productName+'/attachments/'+attachmentName;
     return (dispatch) => {
       http.delete(url(productName,attachmentName))
-          .then(response => { dispatch({type: REMOVE_ATTACHMENT, payload: {}})})
+          .then(response => { dispatch({type: UPDATE_PRODUCT, payload: response.data })})
           .catch(error => console.error(error));
     }
 });

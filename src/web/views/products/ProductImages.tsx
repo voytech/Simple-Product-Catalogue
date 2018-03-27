@@ -36,11 +36,23 @@ export class ProductImages extends React.Component<ProductImagesProps,ProductIma
     this.state = {};
   }
 
-  componentDidMount(){
-    if (this.props.product){
-      http.get('products/'+this.props.product.name+'/images').then((images)=>{
+  reloadImages(product){
+    if (product){
+      http.get('products/'+product.name+'/images').then((images)=>{
         this.setState({images: images.data});
       });
+    }
+  }
+
+  componentDidMount(){
+    if (this.props.product){
+      this.reloadImages(this.props.product);
+    }
+  }
+
+  componentWillReceiveProps(props){
+    if (props.product){
+      this.reloadImages(props.product);
     }
   }
 
@@ -54,10 +66,6 @@ export class ProductImages extends React.Component<ProductImagesProps,ProductIma
         }));
     }, false);
     reader.readAsDataURL(file);
-  }
-
-  removeImage(e : any){
-    removeImageAction()
   }
 
   thumbnail(image : ImageData){

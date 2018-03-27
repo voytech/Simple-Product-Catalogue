@@ -3,10 +3,10 @@ import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
 
-export const removePropertyAction = StoreUtils.createAction((productName : string,propertyName : string) => {
-    let url = (productName:string, attachmentName:string) => 'products/'+productName+'/properties/'+propertyName;
+export const addPropertyAction = StoreUtils.createAction((productName:string, property : any) => {
+    let productsUrl = (suffix) => 'products/'+productName+'/'+suffix;
     return (dispatch) => {
-      http.delete(url(productName,propertyName))
+      http.post(productsUrl('addProperty'),JSON.stringify(property))
           .then(response => { dispatch({type: UPDATE_PRODUCT, payload: response.data })})
           .catch(error => console.error(error));
     }

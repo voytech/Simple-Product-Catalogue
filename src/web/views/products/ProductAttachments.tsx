@@ -21,11 +21,23 @@ export class ProductAttachments extends React.Component<ProductAttachmentsProps,
     this.state = {};
   }
 
-  componentDidMount(){
-    if (this.props.product){
-      http.get('products/'+this.props.product.name+'/attachments').then((attachments)=>{
+  reloadAttachments(product){
+    if (product){
+      http.get('products/'+product.name+'/attachments').then((attachments)=>{
         this.setState({attachments: attachments.data});
       });
+    }
+  }
+
+  componentDidMount(){
+    if (this.props.product){
+      this.reloadAttachments(this.props.product);
+    }
+  }
+
+  componentWillReceiveProps(props){
+    if (props.product){
+      this.reloadAttachments(props.product);
     }
   }
 

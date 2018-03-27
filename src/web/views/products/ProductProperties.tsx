@@ -6,7 +6,7 @@ import { FileButton  } from '../../components/FileButton';
 import { Col, Row, Panel, Button, FormGroup, ControlLabel, FormControl,
          Glyphicon, Label, ButtonToolbar, Image, ListGroupItem, ListGroup } from 'react-bootstrap';
 import { Product, ImageData, ProductProperty, productValidation } from './Model'
-import { uploadImageAction } from '../../actions/products/UploadImageAction'
+import { addPropertyAction } from '../../actions/products/AddPropertyAction'
 import { removePropertyAction } from '../../actions/products/RemovePropertyAction'
 
 import { http } from '../../Config'
@@ -31,16 +31,10 @@ export class ProductProperties extends React.Component<ProductPropertiesProps,Pr
     }
   }
 
-  addProperty(property : ProductProperty){
-    http.post('products/'+this.props.product.name+'/addProperty',JSON.stringify(property))
-        .then(response => console.log(response.data))
-        .catch(error => console.error(error));
-  }
-
   renderAddProp(){
     return <Formik
               initialValues={ { } }
-              onSubmit={(values: ProductProperty) => this.addProperty(values)}
+              onSubmit={(values: ProductProperty) => addPropertyAction(this.props.product.name,values)}
               render={(props : FormikProps<ProductProperty>) => (
                  <Form className="form-inline">
                       <VFormGroup name='name' display='Property'
