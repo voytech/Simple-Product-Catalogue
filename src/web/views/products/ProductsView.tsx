@@ -1,13 +1,11 @@
 import * as  React from 'react';
 import { connect } from 'react-redux';
 
-import { Formik, Form, FormikProps, Field, FieldProps  } from 'formik';
+import { Formik, Form  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
-import { Col, Row,
-         Button,
-         Glyphicon,
-         ButtonToolbar  } from 'react-bootstrap';
+import { Button,
+         Glyphicon  } from 'react-bootstrap';
 import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
 import { TableComponent,
@@ -20,16 +18,13 @@ import { TableComponent,
          RenderCells,
          TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
-import { store } from '../../Store';
 import { createProductAction } from '../../actions/products/CreateProductAction';
-import { updateProductAction,
-         updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
-import { removeProductAction,
-         removeAndLoadProductsAction} from '../../actions/products/RemoveProductAction';
+import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
+import { removeAndLoadProductsAction } from '../../actions/products/RemoveProductAction';
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 import { ProductEditor } from './ProductEditor';
 import { ProductBasicInfo } from './ProductBasicInfo'
-import { Product, ProductProperty } from './Model'
+import { Product } from './Model'
 
 
 interface ProductsViewProps{

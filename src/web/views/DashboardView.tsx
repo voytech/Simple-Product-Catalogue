@@ -17,6 +17,8 @@ export class DashboardView extends React.Component{
                     <PageHeader> Welcome <b>{StoreUtils.currentUser()}</b>! </PageHeader>
                     <p><b><a href='#/products/list'>See your catalog.</a></b></p>
                     <p><b><a href='#/pricelists/list'>See your price lists.</a></b></p>
+                    <p><b><a href='#/dictionaries/'>See dictionaries.</a></b></p>
+                    <p><b><a href='#/rating/'>See product rankings and ratings.</a></b></p>
                   </CenteredPanel>
               }
            </Jumbotron>

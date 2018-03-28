@@ -10,7 +10,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { MainRoutes } from './routers/MainRoutes'
 import { UserRoutes } from './routers/UserRoutes'
 import { ProductRoutes } from './routers/ProductRoutes'
-
+import { PriceListRoutes } from './routers/PriceListRoutes'
 import { Link, Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 import { HeaderComponent } from './components/HeaderComponent'
 import { Provider } from 'react-redux';
@@ -28,6 +28,7 @@ class App extends React.Component{
                        <Switch>
                          <Route path="/user"  component={UserRoutes}/>
                          <Route path="/products"  component={ProductRoutes}/>
+                         <Route path="/pricelists"  component={PriceListRoutes}/>
                          <Route path="/"  component={MainRoutes}/>
                        </Switch>
                    </div>

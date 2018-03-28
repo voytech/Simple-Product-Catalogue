@@ -33,7 +33,7 @@ export class ProductProperties extends React.Component<ProductPropertiesProps,Pr
 
   renderAddProp(){
     return <Formik
-              initialValues={ { } }
+              initialValues={ { name : '', value: '' } }
               onSubmit={(values: ProductProperty) => addPropertyAction(this.props.product.name,values)}
               render={(props : FormikProps<ProductProperty>) => (
                  <Form className="form-inline">

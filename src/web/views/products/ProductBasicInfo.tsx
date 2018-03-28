@@ -27,8 +27,12 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
     return this.props.product && (key in this.props.product) ? {[key] : this.props.product[key].split('T')[0]} : {}
   }
 
-  private withFormattedDates(){
-    return {...this.props.product,
+  private assertValues(input){
+    return { ... this.default(), ...input}
+  }
+  
+  private withFormattedDates(input){
+    return {...input,
             ...this.formatDate('startDate'),
             ...this.formatDate('endDate'),
             ...this.formatDate('effectiveStartDate'),
@@ -49,10 +53,12 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
     }
   }
 
+
+
   render(){
     return <Formik
               enableReinitialize={ this.props.editMode }
-              initialValues={ this.withFormattedDates() }
+              initialValues={ this.withFormattedDates(this.assertValues(this.props.product)) }
               validationSchema={ productValidation }
               onSubmit={(values: Product) => this.props.saveProduct(values)}
               render={(props : FormikProps<Product>) => (
