@@ -18,6 +18,7 @@ import { TableComponent,
          RenderCells,
          TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
+import { PriceListDetails } from './PriceListDetails';
 //import { createProductAction } from '../../actions/products/CreateProductAction';
 //import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
 //import { removeAndLoadProductsAction } from '../../actions/products/RemoveProductAction';
@@ -45,13 +46,13 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
   }
 
   componentDidMount(){
-    this.props.loadPricelists();
+    //this.props.loadPricelists();
   }
 
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
-               <EditorComponent withHeading={true} toggleText='New Product'>
-
+               <EditorComponent withHeading={true} toggleText='New Price List'>
+                 <PriceListDetails savePriceList={(priceList) => {return null;}}/>
                </EditorComponent>
                <TableComponent columns={[new TableColumn('Name','name'),
                                          new TableColumn('Description','description'),

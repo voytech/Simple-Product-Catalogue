@@ -14,7 +14,7 @@ interface PriceListDetailsProps{
   editMode ?: boolean;
 }
 
-export class ProductBasicInfo extends React.Component<PriceListDetailsProps>{
+export class PriceListDetails extends React.Component<PriceListDetailsProps>{
   constructor(props){
     super(props);
   }
