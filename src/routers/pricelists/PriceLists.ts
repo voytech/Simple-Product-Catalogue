@@ -6,10 +6,10 @@ import { PriceList, IPriceList } from '../../models/PriceList';
 import { Resource } from '../../models/Resource';
 import { CRUDRoute } from '../CRUDRoute'
 
-export class PriceListsRoute extends CRUDRoute<IPriceList> {
+export class PriceLists extends CRUDRoute<IPriceList> {
 
     constructor(){
-      super(PriceList);
+      super(PriceList,'name');
     }
 
 }

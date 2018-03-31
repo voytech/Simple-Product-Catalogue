@@ -45,7 +45,6 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
   }
 
   componentDidMount(){
-    console.log('did mount');
     this.props.loadProducts();
   }
 

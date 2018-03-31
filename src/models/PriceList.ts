@@ -27,8 +27,7 @@ const priceListSchema = new Schema({
        type: String
     },
     code: {
-        type: String,
-        required: true
+        type: String
     },
     category: {
       type: String
@@ -38,6 +37,10 @@ const priceListSchema = new Schema({
     }
 });
 
+priceListSchema.pre('save', function(next) {
+  this.code = uuid();
+  next()
+});
 
 priceListSchema.static('findByName', (name: string, callback: Function) => {
     PriceList.findOne({name: name},callback);

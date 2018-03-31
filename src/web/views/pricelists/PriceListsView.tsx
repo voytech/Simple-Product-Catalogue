@@ -19,7 +19,9 @@ import { TableComponent,
          TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { PriceListDetails } from './PriceListDetails';
-//import { createProductAction } from '../../actions/products/CreateProductAction';
+import { createPriceListAction } from '../../actions/pricelists/CreatePricelistAction';
+import { loadPriceListsAction } from '../../actions/pricelists/LoadPriceListsAction';
+import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
 //import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
 //import { removeAndLoadProductsAction } from '../../actions/products/RemoveProductAction';
 //import { loadProductsAction } from '../../actions/products/LoadProductsAction';
@@ -31,7 +33,9 @@ import { Product  } from '../products/Model'
 interface PriceListViewProps{
   createPricelist : (pricelist : PriceList) => void;
   loadPricelists : () => void;
+  loadProductsKeys : () => void;
   pricelists : PriceList[];
+  productsKeys : [{_id:string, name:string}];
 }
 
 interface PriceListViewState {
@@ -46,13 +50,15 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
   }
 
   componentDidMount(){
-    //this.props.loadPricelists();
+    this.props.loadPricelists();
+    this.props.loadProductsKeys();
   }
 
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
                <EditorComponent withHeading={true} toggleText='New Price List'>
-                 <PriceListDetails savePriceList={(priceList) => {return null;}}/>
+                 <PriceListDetails savePriceList={this.props.createPricelist}
+                                   productsKeys={this.props.productsKeys}/>
                </EditorComponent>
                <TableComponent columns={[new TableColumn('Name','name'),
                                          new TableColumn('Description','description'),
@@ -85,7 +91,7 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                                           <Glyphicon glyph='trash' />
                                                         </Button>
                                                       </td>
-                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{cell.value.split('T')[0]}</td>
+                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{cell.value}</td>
                                    default     : return <td key={cell.column.title}>{cell.value}</td>
                                  }
                                }}
@@ -106,15 +112,19 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
 }
 
 const mapStateToProps = (state) => ({
-  products: state.global.products
+  pricelists: state.global.pricelists,
+  productsKeys : state.global.dictionary && state.global.dictionary.products
 });
 
 const mapDispatchToProps = () => ({
-  createProduct : (priceList : PriceList) => {
-    //createPriceListAction(priceList);
+  createPricelist : (priceList : PriceList) => {
+    createPriceListAction(priceList);
   },
-  loadProducts  : () => {
-    //loadPriceListsAction();
+  loadPricelists  : () => {
+    loadPriceListsAction();
+  },
+  loadProductsKeys : () => {
+    loadProductsIdentsAction();
   }
 });
 

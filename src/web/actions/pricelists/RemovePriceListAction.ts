@@ -1,13 +1,13 @@
-import { UPDATE_PRODUCT } from '../../consts/Actions';
+import { REMOVE_PRICELIST } from '../../consts/Actions';
 import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
 
-export const removePriceListAction = StoreUtils.createAction((productName : string,attachmentName : string) => {
-    let url = (productName:string, attachmentName:string) => 'products/'+productName+'/attachments/'+attachmentName;
+export const removePriceListAction = StoreUtils.createAction((priceListName : string,attachmentName : string) => {
+    let url = (productName:string) => 'pricelists/'+priceListName;
     return (dispatch) => {
-      http.delete(url(productName,attachmentName))
-          .then(response => { dispatch({type: UPDATE_PRODUCT, payload: response.data })})
+      http.delete(url(priceListName))
+          .then(response => { dispatch({type: REMOVE_PRICELIST, payload: response.data })})
           .catch(error => console.error(error));
     }
 });

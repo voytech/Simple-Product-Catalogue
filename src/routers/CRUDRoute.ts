@@ -5,7 +5,7 @@ import { Router, Request, Response } from 'express';
 
 export class CRUDRoute<T extends Document> extends BaseRoute {
 
-  constructor(private model: Model<T>){
+  constructor(private model: Model<T>, private identityField : string){
     super();
   }
 
@@ -23,8 +23,9 @@ export class CRUDRoute<T extends Document> extends BaseRoute {
 
   public saveAction(router: Router): void {
       router.post('/save',this.restrict(['ADMIN']), (req: Request, res: Response) => {
-          let { name, ...rest } = req.body;
-          this.model.findOneAndUpdate({name : name}, { $set: { ...rest }}, { new: true }, function (err, result) {
+          let fieldValue = req.body[this.identityField];
+          //req.body.delete(this.identityField);
+          this.model.findOneAndUpdate({[this.identityField] : fieldValue}, { $set: { ...req.body }}, { new: true }, function (err, result) {
             if (err) return res.status(500).json(err);
             res.json(result);
           });
@@ -32,8 +33,8 @@ export class CRUDRoute<T extends Document> extends BaseRoute {
   }
 
   public removeAction(router: Router): void {
-      router.delete('/remove',(req:Request,res:Response)=>{
-        this.model.remove(req.body).then((err)=>{
+      router.delete('/remove/:resourceName',(req:Request,res:Response)=>{
+        this.model.remove({name : req.params.resourceName}).then((err)=>{
           return res.json({status: 'removed'});
         })
       });
@@ -46,6 +47,15 @@ export class CRUDRoute<T extends Document> extends BaseRoute {
           res.json(result.map((e) => e.toJSON()));
         })
       });
+  }
+
+  public getAllKeysAction(router : Router) : void {
+    router.get('/allkeys',(req:Request,res:Response)=>{
+      this.model.find().select(this.identityField).exec((err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result.map((e) => e.toJSON()));
+      })
+    });
   }
 
 }

@@ -13,6 +13,7 @@ export interface PriceList  {
     description: string;
     code ?: string;
     category: string;
+    type: string;
     items ?: PriceListItem[];
     tags ?: string;
 }

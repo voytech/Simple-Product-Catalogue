@@ -1,13 +1,13 @@
-import { UPDATE_PRODUCT, UPDATE_LOAD_PRODUCTS } from '../../consts/Actions';
+import { UPDATE_PRICELIST } from '../../consts/Actions';
 import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
 
-export const updatePriceListActoin = StoreUtils.createAction((product : any) => {
-    let productsUrl = (suffix) => 'products/'+suffix;
+export const updatePriceListAction = StoreUtils.createAction((pricelist : any) => {
+    let url = (suffix) => 'pricelists/'+suffix;
     return (dispatch) => {
-      http.post(productsUrl('save'),JSON.stringify(product))
-          .then(response => { dispatch({type: UPDATE_PRODUCT, payload: response.data })})
+      http.post(url('save'),JSON.stringify(pricelist))
+          .then(response => { dispatch({type: UPDATE_PRICELIST, payload: response.data })})
           .catch(error => console.error(error));
     }
 });

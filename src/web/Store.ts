@@ -27,7 +27,7 @@ const getMiddleware = () => {
 };
 
 export const store = createStore(reducers, getMiddleware());
-
+ 
 export class StoreUtils { // Add store state typings somewhere !
 
   private static lsAuth(){
