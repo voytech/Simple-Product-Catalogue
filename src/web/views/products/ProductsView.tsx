@@ -25,6 +25,7 @@ import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 import { ProductEditor } from './ProductEditor';
 import { ProductBasicInfo } from './ProductBasicInfo'
 import { Product } from '../../actions/products/Model'
+import { dateOnly } from '../Utils'
 
 
 interface ProductsViewProps{
@@ -87,7 +88,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                                           <Glyphicon glyph='trash' />
                                                         </Button>
                                                       </td>
-                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{cell.value.split('T')[0]}</td>
+                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{dateOnly(cell.value)}</td>
                                    default     : return <td key={cell.column.title}>{cell.value}</td>
                                  }
                                }}

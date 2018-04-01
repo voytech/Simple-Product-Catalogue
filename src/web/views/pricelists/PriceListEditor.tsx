@@ -23,6 +23,7 @@ interface PriceListDetailsProps{
   addPriceListItem : (item : PriceAssignement) => void;
   updatePriceList : (update : PriceList) => void;
   priceList ?: PriceList;
+  loadPriceList : (name : string) => void;
   productsKeys ?: [{name:string, _id:string}];
 }
 
@@ -33,20 +34,17 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
     this.state = {}
   }
 
-  private toggle(item:{name:string}){
-    //let state = (item.name in this.state) && this.state[item.name];
-    //this.setState({ [item.name]: !state })
+
+  componentDidMount(){
+    console.log(this.props.priceList.name);
+    this.props.loadPriceList(this.props.priceList.name);
   }
 
-  private isSelected(item){
-    //return (item.name in this.state) && this.state[item.name] == true;
-  }
-
-  renderProduct = (item) => {
+  renderListItem = (item) => {
     return <ListGroupItem key={item.name}>
-              <b>{item.name}</b>
-              <Button className='pull-right' bsSize='xsmall' bsStyle="success" onClick={() => this.toggle(item)}>
-                <Glyphicon glyph='plus'/>
+              <b>{item.name}</b> : {item.price}
+              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => alert('remove')}>
+                <Glyphicon glyph='trash'/>
               </Button>
            </ListGroupItem>;
   }
@@ -54,6 +52,9 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
   renderItems = () => {
     return <div style={{overflow: 'auto', maxHeight: 400}}>
               <ListGroup>
+                {this.props.priceList &&
+                 this.props.priceList.items &&
+                 this.props.priceList.items.map(item => this.renderListItem(item))}
               </ListGroup>
             </div>
   }

@@ -23,9 +23,10 @@ import { NewPriceList } from './NewPriceList';
 import { PriceListEditor } from './PriceListEditor';
 import { createPriceListAction } from '../../actions/pricelists/CreatePricelistAction';
 import { loadPriceListsAction } from '../../actions/pricelists/LoadPriceListsAction';
+import { loadPriceListAction } from '../../actions/pricelists/LoadPriceListAction';
 import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
 import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListItemAction';
-
+import { dateOnly } from '../Utils'
 import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricelists/Model'
 import { Product  } from '../../actions/products/Model'
 
@@ -33,6 +34,7 @@ import { Product  } from '../../actions/products/Model'
 interface PriceListViewProps{
   createPricelist : (pricelist : PriceList) => void;
   loadPricelists : () => void;
+  loadPriceList : (name : string) => void;
   loadProductsKeys : () => void;
   addPriceListItem : (item : PriceAssignement)=> void;
   pricelists : PriceList[];
@@ -91,7 +93,7 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                                           <Glyphicon glyph='trash' />
                                                         </Button>
                                                       </td>
-                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{cell.value}</td>
+                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{dateOnly(cell.value)}</td>
                                    default     : return <td key={cell.column.title}>{cell.value}</td>
                                  }
                                }}
@@ -102,10 +104,11 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                             <tr>
                                               <td colSpan={7}>
                                                 <PriceListEditor addPriceListItem={(item : PriceAssignement) =>
-                                                                                      this.props.addPriceListItem(item)}                                                                                    
+                                                                                      this.props.addPriceListItem(item)}
                                                                  updatePriceList={(item : PriceList) => actions.editRow()}
                                                                  productsKeys={this.props.productsKeys}
-                                                                 priceList={row}/>
+                                                                 priceList={row}
+                                                                 loadPriceList={this.props.loadPriceList}/>
                                               </td>
                                             </tr>}
                                         </>
@@ -126,6 +129,9 @@ const mapDispatchToProps = () => ({
   },
   loadPricelists  : () => {
     loadPriceListsAction();
+  },
+  loadPriceList : (name:string) => {
+    loadPriceListAction(name);
   },
   loadProductsKeys : () => {
     loadProductsIdentsAction();

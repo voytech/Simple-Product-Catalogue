@@ -12,6 +12,15 @@ export class PriceLists extends CRUDRoute<IPriceList> {
       super(PriceList,'name');
     }
 
+    public fetchPriceListsWithItemsAction(router : Router) : void {
+        router.get('/findByNameWithItems',this.restrict(['ADMIN']),(req: Request, res: Response) => {
+          PriceList.findByNameWithItems(req.query.name,(err,priceList)=>{
+            if (err) return res.status(500).json(err);
+            return res.json(priceList);
+          })
+        })
+    }
+
     public addItemAction(router: Router): void {
         router.post('/addItem',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let payload : {priceList:string, product:string, price:number} = req.body;

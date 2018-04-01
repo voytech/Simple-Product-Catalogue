@@ -50,8 +50,9 @@ priceListSchema.static('findByName', (name: string, callback: Function) => {
 priceListSchema.static('findByNameWithItems', (name: string, callback: Function) => {
     PriceList.findOne({name: name}, (err,priceList)=>{
       PriceListItem.find({priceList:priceList.id}).exec((err,coll)=>{
-        priceList.items = coll;
-        callback(err,priceList);
+        let result = priceList.toJSON();
+        result['items'] = coll.map(e => e.toJSON());
+        callback(err,result);
       })
     });
 });
