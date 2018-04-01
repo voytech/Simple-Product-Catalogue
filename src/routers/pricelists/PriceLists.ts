@@ -12,4 +12,17 @@ export class PriceLists extends CRUDRoute<IPriceList> {
       super(PriceList,'name');
     }
 
+    public addItemAction(router: Router): void {
+        router.post('/addItem',this.restrict(['ADMIN']), (req: Request, res: Response) => {
+            let payload : {priceList:string, product:string, price:number} = req.body;
+            PriceList.findByName(payload.priceList,(err, priceList) => {
+              if (err) return res.status(500).json(err);
+              priceList.addItem(payload.product,payload.price,(err,result) => {
+                if (err) return res.status(500).json(err);
+                return res.json(result); // PriceListItem
+              })
+            });
+        });
+    }
+
 }

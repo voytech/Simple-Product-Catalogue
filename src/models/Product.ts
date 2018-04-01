@@ -2,6 +2,7 @@ import {Schema, Model, Document, model, connection} from 'mongoose';
 import * as streamBuffers from 'stream-buffers';
 import {binaryCollections, GridFSModel } from '../BinaryCollections'
 import {ResourceDescriptorSchema, IResourceDescriptor} from './ResourceDescriptor'
+import { Dated, DatedSchema } from './Dated'
 import { v1 as uuid } from 'uuid';
 
 let ObjectId =  Schema.Types.ObjectId;
@@ -11,15 +12,11 @@ export interface IProperty extends Document{
   value : string;
 }
 
-export interface IProduct extends Document {
+export interface IProduct extends Document, Dated {
     name: string;
     code: string;
     category : string;
     description: string;
-    startDate : Date;
-    effectiveStartDate : Date;
-    endDate : Date;
-    effectiveEndDate : Date;
     type: string;
     tags: string[];
     properties : IProperty[];
@@ -56,7 +53,7 @@ const propertySchema = new Schema({
     }
 });
 
-const productSchema = new Schema({
+const productSchema = new Schema({... DatedSchema,
     name: {
       type: String,
       required: true,
@@ -74,22 +71,6 @@ const productSchema = new Schema({
     },
     category : {
       type: String,
-      required : true
-    },
-    startDate : {
-      type: Schema.Types.Date,
-      required : true
-    },
-    endDate : {
-      type: Schema.Types.Date,
-      required : true
-    },
-    effectiveStartDate : {
-      type: Schema.Types.Date,
-      required : true
-    },
-    effectiveEndDate : {
-      type: Schema.Types.Date,
       required : true
     },
     tags: [{

@@ -6,7 +6,7 @@ import { Col, Row,
          Button,
          Glyphicon,
          ButtonToolbar  } from 'react-bootstrap';
-import { Product, ProductProperty, productValidation } from './Model'
+import { Product, ProductProperty, productValidation } from '../../actions/products/Model'
 
 interface ProductBasicInfoProps{
   saveProduct : (product : Product) => void;
@@ -30,7 +30,7 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
   private assertValues(input){
     return { ... this.default(), ...input}
   }
-  
+
   private withFormattedDates(input){
     return {...input,
             ...this.formatDate('startDate'),

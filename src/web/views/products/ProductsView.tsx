@@ -24,11 +24,13 @@ import { removeAndLoadProductsAction } from '../../actions/products/RemoveProduc
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
 import { ProductEditor } from './ProductEditor';
 import { ProductBasicInfo } from './ProductBasicInfo'
-import { Product } from './Model'
+import { Product } from '../../actions/products/Model'
 
 
 interface ProductsViewProps{
   createProduct : (product : Product) => void;
+  removeProduct : (product : Product) => void;
+  updateProduct : (product : Product) => void;
   loadProducts : () => void;
   products : Product[];
 }
@@ -62,7 +64,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                          new TableColumn('X')]}
                                rows={this.props.products}
                                onEdit={ (product) => this.setState({ selection: product.name }) }
-                               onRemove={ (product) => removeAndLoadProductsAction(product) }
+                               onRemove={ (product) => this.props.removeProduct(product) }
                                renderColumn={(column : Column, actions: TableColumnActions) => {
                                  switch  (column.title) {
                                    case 'X' : return <th key={column.title}>
@@ -97,7 +99,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                               <td colSpan={7}>
                                                 <ProductEditor withHeading={false}
                                                                editMode={true}
-                                                               saveProduct={(product) => updateAndLoadProductsAction(product) }
+                                                               saveProduct={(product) => this.props.updateProduct(product) }
                                                                product={row}/>
                                               </td>
                                             </tr>}
@@ -115,6 +117,12 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = () => ({
   createProduct : (product : Product) => {
     createProductAction(product);
+  },
+  updateProduct : (product : Product) => {
+    updateAndLoadProductsAction(product);
+  },
+  removeProduct : (product : Product) => {
+    removeAndLoadProductsAction(product);
   },
   loadProducts  : () => {
     loadProductsAction();

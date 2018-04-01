@@ -5,7 +5,7 @@ import { ProductBasicInfo } from './ProductBasicInfo';
 import { ProductProperties } from './ProductProperties';
 import { ProductAttachments } from './ProductAttachments';
 import { ProductImages } from './ProductImages';
-import { Product, ProductProperty } from './Model';
+import { Product, ProductProperty } from '../../actions/products/Model';
 
 interface ProductEditorViewProps{
   saveProduct : (product : Product) => void;

@@ -2,7 +2,7 @@ import * as  React from 'react';
 import { FileButton  } from '../../components/FileButton';
 import { Panel, Button, FormGroup, ControlLabel, FormControl,
          Glyphicon, Label, Image, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { Product, ResourceData, ProductProperty } from './Model'
+import { Product, ResourceData, ProductProperty } from '../../actions/products/Model'
 import { http } from '../../Config'
 import { uploadAttachmentAction } from '../../actions/products/UploadAttachmentAction'
 import { removeAttachmentAction} from '../../actions/products/RemoveAttachmentAction'

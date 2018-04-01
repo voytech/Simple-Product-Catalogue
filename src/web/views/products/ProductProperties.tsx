@@ -5,7 +5,7 @@ import { HFormGroup  } from '../../components/forms/HFormGroup';
 import { FileButton  } from '../../components/FileButton';
 import { Col, Row, Panel, Button, FormGroup, ControlLabel, FormControl,
          Glyphicon, Label, ButtonToolbar, Image, ListGroupItem, ListGroup } from 'react-bootstrap';
-import { Product, ImageData, ProductProperty, productValidation } from './Model'
+import { Product, ImageData, ProductProperty, productValidation } from '../../actions/products/Model'
 import { addPropertyAction } from '../../actions/products/AddPropertyAction'
 import { removePropertyAction } from '../../actions/products/RemovePropertyAction'
 

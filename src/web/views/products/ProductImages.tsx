@@ -8,7 +8,7 @@ import { Col, Row, Panel,
          Glyphicon, Label,
          ButtonToolbar,
          Image, Thumbnail } from 'react-bootstrap';
-import { Product, ImageData, ProductProperty, productValidation } from './Model'
+import { Product, ImageData, ProductProperty, productValidation } from '../../actions/products/Model'
 import { uploadImageAction } from '../../actions/products/UploadImageAction'
 import { removeImageAction } from '../../actions/products/RemoveImageAction'
 import { http } from '../../Config'

@@ -19,21 +19,21 @@ import { TableComponent,
          TableRowActions } from '../../components/lists/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { PriceListDetails } from './PriceListDetails';
+import { NewPriceList } from './NewPriceList';
 import { createPriceListAction } from '../../actions/pricelists/CreatePricelistAction';
 import { loadPriceListsAction } from '../../actions/pricelists/LoadPriceListsAction';
 import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
-//import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
-//import { removeAndLoadProductsAction } from '../../actions/products/RemoveProductAction';
-//import { loadProductsAction } from '../../actions/products/LoadProductsAction';
+import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListItemAction';
 
-import { PriceList, PriceListItem } from './Model'
-import { Product  } from '../products/Model'
+import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricelists/Model'
+import { Product  } from '../../actions/products/Model'
 
 
 interface PriceListViewProps{
   createPricelist : (pricelist : PriceList) => void;
   loadPricelists : () => void;
   loadProductsKeys : () => void;
+  addPriceListItem : (item : PriceAssignement)=> void;
   pricelists : PriceList[];
   productsKeys : [{_id:string, name:string}];
 }
@@ -57,8 +57,7 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
                <EditorComponent withHeading={true} toggleText='New Price List'>
-                 <PriceListDetails savePriceList={this.props.createPricelist}
-                                   productsKeys={this.props.productsKeys}/>
+                 <NewPriceList createPriceList={this.props.createPricelist} />
                </EditorComponent>
                <TableComponent columns={[new TableColumn('Name','name'),
                                          new TableColumn('Description','description'),
@@ -125,6 +124,9 @@ const mapDispatchToProps = () => ({
   },
   loadProductsKeys : () => {
     loadProductsIdentsAction();
+  },
+  addPriceListItem : (item : PriceAssignement) => {
+    addPriceListItemAction(item);
   }
 });
 

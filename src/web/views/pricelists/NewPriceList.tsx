@@ -7,35 +7,16 @@ import { Col, Row,
          Glyphicon,
          ButtonToolbar,
          ListGroup, ListGroupItem, FormControl  } from 'react-bootstrap';
-import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricelists/Model'
-
-interface PriceListDetailsState{
-  [name:string] : boolean
-}
+import { PriceList } from '../../actions/pricelists/Model'
 
 interface PriceListDetailsProps{
-  savePriceList : (product : PriceList) => void;
-  addPriceListItem : (item : PriceAssignement) => void;
-  priceList ?: PriceList;
-  productsKeys ?: [{name:string, _id:string}];
-  editMode ?: boolean;
+  createPriceList : (priceList : PriceList) => void;
 }
 
-export class PriceListDetails extends React.Component<PriceListDetailsProps,PriceListDetailsState>{
+export class NewPriceList extends React.Component<PriceListDetailsProps>{
 
   constructor(props){
     super(props);
-    this.state = {}
-
-  }
-
-  private toggle(item:{name:string}){
-    let state = (item.name in this.state) && this.state[item.name];
-    this.setState({ [item.name]: !state })
-  }
-
-  private isSelected(item){
-    return (item.name in this.state) && this.state[item.name] == true;
   }
 
   private default() : PriceList{
@@ -51,53 +32,17 @@ export class PriceListDetails extends React.Component<PriceListDetailsProps,Pric
     }
   }
 
-  renderEditor = (item : {name:string, _id:string}) => {
-    return  <>
-            <input className='pull-right'
-                   name='price' type='text'
-                   style={{width:'100px',
-                           marginLeft:'5px',
-                           marginRight:'5px'}} />
-            <Button className='pull-right' bsSize='xsmall' bsStyle="primary" onClick={() =>
-              this.props.addPriceListItem({
-                priceList :  this.props.priceList.name,
-                product : item.name,
-                price : 10
-              })}>
-              <Glyphicon glyph='save'/>
-            </Button>
-            </>
-  }
-
-  renderProduct = (item) => {
-    return <ListGroupItem key={item.name}>
-              <b>{item.name}</b>
-              <Button className='pull-right' bsSize='xsmall' bsStyle="success" onClick={() => this.toggle(item)}>
-                <Glyphicon glyph='plus'/>
-              </Button>
-              {this.isSelected(item) && this.renderEditor(item)}
-           </ListGroupItem>;
-  }
-
-  renderProducts = () => {
-    return <div style={{overflow: 'auto', maxHeight: 400}}>
-              <ListGroup>
-                {this.props.productsKeys && this.props.productsKeys.map(key => this.renderProduct(key))}
-              </ListGroup>
-            </div>
-  }
-
   render(){
     return <Formik
-              enableReinitialize={ this.props.editMode }
+              enableReinitialize={ false }
               initialValues={ this.default() }
               //validationSchema={ productValidation }
-              onSubmit={(values: PriceList) => this.props.savePriceList(values)}
+              onSubmit={(values: PriceList) => this.props.createPriceList(values)}
               render={(props : FormikProps<PriceList>) => (
                  <Form className="form-horizontal">
                   <Row className='mt-2'>
                     <Col sm={6} className='vertical-divider'>
-                      <Col sm={6} className='vertical-divider'>
+                      <Col sm={6}>
                         <HFormGroup labelWidth={4} controlWidth={8}
                                     name='name' display='Name'
                                     value={props.values.name}
@@ -127,17 +72,37 @@ export class PriceListDetails extends React.Component<PriceListDetailsProps,Pric
                       </Col>
                     </Col>
                     <Col sm={6}>
-                      <Panel>
-                        <Panel.Heading>
-                          <Panel.Title>Assign prices</Panel.Title>
-                        </Panel.Heading>
-                        <Panel.Body>
-                          {this.renderProducts()}
-                        </Panel.Body>
-                      </Panel>
+                      <Col sm={6}>
+                        <HFormGroup labelWidth={4} controlWidth={8}
+                                    name='startDate' display='Start Date'
+                                    value={props.values.startDate}
+                                    type='date'
+                                    errors={props.touched.startDate && props.errors.startDate}
+                                    onChange={props.handleChange}/>
+                        <HFormGroup labelWidth={4} controlWidth={8}
+                                    name='effectiveStartDate' display='Effective Date'
+                                    value={props.values.effectiveStartDate}
+                                    type='date'
+                                    errors={props.touched.effectiveStartDate && props.errors.effectiveStartDate}
+                                    onChange={props.handleChange} />
+                      </Col>
+                      <Col sm={6}>
+                        <HFormGroup labelWidth={4} controlWidth={8}
+                                    name='endDate' display='End Date'
+                                    value={props.values.endDate}
+                                    type='date'
+                                    errors={props.touched.endDate && props.errors.endDate}
+                                    onChange={props.handleChange}/>
+                        <HFormGroup labelWidth={4} controlWidth={8}
+                                    name='effectiveEndDate' display='Expiry Date'
+                                    value={props.values.effectiveEndDate}
+                                    type='date'
+                                    errors={props.touched.effectiveEndDate && props.errors.effectiveEndDate}
+                                    onChange={props.handleChange} />
+                      </Col>
                     </Col>
                   </Row>
-                  <Button bsStyle="primary" type="submit" >Save</Button>
+                  <Button bsStyle="primary" type="submit" >Create</Button>
                 </Form>
               )}/>
   }

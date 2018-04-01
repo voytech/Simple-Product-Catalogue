@@ -1,9 +1,10 @@
 import { Schema, Model, Document, model } from 'mongoose';
 import { IPriceListItem, PriceListItem } from './PriceListItem';
 import { IProduct, Product } from './Product';
+import { Dated, DatedSchema } from './Dated';
 import { v1 as uuid } from 'uuid';
 
-export interface IPriceList extends Document {
+export interface IPriceList extends Document, Dated {
     name: string;
     description: string;
     code: string;
@@ -18,7 +19,7 @@ export interface IPriceListModel {
     findByNameWithItems(name: string, callback: Function): void
 }
 
-const priceListSchema = new Schema({
+const priceListSchema = new Schema({...DatedSchema,
     name: {
         type: String,
         required: true
@@ -32,9 +33,9 @@ const priceListSchema = new Schema({
     category: {
       type: String
     },
-    tags: {
+    tags: [{
         type: String
-    }
+    }]
 });
 
 priceListSchema.pre('save', function(next) {
