@@ -6,7 +6,7 @@ import { http } from '../../Config';
 export const loadPriceListsAction = StoreUtils.createAction(()=>{
     let url = (suffix) => 'pricelists/'+suffix;
     return (dispatch) => {
-      http.get(url('all')).then(response => { dispatch({type: LOAD_PRICELISTS, payload: { pricelists: response.data }})})
+      http.get(url('all')).then(response => { console.log(response.data);dispatch({type: LOAD_PRICELISTS, payload: { pricelists: response.data }})})
           .catch(error => console.error(error));
     }
 });

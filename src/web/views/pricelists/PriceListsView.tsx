@@ -20,6 +20,7 @@ import { TableComponent,
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { PriceListDetails } from './PriceListDetails';
 import { NewPriceList } from './NewPriceList';
+import { PriceListEditor } from './PriceListEditor';
 import { createPriceListAction } from '../../actions/pricelists/CreatePricelistAction';
 import { loadPriceListsAction } from '../../actions/pricelists/LoadPriceListsAction';
 import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
@@ -100,7 +101,11 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                           {this.state.selection && (this.state.selection == row.name) &&
                                             <tr>
                                               <td colSpan={7}>
-
+                                                <PriceListEditor addPriceListItem={(item : PriceAssignement) =>
+                                                                                      this.props.addPriceListItem(item)}                                                                                    
+                                                                 updatePriceList={(item : PriceList) => actions.editRow()}
+                                                                 productsKeys={this.props.productsKeys}
+                                                                 priceList={row}/>
                                               </td>
                                             </tr>}
                                         </>
