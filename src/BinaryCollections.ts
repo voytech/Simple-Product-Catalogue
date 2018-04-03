@@ -50,7 +50,7 @@ class BinaryCollections{
           contentType:'text/plain'
         },
         readableStreamBuffer,
-        (err,file) => err ? reject(err) : resolve(file)
+        (err,file) => err ? reject(err) : resolve(new Resource(binaryName,file))
       );
     });
   }
@@ -62,7 +62,7 @@ class BinaryCollections{
   public loadResource(resourceModel:string,resourceMeta:any){
     let Binary = this.getBinaryCollection(resourceModel);
     return new Promise<Resource>((resolve,reject) =>
-      Binary.readById(resourceMeta.refId,(err,res) => err ? reject(err) : resolve(res))
+      Binary.readById(resourceMeta.refId,(err,res) => err ? reject(err) : resolve(new Resource(resourceMeta.name,res)))
     );
   }
 

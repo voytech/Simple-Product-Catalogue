@@ -44,13 +44,17 @@ priceListSchema.pre('save', function(next) {
 
 priceListSchema.static('findByNameWithItems', (name: string) => {
     return new Promise<IPriceList>((resolve, reject) => {
-      PriceList.findOne({name: name}, (err,priceList)=>{
-        PriceListItem.find({priceList:priceList.id}).exec((err,items)=>{
-          let result = priceList.toJSON();
-          result['items'] = items.map(e => e.toJSON());
-          resolve(result);
-        })
-      });
+      PriceList.findOne({name: name}).exec()
+               .then(priceList => {
+                  PriceListItem.find({priceList:priceList.id}).exec()
+                               .then(items => {
+                                  let result = priceList.toJSON();
+                                  result['items'] = items.map(e => e.toJSON());
+                                  resolve(result);
+                               })
+                               .catch(err => reject(err))
+               })
+               .catch(err => reject(err))
     });
 });
 

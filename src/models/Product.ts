@@ -133,7 +133,7 @@ productSchema.method('addImage',function(imageName: string, content : string){
     return new Promise<IProduct>((resolve,reject) => {
         binaryCollections.addContent('Image', this, imageName, content)
                          .then(image => {
-                           this.images.push({name:imageName, refId:image._id});
+                           this.images.push({name:imageName, refId:image.data._id});
                            this.save((err,result) => err ? reject(err) : resolve(result))
                          })
                          .catch(err => reject(err));
@@ -144,7 +144,7 @@ productSchema.method('addAttachment',function(attachmentName: string, content : 
     return new Promise<IProduct>((resolve,reject) => {
         binaryCollections.addContent('Attachment', this, attachmentName, content)
                          .then(attachment => {
-                            this.attachments.push({name:attachmentName, refId:attachment._id});
+                            this.attachments.push({name:attachmentName, refId:attachment.data._id});
                             this.save((err,result) => err ? reject(err) : resolve(result))
                          })
                          .catch(err => reject(err));

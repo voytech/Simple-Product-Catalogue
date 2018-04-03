@@ -27,18 +27,19 @@ describe('Product management', () => {
 
     it('it should add properties ', (done) => {
       console.info('About to add new product properties...');
-      sampleProduct.addProperty(new Property({name:'color',value:'white'}),(err,result)=>{
-        console.info("New Sub-Document property added into Product")
-        expect(result).to.be.not.null;
-        expect(result).property('properties').to.be.not.null;
-        expect(result).property('properties').to.be.not.empty;
-        done();
-      });
+      sampleProduct.addProperty(new Property({name:'color',value:'white'}))
+                   .then(result => {
+                        console.info("New Sub-Document property added into Product")
+                        expect(result).to.be.not.null;
+                        expect(result).property('properties').to.be.not.null;
+                        expect(result).property('properties').to.be.not.empty;
+                        done()
+                   });
     });
 
     it('it should add tags', (done) => {
       console.info('About to add new product properties...');
-      sampleProduct.addTag('supper-product',(err,result)=>{
+      sampleProduct.addTag('supper-product').then(result =>{
         console.info("New tag string added into Product tags string array")
         expect(result).to.be.not.null;
         expect(result).property('tags').to.be.not.null;
@@ -49,7 +50,7 @@ describe('Product management', () => {
 
     it('it should add image', (done) => {
       console.info('About to add new product image...');
-      sampleProduct.addImage('image1',sampleImg,(err,result)=>{
+      sampleProduct.addImage('image1',sampleImg).then(result => {
         console.info("New image added into Product images string array")
         expect(result).to.be.not.null;
         expect(result).property('tags').to.be.not.null;
@@ -61,7 +62,7 @@ describe('Product management', () => {
 
     it('it should load image', (done) => {
       console.info('About to load product image ...');
-      Product.loadImage(sampleProduct,'image1',(err,result)=>{
+      Product.loadImage(sampleProduct,'image1').then(result => {
         console.info("Image has been loaded ...");
         console.info(result);
         expect(result).to.be.not.null;
@@ -69,12 +70,4 @@ describe('Product management', () => {
       });
     });
 
-    it('it should find product by name',(done)=>{
-      console.info('About query product by name...');
-      Product.findByName('Kitchen Wall Plate 40x25 HOUSESMART',(err,result)=>{
-        console.info('found a product');
-        expect(result).to.be.not.null;
-        done();
-      })
-    });
 });
