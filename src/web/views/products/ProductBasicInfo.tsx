@@ -54,8 +54,6 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
     }
   }
 
-
-
   render(){
     return <Formik
               enableReinitialize={ this.props.editMode }
