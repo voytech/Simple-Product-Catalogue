@@ -8,8 +8,5 @@ export class ProductService {
   public updateProduct(product : IProduct){
 
   }
-
-
-
-
+  
 }

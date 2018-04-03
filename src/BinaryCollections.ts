@@ -36,7 +36,7 @@ class BinaryCollections{
     return this.binaryCollections[collection].model; //<GridFSModel>model<IGridFS>(modelName,this.binaryCollections[collection].schema);
   }
 
-  public addBinary(binaryName:string, binaryContent:string,  model:string, cb:(error,createdFile)=> void){
+  public addBinary(binaryName:string, binaryContent:string,  model:string){
     let readableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
         frequency: 10,
         chunkSize: 2048
@@ -44,34 +44,38 @@ class BinaryCollections{
     readableStreamBuffer.put(binaryContent);
     readableStreamBuffer.stop();
     let Binary = this.getBinaryCollection(model);
-    Binary.write({
-        filename: binaryName,
-        contentType:'text/plain'
-      },
-      readableStreamBuffer,
-      cb
+    return new Promise<Resource>((resolve,reject) => {
+      Binary.write({
+          filename: binaryName,
+          contentType:'text/plain'
+        },
+        readableStreamBuffer,
+        (err,file) => err ? reject(err) : resolve(file)
+      );
+    });
+  }
+
+  public addContent(resourceModel:string,doc: Document, binaryName:string, binaryContent:string){
+    return this.addBinary(this.fileName(doc,resourceModel,binaryName),binaryContent,resourceModel);
+  }
+
+  public loadResource(resourceModel:string,resourceMeta:any){
+    let Binary = this.getBinaryCollection(resourceModel);
+    return new Promise<Resource>((resolve,reject) =>
+      Binary.readById(resourceMeta.refId,(err,res) => err ? reject(err) : resolve(res))
     );
   }
 
-  public addContent(resourceModel:string,doc: Document, binaryName:string, binaryContent:string, cb:(error,createdFile)=> void){
-    this.addBinary(this.fileName(doc,resourceModel,binaryName),binaryContent,resourceModel,cb);
-  }
-
-  public loadResource(resourceModel:string,resourceMeta:any,cb: (error, fileContent)=>void){
-    let Binary = this.getBinaryCollection(resourceModel);
-    Binary.readById(resourceMeta.refId,cb);
-  }
-
-  public loadResources(resourceModel:string,resourceMeta:any[],cb: (error, files : Resource[])=>void){
+  public loadResources(resourceModel:string,resourceMeta:any[]){
     let Binary = this.getBinaryCollection(resourceModel);
     let promises : Promise<Resource>[] = resourceMeta.map((meta) => {
-      return new Promise<Resource>((resolve) => {        
+      return new Promise<Resource>((resolve) => {
         return Binary.readById(meta.refId,(err,image) => {
           return resolve(new Resource(meta.name,image))
         })
       })
     });
-    Promise.all(promises).then(resources => cb(null,resources))
+    return Promise.all(promises);
   }
 }
 

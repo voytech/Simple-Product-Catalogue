@@ -32,7 +32,7 @@ export class BaseCRUDService<T extends Document> {
   }
 
   public getByIdentityField(identityFieldValue:string){
-    return this.model.find({[this.identityField] : identityFieldValue}).exec()
+    return this.model.findOne({[this.identityField] : identityFieldValue}).exec()
   }
 
   public getAllKeys(){

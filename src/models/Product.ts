@@ -4,6 +4,7 @@ import {binaryCollections, GridFSModel } from '../BinaryCollections'
 import {ResourceDescriptorSchema, IResourceDescriptor} from './ResourceDescriptor'
 import { Dated, DatedSchema } from './Dated'
 import { v1 as uuid } from 'uuid';
+import { Resource } from './Resource'
 
 let ObjectId =  Schema.Types.ObjectId;
 
@@ -15,7 +16,8 @@ export interface IProperty extends Document{
 export enum Status {
   Draft = 'draft',
   Published = 'published',
-  Live = 'live'
+  Live = 'live',
+  Archived = 'archived'
 }
 
 export interface IProduct extends Document, Dated {
@@ -29,24 +31,20 @@ export interface IProduct extends Document, Dated {
     properties : IProperty[];
     images : IResourceDescriptor[];
     attachments : IResourceDescriptor[];
-    addProperty(property : IProperty, callback : Function): void
-    addTag(tag : string, callback : Function): void
-    addImage(imageName: string, imageContent:string, callback : Function):void
-    addAttachment(attachmentName : string, attachmentContent:string, callback : Function):void
-    removeImage(name : String) : any;
-    removeProperty(name : String) : any;
-    removeAttachment(name : String) : any;
+    addProperty(property : IProperty): Promise<IProduct>
+    addTag(tag : string): Promise<IProduct>
+    addImage(imageName: string, imageContent:string): Promise<IProduct>
+    addAttachment(attachmentName : string, attachmentContent:string): Promise<IProduct>
+    removeImage(name : String): Promise<IProduct>;
+    removeProperty(name : String): Promise<IProduct>;
+    removeAttachment(name : String): Promise<IProduct>;
 }
 
 export interface IProductModel {
-    createProduct(item: IProduct, callback: Function): void
-    all(cllback : Function): void
-    findByName(name: string, callback: Function): void
-    loadImage(product: IProduct,name: string, callback: Function): void
-    loadImages(product: IProduct,callback: Function): void
-    loadAttachment(product: IProduct,name: string, callback: Function): void
-    loadAttachments(product: IProduct, callback: Function): void
-
+    loadImage(product: IProduct,name: string): Promise<Resource>
+    loadImages(product: IProduct): Promise<Resource[]>
+    loadAttachment(product: IProduct,name: string): Promise<Resource>
+    loadAttachments(product: IProduct): Promise<Resource[]>
 }
 
 const propertySchema = new Schema({
@@ -71,7 +69,7 @@ const productSchema = new Schema({... DatedSchema,
     },
     status: {
       type: String,
-      enum:[Status.Draft, Status.Live, Status.Published],
+      enum:[Status.Draft, Status.Live, Status.Published, Status.Archived],
       required: true
     },
     description : {
@@ -103,63 +101,54 @@ productSchema.pre('save', function(next) {
   next()
 });
 
-productSchema.static('createProduct', (product: IProduct, callback:  (err: any, product: IProduct) => void) => {
-    product.save(callback);
+productSchema.static('loadImage',function(product: IProduct, filename: string){
+    let meta = product.images.filter((e) => e.name = filename);
+    return binaryCollections.loadResource('Image', meta);
 });
 
-productSchema.static('findByName', (name: string, callback: Function) => {
-    Product.findOne({name: name}, callback);
+productSchema.static('loadImages',function(product: IProduct){
+    return binaryCollections.loadResources('Image', product.images);
 });
 
-productSchema.static('all', (callback: Function) => {
-    Product.find(callback);
+productSchema.static('loadAttachment',function(product: IProduct, filename: string){
+    let meta = product.attachments.filter((e) => e.name = filename);
+    return binaryCollections.loadResource('Attachment', meta);
 });
 
-
-productSchema.static('withAllPropertiesPopulated',function(name : string, callback : (err: any, product : IProduct) => void){
-    Product.findOne({name:name}).populate('properties').exec(callback);
+productSchema.static('loadAttachments',function(product: IProduct){
+    return binaryCollections.loadResources('Attachment', product.attachments);
 });
 
-productSchema.static('loadImage',function(product: IProduct, filename: string, callback: (err, image) => void){
-    let meta = product.images.filter((e)=>e.name = filename);
-    binaryCollections.loadResource('Image', meta, callback);
-});
-
-productSchema.static('loadImages',function(product: IProduct, callback: (err, images) => void){
-    binaryCollections.loadResources('Image', product.images, callback);
-});
-
-productSchema.static('loadAttachment',function(product: IProduct, filename: string, callback: (err, attachment) => void){
-    let meta = product.attachments.filter((e)=>e.name = filename);
-    binaryCollections.loadResource('Attachment', meta, callback);
-});
-
-productSchema.static('loadAttachments',function(product: IProduct, callback: (err, images) => void){
-    binaryCollections.loadResources('Attachment', product.attachments, callback);
-});
-
-productSchema.method('addProperty',function(property : IProperty, callback : (err: any, product: IProduct) => void){
+productSchema.method('addProperty',function(property : IProperty){
   this.properties.push(property);
-  this.save(callback);
+  return this.save();
 });
 
-productSchema.method('addTag',function(tag : string, callback : (err: any, product: IProduct) => void){
+productSchema.method('addTag',function(tag : string){
   this.tags.push(tag);
-  this.save(callback);
+  return this.save();
 });
 
-productSchema.method('addImage',function(imageName: string, content : string, callback : (err: any, product: IProduct) => void){
-  binaryCollections.addContent('Image', this, imageName, content,(error, createdFile) => {
-                                                                    this.images.push({name:imageName, refId:createdFile._id});
-                                                                    this.save(callback);
-  });
+productSchema.method('addImage',function(imageName: string, content : string){
+    return new Promise<IProduct>((resolve,reject) => {
+        binaryCollections.addContent('Image', this, imageName, content)
+                         .then(image => {
+                           this.images.push({name:imageName, refId:image._id});
+                           this.save((err,result) => err ? reject(err) : resolve(result))
+                         })
+                         .catch(err => reject(err));
+    });
 });
 
 productSchema.method('addAttachment',function(attachmentName: string, content : string, callback : (err: any, product: IProduct) => void){
-  binaryCollections.addContent('Attachment', this, attachmentName, content,(error, createdFile) => {
-                                                                              this.attachments.push({name:attachmentName, refId:createdFile._id});
-                                                                              this.save(callback);
-  });
+    return new Promise<IProduct>((resolve,reject) => {
+        binaryCollections.addContent('Attachment', this, attachmentName, content)
+                         .then(attachment => {
+                            this.attachments.push({name:attachmentName, refId:attachment._id});
+                            this.save((err,result) => err ? reject(err) : resolve(result))
+                         })
+                         .catch(err => reject(err));
+    });
 });
 
 productSchema.method('removeImage',function(name: string){
