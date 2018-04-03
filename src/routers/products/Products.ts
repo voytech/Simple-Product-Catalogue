@@ -142,7 +142,7 @@ export class Products extends CRUDRoute<IProduct> {
       router.delete('/:productName/attachments/:attachmentName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           this.service.getByIdentityField(req.params.productName)
                       .then(product => {
-                        product.removeImage(req.params.attachmentName)
+                        product.removeAttachment(req.params.attachmentName)
                                .then(product => res.json(product))
                                .catch(err => res.status(500).json(err))
                       })

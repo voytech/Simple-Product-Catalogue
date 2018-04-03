@@ -2,6 +2,7 @@ import * as  React from 'react';
 import { Formik, Form, FormikProps, Field, FieldProps  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
+import { StatusComponent  } from '../../components/StatusComponent';
 import { Col, Row,
          Button,
          Glyphicon,
@@ -44,7 +45,7 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
     return {
       name: '',
       type: 'tangible',
-      status : Status.Draft,
+      status : '?',
       category : '',
       description:'...',
       startDate : new Date().toISOString().split('T')[0],
@@ -62,7 +63,7 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
               onSubmit={(values: Product) => this.props.saveProduct(values)}
               render={(props : FormikProps<Product>) => (
                  <Form className="form-horizontal">
-                  <div className='mt-2'>
+                  <Row className='mt-2'>
                     <Col sm={6} className='vertical-divider'>
                       <HFormGroup name='name' display='Product Name'
                                   value={props.values.name}
@@ -75,9 +76,10 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
                                   componentClass='textarea'
                                   onChange={props.handleChange} />
                       <HFormGroup name='status' display='Status'
-                                  value={props.values.status}
-                                  type='text'
-                                  onChange={props.handleChange} />
+                                  type='text'>
+                        <StatusComponent status={props.values.status}/>
+                      </HFormGroup>
+
                     </Col>
                     <Col sm={6}>
                       <Row>
@@ -123,7 +125,7 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
                         </Col>
                       </Row>
                     </Col>
-                  </div>
+                  </Row>
                   <Button bsStyle="primary" type="submit" >Save</Button>
                 </Form>
               )}/>
