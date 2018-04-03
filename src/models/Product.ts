@@ -12,12 +12,19 @@ export interface IProperty extends Document{
   value : string;
 }
 
+export enum Status {
+  Draft = 'draft',
+  Published = 'published',
+  Live = 'live'
+}
+
 export interface IProduct extends Document, Dated {
     name: string;
     code: string;
     category : string;
     description: string;
     type: string;
+    status: Status;
     tags: string[];
     properties : IProperty[];
     images : IResourceDescriptor[];
@@ -62,6 +69,11 @@ const productSchema = new Schema({... DatedSchema,
     code: {
       type: String,
     },
+    status: {
+      type: String,
+      enum:[Status.Draft, Status.Live, Status.Published],
+      required: true
+    },
     description : {
       type: String
     },
@@ -86,7 +98,8 @@ const productSchema = new Schema({... DatedSchema,
 });
 
 productSchema.pre('save', function(next) {
-  this.code = uuid();
+  if (!this.code) this.code = uuid();
+  if (!this.status) this.status = Status.Draft;
   next()
 });
 

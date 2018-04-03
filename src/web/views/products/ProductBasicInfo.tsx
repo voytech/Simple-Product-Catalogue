@@ -6,7 +6,7 @@ import { Col, Row,
          Button,
          Glyphicon,
          ButtonToolbar  } from 'react-bootstrap';
-import { Product, ProductProperty, productValidation } from '../../actions/products/Model'
+import { Product, Status, ProductProperty, productValidation } from '../../actions/products/Model'
 
 interface ProductBasicInfoProps{
   saveProduct : (product : Product) => void;
@@ -44,6 +44,7 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
     return {
       name: '',
       type: 'tangible',
+      status : Status.Draft,
       category : '',
       description:'...',
       startDate : new Date().toISOString().split('T')[0],
@@ -74,6 +75,10 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
                                   value={props.values.description}
                                   type='text'
                                   componentClass='textarea'
+                                  onChange={props.handleChange} />
+                      <HFormGroup name='status' display='Status'
+                                  value={props.values.status}
+                                  type='text'
                                   onChange={props.handleChange} />
                     </Col>
                     <Col sm={6}>

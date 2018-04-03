@@ -1,60 +1,54 @@
 import {Schema, Model, Document, model, connection} from 'mongoose';
 import { BaseRoute } from './BaseRoute';
+import { BaseCRUDService } from '../services/BaseCRUDService'
 import { Router, Request, Response } from 'express';
 
 
 export class CRUDRoute<T extends Document> extends BaseRoute {
 
+  private service : BaseCRUDService<T>;
   constructor(private model: Model<T>, private identityField : string){
     super();
+    this.service = new BaseCRUDService(model,identityField);
   }
 
   public addAction(router: Router): void {
       router.post('/create',this.restrict(['ADMIN']), (req: Request, res: Response) => {
-          this.model.create({ ... req.body },(err,result)=>{
-            if (err){
-              return res.status(500).json(err);
-            } else {
-              return res.json(result.toJSON());
-            }
-          })
+          this.service.create(req.body)
+                      .then(result => res.json(result.toJSON()))
+                      .catch(err => res.status(500).json(err));
       });
   }
 
   public saveAction(router: Router): void {
       router.post('/save',this.restrict(['ADMIN']), (req: Request, res: Response) => {
-          let fieldValue = req.body[this.identityField];
-          //req.body.delete(this.identityField);
-          this.model.findOneAndUpdate({[this.identityField] : fieldValue}, { $set: { ...req.body }}, { new: true }, function (err, result) {
-            if (err) return res.status(500).json(err);
-            res.json(result);
-          });
+          this.service.update(req.body)
+                      .then(result => res.json(result.toJSON()))
+                      .catch(err => res.status(500).json(err))
       });
   }
 
   public removeAction(router: Router): void {
       router.delete('/remove/:resourceName',(req:Request,res:Response)=>{
-        this.model.remove({name : req.params.resourceName}).then((err)=>{
-          return res.json({status: 'removed'});
-        })
+        this.service.remove(req.params.resourceName)
+                    .then(result => res.json(result.toJSON()))
+                    .catch(err => res.status(500).json(err))
       });
   }
 
   public getAllAction(router: Router): void {
       router.get('/all',(req:Request,res:Response)=>{
-        this.model.find((err, result) => {
-          if (err) return res.status(500).json(err);
-          res.json(result.map((e) => e.toJSON()));
-        })
+        this.service.getAll()
+                    .then(result => res.json(result.map(e => e.toJSON())))
+                    .catch(err => res.status(500).json(err))
       });
   }
 
   public getAllKeysAction(router : Router) : void {
     router.get('/allkeys',(req:Request,res:Response)=>{
-      this.model.find().select(this.identityField).exec((err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json(result.map((e) => e.toJSON()));
-      })
+      this.service.getAllKeys()
+                  .then(result => res.json(result.map(e => e.toJSON())))
+                  .catch(err => res.status(500).json(err))    
     });
   }
 

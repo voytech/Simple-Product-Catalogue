@@ -1,5 +1,12 @@
 import yup from 'yup';
 
+export enum Status {
+  Draft = 'draft',
+  Published = 'published',
+  Live = 'live',
+  Archive = 'archive'
+}
+
 export interface ResourceData {
   name : string;
   data? : any;
@@ -16,6 +23,7 @@ export interface Product {
   name: string;
   type: string;
   code ?: string;
+  status : string;
   category : string;
   description: string;
   startDate : string;
@@ -31,6 +39,7 @@ export interface Product {
 export const productValidation = yup.object().shape({
   name: yup.string().required(),
   type: yup.string().required(),
+  status: yup.string().required(),
   category: yup.string().required(),
   startDate: yup.date().min(new Date(1990,0,1)).max(new Date(9999,0,1)).default(new Date()),
   endDate: yup.date().min(new Date(1990,0,1)).max(new Date(9999,0,1)).default(new Date(9999,0,1)),
