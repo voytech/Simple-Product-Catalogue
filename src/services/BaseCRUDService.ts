@@ -5,7 +5,6 @@ export class PageInfo {
   constructor(public offset : number,public size : number){}
 }
 
-
 export class BaseCRUDService<T extends Document> {
 
   constructor(private model: Model<T>, private identityField : string){}

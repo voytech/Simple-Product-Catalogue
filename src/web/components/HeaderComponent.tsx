@@ -30,7 +30,7 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
   }
 
   isActive = (tab:string) => {
-      return window.location.hash.indexOf(tab) != -1;     
+      return window.location.hash.indexOf(tab) != -1;
   }
 
   render() {
@@ -45,8 +45,14 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
        </Navbar.Header>
        <Navbar.Collapse>
          <Nav>
+           <NavItem active={this.isActive('dashboard')} eventKey={1} href="#/dashboard">
+             Dashboard
+           </NavItem>
            <NavItem active={this.isActive('dictionaries')} eventKey={1} href="#/dictionaries">
              Dictionaries
+           </NavItem>
+           <NavItem active={this.isActive('categories')} eventKey={1} href="#/categories">
+             Categories
            </NavItem>
            <NavItem active={this.isActive('products')} eventKey={2} href="#/products">
              Products
@@ -56,6 +62,12 @@ export class HeaderComponent extends React.Component<IHeaderComponentProperties,
            </NavItem>
            <NavItem active={this.isActive('promotions')} eventKey={2} href="#/promotions">
              Promotions
+           </NavItem>
+           <NavItem active={this.isActive('inventory')} eventKey={2} href="#/inventory">
+             Inventory
+           </NavItem>
+           <NavItem active={this.isActive('orders')} eventKey={2} href="#/orders">
+             Orders
            </NavItem>
            <NavItem active={this.isActive('rating')} eventKey={2} href="#/rating">
              Product Ratings

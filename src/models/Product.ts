@@ -130,25 +130,19 @@ productSchema.method('addTag',function(tag : string){
 });
 
 productSchema.method('addImage',function(imageName: string, content : string){
-    return new Promise<IProduct>((resolve,reject) => {
-        binaryCollections.addContent('Image', this, imageName, content)
-                         .then(image => {
-                           this.images.push({name:imageName, refId:image.data._id});
-                           this.save((err,result) => err ? reject(err) : resolve(result))
-                         })
-                         .catch(err => reject(err));
-    });
+    return binaryCollections.addContent('Image', this, imageName, content)
+                            .then(image => {
+                                this.images.push({name:imageName, refId:image.data._id});
+                                return this.save()
+                             })
 });
 
 productSchema.method('addAttachment',function(attachmentName: string, content : string, callback : (err: any, product: IProduct) => void){
-    return new Promise<IProduct>((resolve,reject) => {
-        binaryCollections.addContent('Attachment', this, attachmentName, content)
-                         .then(attachment => {
-                            this.attachments.push({name:attachmentName, refId:attachment.data._id});
-                            this.save((err,result) => err ? reject(err) : resolve(result))
-                         })
-                         .catch(err => reject(err));
-    });
+    return binaryCollections.addContent('Attachment', this, attachmentName, content)
+                            .then(attachment => {
+                                this.attachments.push({name:attachmentName, refId:attachment.data._id});
+                                return this.save()
+                            })
 });
 
 productSchema.method('removeImage',function(name: string){

@@ -24,7 +24,7 @@ class App extends React.Component{
               <AppContainer>
                 <HashRouter>
                    <div className="container-fluid">
-                       <HeaderComponent title='Simple Product Catalogue'></HeaderComponent>
+                       <HeaderComponent title='$ FreEcommerce $'></HeaderComponent>
                        <Switch>
                          <Route path="/user"  component={UserRoutes}/>
                          <Route path="/products"  component={ProductRoutes}/>

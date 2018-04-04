@@ -21,12 +21,9 @@ export class Products extends CRUDRoute<IProduct> {
     public addPropertyAction(router: Router): void {
         router.post('/:productName/addProperty',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             Product.findOne({name:req.params.productName})
-                   .then(product => {
-                     product.addProperty(req.body)
-                            .then(product => res.json(product))
-                            .catch(err => res.status(500).json(err))
-                   })
-                   .catch(err => res.status(500).json(err));
+                   .then(product => { return product.addProperty(req.body)} )
+                   .then(product => res.json(product))
+                   .catch(err => res.status(500).json(err))
         });
     }
 
@@ -34,9 +31,8 @@ export class Products extends CRUDRoute<IProduct> {
         router.post('/save/getall',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let { _id, ...rest } = req.body;
             Product.findByIdAndUpdate(_id, { $set: { ...rest }}, { new: true })
-                   .then(product => this.service.getAll()
-                                                .then(result => res.json(result))
-                                                .catch(err => res.status(500).json(err)))
+                   .then(product => {return this.service.getAll()} )
+                   .then(result => res.json(result))
                    .catch(err => res.status(500).json(err))
         });
     }
@@ -45,12 +41,9 @@ export class Products extends CRUDRoute<IProduct> {
         router.post('/:productName/uploadAttachment',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let { name, data } = req.body;
             this.service.getByIdentityField(req.params.productName)
-                        .then(product => {
-                          product.addAttachment(name,data)
-                                 .then(product => res.json(product))
-                                 .catch(err => res.status(500).json(err))
-                        })
-                        .catch(err => res.status(500).json(err));
+                        .then(product => { return product.addAttachment(name,data)} )
+                        .then(product => res.json(product))
+                        .catch(err => res.status(500).json(err))
         });
     }
 
@@ -58,12 +51,9 @@ export class Products extends CRUDRoute<IProduct> {
         router.post('/uploadImage',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let { product, image } = req.body;
             this.service.getByIdentityField(product.name)
-                        .then(product => {
-                          product.addImage(image.filename,image.data)
-                                 .then(product => res.json(product))
-                                 .catch(err => res.status(500).json(err))
-                        })
-                        .catch(err => res.status(500).json(err));
+                        .then(product => { return product.addImage(image.filename,image.data) })
+                        .then(product => res.json(product))
+                        .catch(err => res.status(500).json(err))
         });
     }
 
@@ -71,11 +61,8 @@ export class Products extends CRUDRoute<IProduct> {
       router.post('/image',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           let { product, name } = req.body;
           this.service.getByIdentityField(product.name)
-                      .then(product => {
-                        Product.loadImage(product,name)
-                               .then(image => res.json(image))
-                               .catch(err => res.status(500).json(err))
-                      })
+                      .then(product => { return Product.loadImage(product,name)} )
+                      .then(image => res.json(image))
                       .catch(err => res.status(500).json(err));
       });
     }
@@ -83,11 +70,8 @@ export class Products extends CRUDRoute<IProduct> {
     public loadImagesAction(router : Router): void {
       router.get('/:productName/images',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           this.service.getByIdentityField(req.params.productName)
-                      .then(product => {
-                        Product.loadImages(product)
-                               .then(images => res.json(images.map(img => {return new Resource(img.name,img.data.toString('utf8'))})))
-                               .catch(err => res.status(500).json(err))
-                      })
+                      .then(product => { return Product.loadImages(product)})
+                      .then(images => res.json(images.map(img => {return new Resource(img.name,img.data.toString('utf8'))})))
                       .catch(err => res.status(500).json(err));
       });
     }
@@ -95,12 +79,9 @@ export class Products extends CRUDRoute<IProduct> {
     public loadAttachmentsAction(router : Router): void {
       router.get('/:productName/attachments',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           this.service.getByIdentityField(req.params.productName)
-                      .then(product => {
-                        Product.loadAttachments(product)
-                               .then(atts => res.json(atts.map(att => {return new Resource(att.name,att.data.toString('utf8'))})))
-                               .catch(err => res.status(500).json(err))
-                      })
-                      .catch(err => res.status(500).json(err));
+                      .then(product => { return Product.loadAttachments(product)})
+                      .then(atts => res.json(atts.map(att => {return new Resource(att.name,att.data.toString('utf8'))})))
+                      .catch(err => res.status(500).json(err))
       });
     }
 
@@ -117,36 +98,27 @@ export class Products extends CRUDRoute<IProduct> {
     public removeImageAction(router : Router): void {
       router.delete('/:productName/images/:imageName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           this.service.getByIdentityField(req.params.productName)
-                      .then(product => {
-                        product.removeImage(req.params.imageName)
-                               .then(product => res.json(product))
-                               .catch(err => res.status(500).json(err))
-                      })
-                      .catch(err => res.status(500).json(err));
+                      .then(product => { return product.removeImage(req.params.imageName) })
+                      .then(product => res.json(product))
+                      .catch(err => res.status(500).json(err))
       });
     }
 
     public removePropertyAction(router : Router): void {
       router.delete('/:productName/properties/:propName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           this.service.getByIdentityField(req.params.productName)
-                      .then(product => {
-                        product.removeProperty(req.params.propName)
-                               .then(product => res.json(product))
-                               .catch(err => res.status(500).json(err))
-                      })
-                      .catch(err => res.status(500).json(err));
+                      .then(product => { return product.removeProperty(req.params.propName)})
+                      .then(product => res.json(product))
+                      .catch(err => res.status(500).json(err))
       });
     }
 
     public removeAttachmentAction(router : Router): void {
       router.delete('/:productName/attachments/:attachmentName',this.restrict(['ADMIN']), (req: Request, res: Response) => {
           this.service.getByIdentityField(req.params.productName)
-                      .then(product => {
-                        product.removeAttachment(req.params.attachmentName)
-                               .then(product => res.json(product))
-                               .catch(err => res.status(500).json(err))
-                      })
-                      .catch(err => res.status(500).json(err));
+                      .then(product => { return product.removeAttachment(req.params.attachmentName)})
+                      .then(product => res.json(product))
+                      .catch(err => res.status(500).json(err))
       });
     }
 
@@ -154,11 +126,8 @@ export class Products extends CRUDRoute<IProduct> {
         router.post('/remove/getall',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let { _id, ...rest } = req.body;
             Product.remove(req.body)
-                   .then(removed => {
-                      this.service.getAll()
-                                  .then(all => res.json(all.map((e) => e.toJSON())))
-                                  .catch(err => res.status(500).json(err))
-                   })
+                   .then(removed => { return this.service.getAll()})
+                   .then(all => res.json(all.map((e) => e.toJSON())))
                    .catch(err => res.status(500).json(err))
         });
     }

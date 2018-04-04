@@ -65,21 +65,16 @@ priceListSchema.virtual('allItems').get(async obj =>
 
 priceListSchema.method('addItem', function(productName: string, price :number){
     let self = this;
-    return new Promise<IPriceListItem>((resolve,reject) => {
-      Product.findOne({name : productName}).exec()
-             .then(product => {
-                 new PriceListItem({
-                   name : product.name +" [ "+self.name+" ]",
-                   code : uuid(),
-                   priceList: self.id,
-                   product: product.id,
-                   price : price
-                 }).save()
-                   .then(item => resolve(item))
-                   .catch(err => reject(err));
-             })
-             .catch(err => reject(err))
-    });
+    return Product.findOne({name : productName}).exec()
+                  .then(product => {
+                        return new PriceListItem({
+                             name : product.name +" [ "+self.name+" ]",
+                             code : uuid(),
+                             priceList: self.id,
+                             product: product.id,
+                             price : price
+                        }).save()                             
+                  });
 });
 
 export type PriceListModel = Model<IPriceList> & IPriceListModel & IPriceList;
