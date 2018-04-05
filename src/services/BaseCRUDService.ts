@@ -9,6 +9,10 @@ export class BaseCRUDService<T extends Document> {
 
   constructor(private model: Model<T>, private identityField : string){}
 
+  static create(model: Model<any>, identityField : string){
+    return new BaseCRUDService(model,identityField);
+  }
+
   private transformPayload(input : T, ...transforms : ComposableFunction<T>[]){
       return transforms ? compose<T>(...transforms)(input) : input;
   }

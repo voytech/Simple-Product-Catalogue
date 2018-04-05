@@ -60,10 +60,10 @@ export class ProductImages extends React.Component<ProductImagesProps,ProductIma
     let file = e.target.files[0];
     let reader = new FileReader();
     reader.addEventListener("load", (event) => {
-        uploadImageAction(new UploadImage(this.props.product, {
-          filename: file.name,
+        uploadImageAction(this.props.product.name, {
+          name : file.name,
           data : (event.target as any).result
-        }));
+        });
     }, false);
     reader.readAsDataURL(file);
   }

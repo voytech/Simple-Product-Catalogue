@@ -73,7 +73,7 @@ priceListSchema.method('addItem', function(productName: string, price :number){
                              priceList: self.id,
                              product: product.id,
                              price : price
-                        }).save()                             
+                        }).save()
                   });
 });
 

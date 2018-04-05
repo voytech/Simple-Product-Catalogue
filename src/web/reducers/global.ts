@@ -1,7 +1,23 @@
 import * as types from '../consts/Actions'
 
-function listRemove(list :any[], prop:string, val:string){
-  return list.filter(e => e[prop] !== val).slice();
+function listRemove(list :any[], payload : any, prop:string){
+  let element = list.filter(e => e[prop] === payload[prop])[0]
+  if (element){
+    let index = list.indexOf(element)
+    list.splice(index,1)
+    return list.slice()
+  }
+  return list;
+}
+
+function listUpdate(list : any[], payload : any, prop:string){
+    let element = list.filter(e => e[prop] === payload[prop])[0]
+    if (element){
+      let index = list.indexOf(element)
+      list.splice(index,1,payload)
+      return list.slice()
+    }
+    return list;
 }
 
 export function reduce(state = {}, action){
@@ -12,11 +28,11 @@ export function reduce(state = {}, action){
     }
     case types.UPDATE_PRODUCT : return {
       ... state,
-      products : listRemove((state as any).products,'name',action.payload.name).concat(action.payload)
+      products : listUpdate((state as any).products,action.payload,'name')
     }
     case types.REMOVE_PRODUCT : return {
       ... state,
-      products : listRemove((state as any).products,'name',action.payload.name)
+      products : listRemove((state as any).products,action.payload,'name')
     }
     case types.CREATE_PRICELIST : return {
       ... state,
@@ -24,11 +40,11 @@ export function reduce(state = {}, action){
     }
     case types.UPDATE_PRICELIST : return {
       ... state,
-      pricelists : listRemove((state as any).pricelists,'name',action.payload.name).concat(action.payload)
+      pricelists : listUpdate((state as any).pricelists,action.payload,'name')
     }
     case types.REMOVE_PRICELIST : return {
       ... state,
-      pricelists : listRemove((state as any).pricelists,'name',action.payload.name)
+      pricelists : listRemove((state as any).pricelists,action.payload,'name')
     }
     case types.LOAD_ENTITY_KEYS : return {
       ... state,
