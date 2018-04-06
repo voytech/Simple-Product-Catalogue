@@ -44,6 +44,10 @@ interface RenderCellsDef {
   [title : string] : (value : Cell, actions : TableCellActions) => React.ReactNode
 }
 
+interface RenderColumnsDef {
+  [title : string] : (value : Column, actions : TableColumnActions) => React.ReactNode
+}
+
 export interface RenderCells extends PartiallyAppliedNoArgMarkerInterface {};
 
 export interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
@@ -55,6 +59,7 @@ interface TableProps<Row> {
   onRemove ?: (row : any) => void;
   onRemoveMany ?: (options : any) => void;
   renderHeader ?: (columns : RenderColumns) => React.ReactNode;
+  renderColumns ?: RenderColumnsDef
   renderColumn : ((column : Column, actions: TableColumnActions) => React.ReactNode);
   renderBody ? : (rowsRender : RenderRows) => React.ReactNode;
   renderRow ?: ((rowRender : RenderCells, row : any, actions: TableRowActions) => React.ReactNode);
@@ -91,7 +96,13 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
 
   private renderColumns = () : React.ReactNode => {
     return <>
-            {this.props.columns.map((col) => this.props.renderColumn(col,null))}
+            {this.props.columns.map((col) => {
+              return this.props.renderColumns && (col.title in this.props.renderColumns)
+              ?
+              this.props.renderColumns[col.title](col,null)
+              :
+              this.props.renderColumn(col,null)
+            })}
            </>;
   }
 

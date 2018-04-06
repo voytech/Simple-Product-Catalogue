@@ -29,6 +29,8 @@ import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListIte
 import { dateOnly } from '../Utils'
 import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricelists/Model'
 import { Product  } from '../../actions/products/Model'
+import { editButtonCell, removeButtonCell, dateCell,
+         removeButtonColumn } from '../../components/tables/renderers/Basics'
 
 
 interface PriceListViewProps{
@@ -70,33 +72,18 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                          new TableColumn('X')]}
                                rows={this.props.pricelists}
                                onEdit={ (prs) => this.setState({ selection: prs.name }) }
-                               onRemove={ (prs) => {return null;} }
-                               renderColumn={(column : Column, actions: TableColumnActions) => {
-                                 switch  (column.title) {
-                                   case 'X' : return <th key={column.title}>
-                                                       <Button bsStyle='danger' bsSize='xsmall' onClick={() => alert('removing all')}>
-                                                         <Glyphicon glyph='trash' />
-                                                       </Button>
-                                                     </th>
-                                   default  : return <th>{column.title}</th>
-                                 }
+                               onRemove={ (prs) =>  null }
+                               renderColumns={{
+                                 'X'  : removeButtonColumn
                                }}
-                               renderCell={(cell : Cell, actions : TableCellActions) => {
-                                 switch (cell.column.title){
-                                   case 'Edit' : return <td key={cell.column.title}>
-                                                          <Button bsSize='xsmall' onClick={() => actions.editRow()}>
-                                                            <Glyphicon glyph='pencil' />
-                                                          </Button>
-                                                        </td>
-                                   case 'X' : return <td key={cell.column.title}>
-                                                        <Button bsSize='xsmall'  type='button' onClick={(e) => actions.removeRow()}>
-                                                          <Glyphicon glyph='trash' />
-                                                        </Button>
-                                                      </td>
-                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{dateOnly(cell.value)}</td>
-                                   default     : return <td key={cell.column.title}>{cell.value}</td>
-                                 }
-                               }}
+                               renderColumn={ (column : Column, actions: TableColumnActions) => <th>{column.title}</th> }
+                               renderCells={ {
+                                 'Edit'      : editButtonCell,
+                                 'X'         : removeButtonCell,
+                                 'Start Date': dateCell,
+                                 'Expiry'    : dateCell
+                               } }
+                               renderCell={ (cell : Cell, actions : TableCellActions) => <td key={cell.column.title}>{cell.value}</td> }
                                renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
                                  return <>
                                           <tr>{rowRender()}</tr>

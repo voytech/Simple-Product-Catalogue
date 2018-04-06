@@ -17,7 +17,8 @@ import { TableComponent,
          TableCellActions,
          RenderCells,
          TableRowActions } from '../../components/tables/TableComponent'
-import { editButtonCell, removeButtonCell, dateCell } from '../../components/tables/renderers/Basics'
+import { editButtonCell, removeButtonCell, dateCell,
+         removeButtonColumn } from '../../components/tables/renderers/Basics'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { createProductAction } from '../../actions/products/CreateProductAction';
 import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
@@ -67,25 +68,17 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                rows={this.props.products}
                                onEdit={ (product) => this.setState({ selection: product.name }) }
                                onRemove={ (product) => this.props.removeProduct(product) }
-                               renderColumn={(column : Column, actions: TableColumnActions) => {
-                                 switch  (column.title) {
-                                   case 'X' : return <th key={column.title}>
-                                                       <Button bsStyle='danger' bsSize='xsmall' onClick={() => alert('removing all')}>
-                                                         <Glyphicon glyph='trash' />
-                                                       </Button>
-                                                     </th>
-                                   default  : return <th>{column.title}</th>
-                                 }
+                               renderColumns={{
+                                 'X'  : removeButtonColumn
                                }}
+                               renderColumn={(column : Column, actions: TableColumnActions) =>  <th>{column.title}</th> }
                                renderCells={{
                                  'Edit'      : editButtonCell,
                                  'X'         : removeButtonCell,
                                  'Start Date': dateCell,
                                  'Expiry'    : dateCell
                                }}
-                               renderCell={(cell : Cell, actions : TableCellActions) => {
-                                 return <td key={cell.column.title}>{cell.value}</td>
-                               }}
+                               renderCell={(cell : Cell, actions : TableCellActions) => <td key={cell.column.title}>{cell.value}</td> }
                                renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
                                  return <>
                                           <tr>{rowRender()}</tr>
