@@ -40,6 +40,10 @@ interface PartiallyAppliedNoArgMarkerInterface{
   () : React.ReactNode
 }
 
+interface RenderCellsDef {
+  [title : string] : (value : Cell, actions : TableCellActions) => React.ReactNode
+}
+
 export interface RenderCells extends PartiallyAppliedNoArgMarkerInterface {};
 
 export interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
@@ -54,6 +58,7 @@ interface TableProps<Row> {
   renderColumn : ((column : Column, actions: TableColumnActions) => React.ReactNode);
   renderBody ? : (rowsRender : RenderRows) => React.ReactNode;
   renderRow ?: ((rowRender : RenderCells, row : any, actions: TableRowActions) => React.ReactNode);
+  renderCells ?: RenderCellsDef
   renderCell : (value : Cell, actions : TableCellActions) => React.ReactNode;
 }
 
@@ -72,10 +77,12 @@ export class TableColumns {
     }
 }
 
+//---------------- Helper statics for property passing.
+
 export function columns(... cols : Column[]){
   return cols;
 }
-
+//----------------------------------------------------
 export class TableComponent extends React.Component<TableProps<any>,TableState<any>>{
 
   constructor(props){
@@ -101,7 +108,13 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
 
   private renderCells = (cells : Cell[], actions : TableCellActions) : React.ReactNode => {
     return <>
-            {cells.map((cell) => this.props.renderCell(cell,actions))}
+            {cells.map((cell) => {
+              return this.props.renderCells && (cell.column.title in this.props.renderCells)
+                     ?
+                     this.props.renderCells[cell.column.title](cell,actions)
+                     :
+                     this.props.renderCell(cell,actions)
+            })}
            </>;
   }
 

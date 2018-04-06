@@ -17,6 +17,7 @@ import { TableComponent,
          TableCellActions,
          RenderCells,
          TableRowActions } from '../../components/tables/TableComponent'
+import { editButtonCell, removeButtonCell, dateCell } from '../../components/tables/renderers/Basics'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { createProductAction } from '../../actions/products/CreateProductAction';
 import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
@@ -76,21 +77,14 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                    default  : return <th>{column.title}</th>
                                  }
                                }}
+                               renderCells={{
+                                 'Edit'      : editButtonCell,
+                                 'X'         : removeButtonCell,
+                                 'Start Date': dateCell,
+                                 'Expiry'    : dateCell
+                               }}
                                renderCell={(cell : Cell, actions : TableCellActions) => {
-                                 switch (cell.column.title){
-                                   case 'Edit' : return <td key={cell.column.title}>
-                                                          <Button bsSize='xsmall' onClick={() => actions.editRow()}>
-                                                            <Glyphicon glyph='pencil' />
-                                                          </Button>
-                                                        </td>
-                                   case 'X' : return <td key={cell.column.title}>
-                                                        <Button bsSize='xsmall'  type='button' onClick={(e) => actions.removeRow()}>
-                                                          <Glyphicon glyph='trash' />
-                                                        </Button>
-                                                      </td>
-                                   case 'Start Date': case 'Expiry': return <td key={cell.column.title}>{dateOnly(cell.value)}</td>
-                                   default     : return <td key={cell.column.title}>{cell.value}</td>
-                                 }
+                                 return <td key={cell.column.title}>{cell.value}</td>
                                }}
                                renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
                                  return <>
