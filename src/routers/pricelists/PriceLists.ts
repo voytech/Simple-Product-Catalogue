@@ -14,7 +14,7 @@ export class PriceLists extends CRUDRoute<IPriceList,PriceListService> {
       super(PriceList,'name',[]);
     }
 
-    protected createService(model : Model<IPriceList>,identityField : string) : PriceListService{
+    createService(model : Model<IPriceList>,identityField : string) : PriceListService{
       return new PriceListService(model,identityField);
     }
 

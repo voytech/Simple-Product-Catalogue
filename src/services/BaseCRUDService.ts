@@ -1,5 +1,5 @@
 import {Schema, Model, Document, model, connection} from 'mongoose';
-import { multimethod, compose, ComposableFunction } from '../Utils'
+import { interleavePromises, compose, ComposableFunction } from '../Utils'
 
 export class PageInfo {
   constructor(public offset : number,public size : number){}
@@ -43,7 +43,7 @@ export class BaseCRUDService<T extends Document> {
   }
 
   public getAllKeysWithTotal(){
-    return multimethod({
+    return interleavePromises({
       data : (() => this.getAllKeys()),
       collCount : (() => this.getCount())
     })
@@ -54,7 +54,7 @@ export class BaseCRUDService<T extends Document> {
   }
 
   public getAllWithTotal(){
-    return multimethod({
+    return interleavePromises({
       data : (() => this.getAll()),
       collCount : (() => this.getCount())
     })
@@ -75,7 +75,7 @@ export class BaseCRUDService<T extends Document> {
   }
 
   public getPageWithTotal(pageInfo : PageInfo){
-    return multimethod({
+    return interleavePromises({
       data : (() => this.getPage(pageInfo)),
       collCount : (() => this.getCount())
     })

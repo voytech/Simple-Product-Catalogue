@@ -20,7 +20,7 @@ export class Products extends CRUDRoute<IProduct,ProductService> {
             //this will ensure we never propagate down fields managed by dedicated logic.
     }
 
-    protected createService(model : Model<IProduct>,identityField : string){
+    createService(model : Model<IProduct>,identityField : string){
       return new ProductService(model,identityField);
     }
 

@@ -3,9 +3,9 @@ import { BaseRoute } from './BaseRoute';
 import { BaseCRUDService } from '../services/BaseCRUDService'
 import { Router, Request, Response } from 'express';
 import { ComposableFunction } from '../Utils'
+import { ServiceAwareRoute } from './ServiceAwareRoute'
 
-
-export class CRUDRoute<T extends Document,E extends BaseCRUDService<T>> extends BaseRoute {
+export class CRUDRoute<T extends Document,E extends BaseCRUDService<T>> extends BaseRoute implements ServiceAwareRoute<T,E> {
 
   protected service : E;
 
@@ -16,7 +16,7 @@ export class CRUDRoute<T extends Document,E extends BaseCRUDService<T>> extends 
     this.service = <E>this.createService(model,identityField);
   }
 
-  protected createService(model : Model<T>,identityField : string) : BaseCRUDService<T>{
+  createService(model : Model<T>,identityField : string) : BaseCRUDService<T>{
     return new BaseCRUDService<T>(model,identityField);
   }
 

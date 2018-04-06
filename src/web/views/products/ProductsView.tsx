@@ -16,7 +16,7 @@ import { TableComponent,
          TableColumnActions,
          TableCellActions,
          RenderCells,
-         TableRowActions } from '../../components/lists/TableComponent'
+         TableRowActions } from '../../components/tables/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { createProductAction } from '../../actions/products/CreateProductAction';
 import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';

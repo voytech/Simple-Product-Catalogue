@@ -2,7 +2,7 @@ interface CallEntry {
   [key : string ] : Function;
 }
 
-export const multimethod = (calls : CallEntry) => {
+export const interleavePromises = (calls : CallEntry) => {
   let call = (key : string, call : Function) => {
      call().then(result => {return {[key] : result}})
            .catch(err => {return {[key] : err}})

@@ -160,6 +160,6 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
       return <Table responsive>
                 { this.renderHeader() }
                 { this.renderBody() }
-            </Table>;
+             </Table>;
   }
 }
