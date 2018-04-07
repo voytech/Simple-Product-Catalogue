@@ -29,8 +29,8 @@ import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListIte
 import { dateOnly } from '../Utils'
 import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricelists/Model'
 import { Product  } from '../../actions/products/Model'
-import { editButtonCell, removeButtonCell, dateCell,
-         removeButtonColumn } from '../../components/tables/renderers/Basics'
+import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
+         removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
 
 
 interface PriceListViewProps{
@@ -76,14 +76,14 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                renderColumns={{
                                  'X'  : removeButtonColumn
                                }}
-                               renderColumn={ (column : Column, actions: TableColumnActions) => <th>{column.title}</th> }
+                               renderColumn={ defaultTextColumn }
                                renderCells={ {
                                  'Edit'      : editButtonCell,
                                  'X'         : removeButtonCell,
                                  'Start Date': dateCell,
                                  'Expiry'    : dateCell
                                } }
-                               renderCell={ (cell : Cell, actions : TableCellActions) => <td key={cell.column.title}>{cell.value}</td> }
+                               renderCell={ defaultTextCell }
                                renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
                                  return <>
                                           <tr>{rowRender()}</tr>

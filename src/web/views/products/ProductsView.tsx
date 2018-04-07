@@ -17,8 +17,8 @@ import { TableComponent,
          TableCellActions,
          RenderCells,
          TableRowActions } from '../../components/tables/TableComponent'
-import { editButtonCell, removeButtonCell, dateCell,
-         removeButtonColumn } from '../../components/tables/renderers/Basics'
+import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
+         removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { createProductAction } from '../../actions/products/CreateProductAction';
 import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
@@ -71,14 +71,14 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                                renderColumns={{
                                  'X'  : removeButtonColumn
                                }}
-                               renderColumn={(column : Column, actions: TableColumnActions) =>  <th>{column.title}</th> }
+                               renderColumn={ defaultTextColumn }
                                renderCells={{
                                  'Edit'      : editButtonCell,
                                  'X'         : removeButtonCell,
                                  'Start Date': dateCell,
                                  'Expiry'    : dateCell
                                }}
-                               renderCell={(cell : Cell, actions : TableCellActions) => <td key={cell.column.title}>{cell.value}</td> }
+                               renderCell={ defaultTextCell }
                                renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
                                  return <>
                                           <tr>{rowRender()}</tr>

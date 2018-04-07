@@ -25,6 +25,7 @@ export const removeButtonColumn = (column : Column, actions : TableColumnActions
            </Button>
          </th>
 }
+export const defaultTextColumn = (column : Column, actions: TableColumnActions) =>  <th>{column.title}</th>
 
 export const  buttonCell = (glyph:string, clickFunc : Function) => {
     return (cell : Cell, actions : TableCellActions) => {
@@ -55,3 +56,5 @@ export const  removeButtonCell = (cell : Cell, actions : TableCellActions) => {
 export const dateCell = (cell : Cell, actions : TableCellActions) => {
   return <td key={cell.column.title}>{dateOnly(cell.value)}</td>
 }
+
+export const defaultTextCell = (cell : Cell, actions : TableCellActions) => <td key={cell.column.title}>{cell.value}</td>

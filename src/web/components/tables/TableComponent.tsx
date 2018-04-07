@@ -40,11 +40,11 @@ interface PartiallyAppliedNoArgMarkerInterface{
   () : React.ReactNode
 }
 
-interface RenderCellsDef {
+export interface RenderCellsDef {
   [title : string] : (value : Cell, actions : TableCellActions) => React.ReactNode
 }
 
-interface RenderColumnsDef {
+export interface RenderColumnsDef {
   [title : string] : (value : Column, actions : TableColumnActions) => React.ReactNode
 }
 
@@ -52,7 +52,7 @@ export interface RenderCells extends PartiallyAppliedNoArgMarkerInterface {};
 
 export interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
 
-interface TableProps<Row> {
+export interface TableProps<Row> {
   columns : Column[];
   rows : Row[];
   onEdit   ?: (row : any) => void;
