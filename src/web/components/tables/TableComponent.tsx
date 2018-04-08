@@ -36,7 +36,7 @@ export interface RenderColumns {
    (columns : Column[]) : React.ReactNode;
 }
 
-interface PartiallyAppliedNoArgMarkerInterface{
+export interface NoArgRender{
   () : React.ReactNode
 }
 
@@ -48,10 +48,58 @@ export interface RenderColumnsDef {
   [title : string] : (value : Column, actions : TableColumnActions) => React.ReactNode
 }
 
-export interface RenderCells extends PartiallyAppliedNoArgMarkerInterface {};
+// =============================================================================
+// Type-Grained Table PROPS Approach.
+// For ease of distributing functionalities acros various higher order components.
+// =============================================================================
+export interface TableColumns {
+  columns : Column[]
+}
 
-export interface RenderRows extends PartiallyAppliedNoArgMarkerInterface {};
+export interface TableRows<R> {
+  rows : R[]
+}
 
+export interface TableEditAction<R>{
+  onEdit ?: (row : R) => void;
+}
+
+export interface TableRemoveAction<R>{
+  onRemove ?: (row : R) => void;
+}
+export interface TableRemoveManyAction{
+  onRemoveMany ?: (options : any) => void;
+}
+
+export interface RenderHeader{
+  renderHeader ?: (columns : RenderColumns) => React.ReactNode;
+}
+
+export interface RenderColumns{
+  renderColumns ?: RenderColumnsDef
+}
+
+export interface RenderColumn{
+  renderColumn : ((column : Column, actions: TableColumnActions) => React.ReactNode);
+}
+
+export interface RenderBody{
+  renderBody ? : (rowsRender : NoArgRender) => React.ReactNode;
+}
+
+export interface RenderRow<R>{
+  renderRow ?: ((rowRender : NoArgRender, row : R, actions: TableRowActions) => React.ReactNode);
+}
+
+export interface RenderCells{
+  renderCells ?: RenderCellsDef
+}
+
+export interface RenderCell{
+  renderCell : (value : Cell, actions : TableCellActions) => React.ReactNode;
+}
+
+/*
 export interface TableProps<Row> {
   columns : Column[];
   rows : Row[];
@@ -65,7 +113,28 @@ export interface TableProps<Row> {
   renderRow ?: ((rowRender : RenderCells, row : any, actions: TableRowActions) => React.ReactNode);
   renderCells ?: RenderCellsDef
   renderCell : (value : Cell, actions : TableCellActions) => React.ReactNode;
-}
+} */
+
+export type TableDataProps<R> = TableColumns &
+                                TableRows<R>;
+
+export type TableActionsProps<R> =  TableEditAction<R> &
+                                    TableRemoveAction<R> &
+                                    TableRemoveManyAction;
+
+export type RenderHeaderProps<R> =  RenderHeader &
+                                    RenderColumns &
+                                    RenderColumn;
+
+export type RenderBodyProps<R> =  RenderBody &
+                                  RenderRow<R> &
+                                  RenderCells &
+                                  RenderCell;
+
+export type TableProps<R> = TableDataProps<R> &
+                            TableActionsProps<R> &
+                            RenderHeaderProps<R> &
+                            RenderBodyProps<R>;
 
 interface TableState<Row> {
   rows : Row[];
@@ -88,7 +157,7 @@ export function columns(... cols : Column[]){
   return cols;
 }
 //----------------------------------------------------
-export class TableComponent extends React.Component<TableProps<any>,TableState<any>>{
+export class TableComponent<M> extends React.Component<TableProps<M>,TableState<M>>{
 
   constructor(props){
     super(props);
@@ -136,7 +205,7 @@ export class TableComponent extends React.Component<TableProps<any>,TableState<a
     action(arg);
   }
 
-  private partialRenderCells = (row, idx : number) : RenderCells => {
+  private partialRenderCells = (row, idx : number) : NoArgRender => {
     let contextAwareActions : TableCellActions = {
         editValue : () => { this.withThrow(this.props.onEdit,row) },
         editRow :   () => { this.withThrow(this.props.onEdit,row) },

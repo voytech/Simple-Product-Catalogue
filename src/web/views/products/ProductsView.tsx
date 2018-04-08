@@ -15,8 +15,9 @@ import { TableComponent,
          TableColumn,
          TableColumnActions,
          TableCellActions,
-         RenderCells,
+         NoArgRender,
          TableRowActions } from '../../components/tables/TableComponent'
+import { withRowPlugin } from '../../components/tables/extensions/RowPlugins'
 import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
          removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
 import { CenteredPanel } from '../../components/CenteredPanel';
@@ -52,47 +53,81 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
   componentDidMount(){
     this.props.loadProducts();
   }
+/*
+<TableComponent columns={[new TableColumn('Name','name'),
+                          new TableColumn('Type','type'),
+                          new TableColumn('Description','description'),
+                          new TableColumn('Start Date','startDate'),
+                          new TableColumn('Expiry','endDate'),
+                          new TableColumn('Edit'),
+                          new TableColumn('X')]}
+                rows={this.props.products}
+                onEdit={ (product) => this.setState({ selection: product.name }) }
+                onRemove={ (product) => this.props.removeProduct(product) }
+                renderColumns={{
+                  'X'  : removeButtonColumn
+                }}
+                renderColumn={ defaultTextColumn }
+                renderCells={{
+                  'Edit'      : editButtonCell,
+                  'X'         : removeButtonCell,
+                  'Start Date': dateCell,
+                  'Expiry'    : dateCell
+                }}
+                renderCell={ defaultTextCell }
+                renderRow={(rowRender : NoArgRender, row : any, actions: TableRowActions) => {
+                  return <>
+                           <tr>{rowRender()}</tr>
+                           {this.state.selection && (this.state.selection == row.name) &&
+                             <tr>
+                               <td colSpan={7}>
+                                 <ProductEditor withHeading={false}
+                                                editMode={true}
+                                                saveProduct={(product) => this.props.updateProduct(product) }
+                                                product={row}/>
+                               </td>
+                             </tr>}
+                         </>
+                }}/>
+*/
+
+  renderTable() {
+     let TableWithRowPlugin = withRowPlugin<Product>()(TableComponent)
+     return <TableWithRowPlugin
+              columns={[new TableColumn('Name','name'),
+                        new TableColumn('Type','type'),
+                        new TableColumn('Description','description'),
+                        new TableColumn('Start Date','startDate'),
+                        new TableColumn('Expiry','endDate'),
+                        new TableColumn('Edit'),
+                        new TableColumn('X')]}
+               rows={this.props.products}
+               onRemove={ (product) => this.props.removeProduct(product) }
+               renderColumns={{
+                 'X'  : removeButtonColumn
+               }}
+               renderColumn={ defaultTextColumn }
+               renderCells={{
+                 'X'         : removeButtonCell,
+                 'Start Date': dateCell,
+                 'Expiry'    : dateCell
+               }}
+               renderCell={ defaultTextCell }
+               rowPlugin={(row, actions) => {
+                 return <ProductEditor withHeading={false}
+                                       editMode={true}
+                                       saveProduct={(product) => this.props.updateProduct(product) }
+                                       product={row}/>
+               }}
+            />
+  }
 
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
                <EditorComponent withHeading={true} toggleText='New Product'>
                  <ProductBasicInfo saveProduct={this.props.createProduct} />
                </EditorComponent>
-               <TableComponent columns={[new TableColumn('Name','name'),
-                                         new TableColumn('Type','type'),
-                                         new TableColumn('Description','description'),
-                                         new TableColumn('Start Date','startDate'),
-                                         new TableColumn('Expiry','endDate'),
-                                         new TableColumn('Edit'),
-                                         new TableColumn('X')]}
-                               rows={this.props.products}
-                               onEdit={ (product) => this.setState({ selection: product.name }) }
-                               onRemove={ (product) => this.props.removeProduct(product) }
-                               renderColumns={{
-                                 'X'  : removeButtonColumn
-                               }}
-                               renderColumn={ defaultTextColumn }
-                               renderCells={{
-                                 'Edit'      : editButtonCell,
-                                 'X'         : removeButtonCell,
-                                 'Start Date': dateCell,
-                                 'Expiry'    : dateCell
-                               }}
-                               renderCell={ defaultTextCell }
-                               renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
-                                 return <>
-                                          <tr>{rowRender()}</tr>
-                                          {this.state.selection && (this.state.selection == row.name) &&
-                                            <tr>
-                                              <td colSpan={7}>
-                                                <ProductEditor withHeading={false}
-                                                               editMode={true}
-                                                               saveProduct={(product) => this.props.updateProduct(product) }
-                                                               product={row}/>
-                                              </td>
-                                            </tr>}
-                                        </>
-                               }}/>
+               {this.renderTable()}              
              </CenteredPanel>
   }
 

@@ -15,7 +15,7 @@ import { TableComponent,
          TableColumn,
          TableColumnActions,
          TableCellActions,
-         RenderCells,
+         NoArgRender,
          TableRowActions } from '../../components/tables/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { PriceListDetails } from './PriceListDetails';
@@ -71,7 +71,7 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                          new TableColumn('Edit'),
                                          new TableColumn('X')]}
                                rows={this.props.pricelists}
-                               onEdit={ (prs) => this.setState({ selection: prs.name }) }
+                               onEdit={ (prs) => this.setState({ selection: (prs as PriceList).name }) }
                                onRemove={ (prs) =>  null }
                                renderColumns={{
                                  'X'  : removeButtonColumn
@@ -84,7 +84,7 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                                  'Expiry'    : dateCell
                                } }
                                renderCell={ defaultTextCell }
-                               renderRow={(rowRender : RenderCells, row : any, actions: TableRowActions) => {
+                               renderRow={(rowRender : NoArgRender, row : any, actions: TableRowActions) => {
                                  return <>
                                           <tr>{rowRender()}</tr>
                                           {this.state.selection && (this.state.selection == row.name) &&
