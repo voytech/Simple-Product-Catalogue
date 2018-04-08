@@ -53,53 +53,24 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
   componentDidMount(){
     this.props.loadProducts();
   }
-/*
-<TableComponent columns={[new TableColumn('Name','name'),
-                          new TableColumn('Type','type'),
-                          new TableColumn('Description','description'),
-                          new TableColumn('Start Date','startDate'),
-                          new TableColumn('Expiry','endDate'),
-                          new TableColumn('Edit'),
-                          new TableColumn('X')]}
-                rows={this.props.products}
-                onEdit={ (product) => this.setState({ selection: product.name }) }
-                onRemove={ (product) => this.props.removeProduct(product) }
-                renderColumns={{
-                  'X'  : removeButtonColumn
-                }}
-                renderColumn={ defaultTextColumn }
-                renderCells={{
-                  'Edit'      : editButtonCell,
-                  'X'         : removeButtonCell,
-                  'Start Date': dateCell,
-                  'Expiry'    : dateCell
-                }}
-                renderCell={ defaultTextCell }
-                renderRow={(rowRender : NoArgRender, row : any, actions: TableRowActions) => {
-                  return <>
-                           <tr>{rowRender()}</tr>
-                           {this.state.selection && (this.state.selection == row.name) &&
-                             <tr>
-                               <td colSpan={7}>
-                                 <ProductEditor withHeading={false}
-                                                editMode={true}
-                                                saveProduct={(product) => this.props.updateProduct(product) }
-                                                product={row}/>
-                               </td>
-                             </tr>}
-                         </>
-                }}/>
-*/
 
   renderTable() {
-     let TableWithRowPlugin = withRowPlugin<Product>()(TableComponent)
+     let TableWithRowPlugin = withRowPlugin<Product>({
+         triggerIndex : 5,
+         rowPlugin: (row : Product, actions : TableRowActions) => {
+             return <ProductEditor withHeading={false}
+                                   editMode={true}
+                                   saveProduct={(product) => this.props.updateProduct(product) }
+                                   product={row}/>
+        }
+     })(TableComponent)
+
      return <TableWithRowPlugin
               columns={[new TableColumn('Name','name'),
                         new TableColumn('Type','type'),
                         new TableColumn('Description','description'),
                         new TableColumn('Start Date','startDate'),
                         new TableColumn('Expiry','endDate'),
-                        new TableColumn('Edit'),
                         new TableColumn('X')]}
                rows={this.props.products}
                onRemove={ (product) => this.props.removeProduct(product) }
@@ -112,14 +83,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                  'Start Date': dateCell,
                  'Expiry'    : dateCell
                }}
-               renderCell={ defaultTextCell }
-               rowPlugin={(row, actions) => {
-                 return <ProductEditor withHeading={false}
-                                       editMode={true}
-                                       saveProduct={(product) => this.props.updateProduct(product) }
-                                       product={row}/>
-               }}
-            />
+               renderCell={ defaultTextCell } />
   }
 
   render(){
@@ -127,7 +91,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                <EditorComponent withHeading={true} toggleText='New Product'>
                  <ProductBasicInfo saveProduct={this.props.createProduct} />
                </EditorComponent>
-               {this.renderTable()}              
+               {this.renderTable()}
              </CenteredPanel>
   }
 

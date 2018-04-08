@@ -31,6 +31,7 @@ import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricel
 import { Product  } from '../../actions/products/Model'
 import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
          removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
+import { withRowPlugin } from '../../components/tables/extensions/RowPlugins'
 
 
 interface PriceListViewProps{
@@ -59,47 +60,44 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
     this.props.loadProductsKeys();
   }
 
+  renderTable(){
+    let TableWithRowPlugin = withRowPlugin<PriceList>({
+        triggerIndex : 4,
+        rowPlugin: (row : PriceList, actions : TableRowActions) => {
+            return <PriceListEditor
+                     addPriceListItem={(item : PriceAssignement) => this.props.addPriceListItem(item)}
+                     updatePriceList={(item : PriceList) => actions.editRow()}
+                     productsKeys={this.props.productsKeys}
+                     priceList={row}
+                     loadPriceList={this.props.loadPriceList}/>
+       }
+    })(TableComponent)
+    return  <TableWithRowPlugin
+                columns={[new TableColumn('Name','name'),
+                          new TableColumn('Description','description'),
+                          new TableColumn('Start Date','startDate'),
+                          new TableColumn('Expiry','endDate'),
+                          new TableColumn('X')]}
+                 rows={this.props.pricelists}
+                 onRemove={ (prs) =>  null }
+                 renderColumns={ {
+                   'X'  : removeButtonColumn
+                 } }
+                 renderColumn={ defaultTextColumn }
+                 renderCells={ {
+                   'X'         : removeButtonCell,
+                   'Start Date': dateCell,
+                   'Expiry'    : dateCell
+                 } }
+                 renderCell={ defaultTextCell } />
+  }
+
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
                <EditorComponent withHeading={true} toggleText='New Price List'>
                  <NewPriceList createPriceList={this.props.createPricelist} />
                </EditorComponent>
-               <TableComponent columns={[new TableColumn('Name','name'),
-                                         new TableColumn('Description','description'),
-                                         new TableColumn('Start Date','startDate'),
-                                         new TableColumn('Expiry','endDate'),
-                                         new TableColumn('Edit'),
-                                         new TableColumn('X')]}
-                               rows={this.props.pricelists}
-                               onEdit={ (prs) => this.setState({ selection: (prs as PriceList).name }) }
-                               onRemove={ (prs) =>  null }
-                               renderColumns={{
-                                 'X'  : removeButtonColumn
-                               }}
-                               renderColumn={ defaultTextColumn }
-                               renderCells={ {
-                                 'Edit'      : editButtonCell,
-                                 'X'         : removeButtonCell,
-                                 'Start Date': dateCell,
-                                 'Expiry'    : dateCell
-                               } }
-                               renderCell={ defaultTextCell }
-                               renderRow={(rowRender : NoArgRender, row : any, actions: TableRowActions) => {
-                                 return <>
-                                          <tr>{rowRender()}</tr>
-                                          {this.state.selection && (this.state.selection == row.name) &&
-                                            <tr>
-                                              <td colSpan={7}>
-                                                <PriceListEditor addPriceListItem={(item : PriceAssignement) =>
-                                                                                      this.props.addPriceListItem(item)}
-                                                                 updatePriceList={(item : PriceList) => actions.editRow()}
-                                                                 productsKeys={this.props.productsKeys}
-                                                                 priceList={row}
-                                                                 loadPriceList={this.props.loadPriceList}/>
-                                              </td>
-                                            </tr>}
-                                        </>
-                               }}/>
+               {this.renderTable()}
              </CenteredPanel>
   }
 
