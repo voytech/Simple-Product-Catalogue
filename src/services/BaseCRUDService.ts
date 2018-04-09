@@ -70,8 +70,8 @@ export class BaseCRUDService<T extends Document> {
 
   public getPage(pageInfo : PageInfo){
     return this.model.find()
-                     .skip(pageInfo.offset)
-                     .limit(pageInfo.size).exec();
+                     .skip(parseInt(pageInfo.offset+''))
+                     .limit(parseInt(pageInfo.size+'')).exec();
   }
 
   public getPageWithTotal(pageInfo : PageInfo){

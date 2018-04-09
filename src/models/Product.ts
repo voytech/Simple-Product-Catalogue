@@ -70,6 +70,7 @@ const productSchema = new Schema({... DatedSchema,
     status: {
       type: String,
       enum:[Status.Draft, Status.Live, Status.Published, Status.Archived],
+      default : Status.Draft,
       required: true
     },
     description : {

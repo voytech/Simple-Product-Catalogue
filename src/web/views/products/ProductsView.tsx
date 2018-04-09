@@ -18,6 +18,7 @@ import { TableComponent,
          NoArgRender,
          TableRowActions } from '../../components/tables/TableComponent'
 import { withRowPlugin } from '../../components/tables/extensions/RowPlugins'
+import { withPagination } from '../../components/tables/extensions/Pagination'
 import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
          removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
 import { CenteredPanel } from '../../components/CenteredPanel';
@@ -25,18 +26,25 @@ import { createProductAction } from '../../actions/products/CreateProductAction'
 import { updateAndLoadProductsAction } from '../../actions/products/UpdateProductAction';
 import { removeAndLoadProductsAction } from '../../actions/products/RemoveProductAction';
 import { loadProductsAction } from '../../actions/products/LoadProductsAction';
+import { loadProductsPageAction } from '../../actions/products/LoadPageAction';
 import { ProductEditor } from './ProductEditor';
 import { ProductBasicInfo } from './ProductBasicInfo'
 import { Product } from '../../actions/products/Model'
 import { dateOnly } from '../Utils'
 
+interface PageMetadata{
+  total : number,
+  offset : number,
+  pageSize : number
+}
 
 interface ProductsViewProps{
   createProduct : (product : Product) => void;
   removeProduct : (product : Product) => void;
   updateProduct : (product : Product) => void;
   loadProducts : () => void;
-  products : Product[];
+  loadPage: (offset:number,size:number) => void;
+  products : {data : Product[], meta : PageMetadata}
 }
 
 interface ProductsViewState {
@@ -51,7 +59,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
   }
 
   componentDidMount(){
-    this.props.loadProducts();
+    this.props.loadPage(0,5);
   }
 
   renderTable() {
@@ -65,14 +73,16 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
         }
      })(TableComponent)
 
-     return <TableWithRowPlugin
+     let TableEx = withPagination<Product>()(TableWithRowPlugin)
+
+     return <TableEx
               columns={[new TableColumn('Name','name'),
                         new TableColumn('Type','type'),
                         new TableColumn('Description','description'),
                         new TableColumn('Start Date','startDate'),
                         new TableColumn('Expiry','endDate'),
                         new TableColumn('X')]}
-               rows={this.props.products}
+               rows={this.props.products && this.props.products.data}
                onRemove={ (product) => this.props.removeProduct(product) }
                renderColumns={{
                  'X'  : removeButtonColumn
@@ -83,7 +93,12 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
                  'Start Date': dateCell,
                  'Expiry'    : dateCell
                }}
-               renderCell={ defaultTextCell } />
+               renderCell={ defaultTextCell }
+               //Props from paging HoC
+               pageSize={5}
+               total= {this.props.products && this.props.products.meta.total}
+               offset= {this.props.products && this.props.products.meta.offset}
+               getPage={this.props.loadPage}/>
   }
 
   render(){
@@ -98,7 +113,7 @@ class _ProductsView_ extends React.Component<ProductsViewProps, ProductsViewStat
 }
 
 const mapStateToProps = (state) => ({
-  products: state.global.products
+  products: state.global.products,
 });
 
 const mapDispatchToProps = () => ({
@@ -113,6 +128,9 @@ const mapDispatchToProps = () => ({
   },
   loadProducts  : () => {
     loadProductsAction();
+  },
+  loadPage : (offset,pageSize) => {
+    loadProductsPageAction(offset,pageSize)
   }
 });
 

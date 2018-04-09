@@ -16,7 +16,7 @@ export const loadProductsIdentsAction = StoreUtils.createAction(()=>{
     let productsUrl = (suffix) => 'products/'+suffix;
     return (dispatch) => {
       http.get(productsUrl('allkeys'))
-          .then(response => { console.log(response.data);  dispatch({type: LOAD_ENTITY_KEYS, payload: { products: response.data }}) })
+          .then(response => { dispatch({type: LOAD_ENTITY_KEYS, payload: { products: response.data }}) })
           .catch(error => console.error(error));
     }
 });

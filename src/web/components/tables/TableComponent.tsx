@@ -99,22 +99,6 @@ export interface RenderCell{
   renderCell : (value : Cell, actions : TableCellActions) => React.ReactNode;
 }
 
-/*
-export interface TableProps<Row> {
-  columns : Column[];
-  rows : Row[];
-  onEdit   ?: (row : any) => void;
-  onRemove ?: (row : any) => void;
-  onRemoveMany ?: (options : any) => void;
-  renderHeader ?: (columns : RenderColumns) => React.ReactNode;
-  renderColumns ?: RenderColumnsDef
-  renderColumn : ((column : Column, actions: TableColumnActions) => React.ReactNode);
-  renderBody ? : (rowsRender : RenderRows) => React.ReactNode;
-  renderRow ?: ((rowRender : RenderCells, row : any, actions: TableRowActions) => React.ReactNode);
-  renderCells ?: RenderCellsDef
-  renderCell : (value : Cell, actions : TableCellActions) => React.ReactNode;
-} */
-
 export type TableDataProps<R> = TableColumns &
                                 TableRows<R>;
 
