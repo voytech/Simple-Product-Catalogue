@@ -1,5 +1,4 @@
 import * as  React from 'react';
-import { connect } from 'react-redux';
 
 import { Formik, Form  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
@@ -35,29 +34,44 @@ import { withRowPlugin } from '../../components/tables/extensions/RowPlugins'
 
 
 interface PriceListViewProps{
-  createPricelist : (pricelist : PriceList) => void;
-  loadPricelists : () => void;
-  loadPriceList : (name : string) => void;
-  loadProductsKeys : () => void;
-  addPriceListItem : (item : PriceAssignement)=> void;
+
+}
+
+interface PriceListViewState {
   pricelists : PriceList[];
   productsKeys : [{_id:string, name:string}];
 }
 
-interface PriceListViewState {
-  selection ?: string;
-}
-
-class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListViewState> {
+export class PriceListsView extends React.Component<PriceListViewProps, PriceListViewState> {
 
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = { pricelists : [], productsKeys : [null]}
+  }
+
+  createPricelist = (pricelist : PriceList) => {
+    createPriceListAction(pricelist).then(result => this.loadPricelists())
+  }
+
+  loadPricelists = () => {
+    loadPriceListsAction().then(result => this.setState({pricelists: result.data}))
+  }
+
+  loadPriceList = (name : string) => {
+    loadPriceListAction(name).then(result => console.log(result))
+  }
+
+  loadProductsKeys = () => {
+    loadProductsIdentsAction().then(idents => this.setState({productsKeys: idents.data}))
+  }
+
+  addPriceListItem = (item : PriceAssignement)=> {
+
   }
 
   componentDidMount(){
-    this.props.loadPricelists();
-    this.props.loadProductsKeys();
+    this.loadPricelists();
+    this.loadProductsKeys();
   }
 
   renderTable(){
@@ -65,11 +79,11 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
         triggerIndex : 4,
         rowPlugin: (row : PriceList, actions : TableRowActions) => {
             return <PriceListEditor
-                     addPriceListItem={(item : PriceAssignement) => this.props.addPriceListItem(item)}
+                     addPriceListItem={(item : PriceAssignement) => this.addPriceListItem(item)}
                      updatePriceList={(item : PriceList) => actions.editRow()}
-                     productsKeys={this.props.productsKeys}
+                     productsKeys={this.state.productsKeys}
                      priceList={row}
-                     loadPriceList={this.props.loadPriceList}/>
+                     loadPriceList={this.loadPriceList}/>
        }
     })(TableComponent)
     return  <TableWithRowPlugin
@@ -78,7 +92,7 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
                           new TableColumn('Start Date','startDate'),
                           new TableColumn('Expiry','endDate'),
                           new TableColumn('X')]}
-                 rows={this.props.pricelists}
+                 rows={this.state.pricelists}
                  onRemove={ (prs) =>  null }
                  renderColumns={ {
                    'X'  : removeButtonColumn
@@ -95,35 +109,10 @@ class _PriceListsView_ extends React.Component<PriceListViewProps, PriceListView
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
                <EditorComponent withHeading={true} toggleText='New Price List'>
-                 <NewPriceList createPriceList={this.props.createPricelist} />
+                 <NewPriceList createPriceList={this.createPricelist} />
                </EditorComponent>
                {this.renderTable()}
              </CenteredPanel>
   }
 
 }
-
-const mapStateToProps = (state) => ({
-  pricelists: state.global.pricelists,
-  productsKeys : state.global.dictionary && state.global.dictionary.products
-});
-
-const mapDispatchToProps = () => ({
-  createPricelist : (priceList : PriceList) => {
-    createPriceListAction(priceList);
-  },
-  loadPricelists  : () => {
-    loadPriceListsAction();
-  },
-  loadPriceList : (name:string) => {
-    loadPriceListAction(name);
-  },
-  loadProductsKeys : () => {
-    loadProductsIdentsAction();
-  },
-  addPriceListItem : (item : PriceAssignement) => {
-    addPriceListItemAction(item);
-  }
-});
-
-export const PriceListsView = connect(mapStateToProps, mapDispatchToProps)(_PriceListsView_);

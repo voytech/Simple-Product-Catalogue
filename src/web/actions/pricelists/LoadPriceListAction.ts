@@ -3,11 +3,7 @@ import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
 
-export const loadPriceListAction = StoreUtils.createAction((name:string)=>{
+export const loadPriceListAction = (name:string)=>{
     let url = (suffix) => 'pricelists/'+suffix;
-    return (dispatch) => {
-      http.get(url('findByNameWithItems?name='+name))
-          .then(response => { dispatch({type: UPDATE_PRICELIST, payload:  response.data })})
-          .catch(error => console.error(error));
-    }
-});
+    return http.get(url('findByNameWithItems?name='+name))
+}
