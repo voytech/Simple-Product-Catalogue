@@ -9,12 +9,12 @@ import { Col, Row, Panel,
          ButtonToolbar,
          Image, Thumbnail } from 'react-bootstrap';
 import { Product, ImageData, ProductProperty, productValidation } from '../../actions/products/Model'
-import { uploadImageAction } from '../../actions/products/UploadImageAction'
-import { removeImageAction } from '../../actions/products/RemoveImageAction'
 import { http } from '../../Config'
 
 interface ProductImagesProps{
    product ?: Product;
+   uploadImage : (image : ImageData) => void
+   removeImage : (imageName : string) => void
 }
 
 interface ProductImagesState{
@@ -60,7 +60,7 @@ export class ProductImages extends React.Component<ProductImagesProps,ProductIma
     let file = e.target.files[0];
     let reader = new FileReader();
     reader.addEventListener("load", (event) => {
-        uploadImageAction(this.props.product.name, {
+        this.props.uploadImage({
           name : file.name,
           data : (event.target as any).result
         });
@@ -71,7 +71,7 @@ export class ProductImages extends React.Component<ProductImagesProps,ProductIma
   thumbnail(image : ImageData){
     return <div key={image.name} className='pull-left thumbnail-view'>
               <Image height={100} width={100} src={image.data}/>
-              <Button className='thumbnail-remove' bsSize='xsmall' bsStyle="danger" onClick={(e) => removeImageAction(this.props.product.name,image.name)}>
+              <Button className='thumbnail-remove' bsSize='xsmall' bsStyle="danger" onClick={(e) => this.props.removeImage(image.name)}>
                 <Glyphicon glyph='trash'/>
               </Button>
            </div>

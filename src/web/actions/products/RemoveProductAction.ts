@@ -3,20 +3,12 @@ import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
 
-export const removeProductAction = StoreUtils.createAction((product : any) => {
+export const removeProductAction = (product : any) => {
     let productsUrl = (suffix) => 'products/'+suffix;
-    return (dispatch) => {
-      http.post(productsUrl('remove'),JSON.stringify(product))
-          .then(response => { dispatch({type: REMOVE_PRODUCT, payload: response.data })})
-          .catch(error => console.error(error));
-    }
-});
+    return http.post(productsUrl('remove'),JSON.stringify(product))
+}
 
-export const removeAndLoadProductsAction = StoreUtils.createAction((product : any) => {
+export const removeAndLoadProductsAction = (product : any) => {
     let productsUrl = (suffix) => 'products/'+suffix+'/getall';
-    return (dispatch) => {
-      http.post(productsUrl('remove'),JSON.stringify(product))
-          .then(response => { dispatch({type: LOAD_PRODUCTS, payload: { products: response.data } })})
-          .catch(error => console.error(error));
-    }
-});
+    return http.post(productsUrl('remove'),JSON.stringify(product))
+}

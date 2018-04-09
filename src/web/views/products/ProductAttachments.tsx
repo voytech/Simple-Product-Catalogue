@@ -9,6 +9,8 @@ import { removeAttachmentAction} from '../../actions/products/RemoveAttachmentAc
 
 interface ProductAttachmentsProps{
    product ?: Product;
+   uploadAttachment : (attachment : ResourceData) => void
+   removeAttachment : (attachmentName : string) => void
 }
 
 interface ProductAttachmentsState{
@@ -45,7 +47,7 @@ export class ProductAttachments extends React.Component<ProductAttachmentsProps,
     let file = e.target.files[0];
     let reader = new FileReader();
     reader.addEventListener("load", (event) => {
-        uploadAttachmentAction(this.props.product.name,{
+        this.props.uploadAttachment({
           name: file.name,
           data : (event.target as any).result
         });
@@ -57,7 +59,7 @@ export class ProductAttachments extends React.Component<ProductAttachmentsProps,
   renderListItem = (item, index) => {
     return <ListGroupItem key={index}>
               <b>{item.name}</b> : {item.value}
-              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => removeAttachmentAction(this.props.product.name,item.name)}>
+              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => this.props.removeAttachment(item.name)}>
                 <Glyphicon glyph='trash'/>
               </Button>
            </ListGroupItem>;

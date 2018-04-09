@@ -6,13 +6,13 @@ import { FileButton  } from '../../components/FileButton';
 import { Col, Row, Panel, Button, FormGroup, ControlLabel, FormControl,
          Glyphicon, Label, ButtonToolbar, Image, ListGroupItem, ListGroup } from 'react-bootstrap';
 import { Product, ImageData, ProductProperty, productValidation } from '../../actions/products/Model'
-import { addPropertyAction } from '../../actions/products/AddPropertyAction'
-import { removePropertyAction } from '../../actions/products/RemovePropertyAction'
 
 import { http } from '../../Config'
 
 interface ProductPropertiesProps{
    product ?: Product;
+   addProperty : (property: ProductProperty) => void
+   removeProperty : (propertyName:string) => void
 }
 
 interface ProductPropertiesState{
@@ -22,7 +22,7 @@ interface ProductPropertiesState{
 export class ProductProperties extends React.Component<ProductPropertiesProps,ProductPropertiesState>{
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = { properties : []};
   }
 
   componentDidMount(){
@@ -34,7 +34,7 @@ export class ProductProperties extends React.Component<ProductPropertiesProps,Pr
   renderAddProp(){
     return <Formik
               initialValues={ { name : '', value: '' } }
-              onSubmit={(values: ProductProperty) => addPropertyAction(this.props.product.name,values)}
+              onSubmit={(values: ProductProperty) => this.props.addProperty(values)}
               render={(props : FormikProps<ProductProperty>) => (
                  <Form className="form-inline">
                       <VFormGroup name='name' display='Property'
@@ -54,7 +54,7 @@ export class ProductProperties extends React.Component<ProductPropertiesProps,Pr
   renderListItem = (item,index) => {
     return <ListGroupItem key={index}>
               <b>{item.name}</b> : {item.value}
-              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => removePropertyAction(this.props.product.name,item.name)}>
+              <Button className='pull-right' bsSize='xsmall' bsStyle="danger" onClick={() => this.props.removeProperty(item.name)}>
                 <Glyphicon glyph='trash'/>
               </Button>
            </ListGroupItem>;

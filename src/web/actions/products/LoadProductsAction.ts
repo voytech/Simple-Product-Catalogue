@@ -3,20 +3,12 @@ import { ActionPayload } from '../utils';
 import { StoreUtils } from '../../Store';
 import { http } from '../../Config';
 
-export const loadProductsAction = StoreUtils.createAction(()=>{
+export const loadProductsAction = ()=>{
     let productsUrl = (suffix) => 'products/'+suffix;
-    return (dispatch) => {
-      http.get(productsUrl('all'))
-          .then(response => { dispatch({type: LOAD_PRODUCTS, payload: { products: response.data }})})
-          .catch(error => console.error(error));
-    }
-});
+    return http.get(productsUrl('all'))
+}
 
-export const loadProductsIdentsAction = StoreUtils.createAction(()=>{
+export const loadProductsIdentsAction = ()=>{
     let productsUrl = (suffix) => 'products/'+suffix;
-    return (dispatch) => {
-      http.get(productsUrl('allkeys'))
-          .then(response => { dispatch({type: LOAD_ENTITY_KEYS, payload: { products: response.data }}) })
-          .catch(error => console.error(error));
-    }
-});
+    return  http.get(productsUrl('allkeys'))
+}
