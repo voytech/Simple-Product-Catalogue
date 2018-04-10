@@ -111,7 +111,12 @@ export class ProductsView extends React.Component<ProductsViewProps, ProductsVie
         }
      })(TableComponent)
 
-     let TableEx = withPagination<Product>()(TableWithRowPlugin)
+     let TableEx = withPagination<Product>({
+       pageSize : 5,
+       total    : this.state.products && this.state.products.meta.total,
+       offset   : this.state.products && this.state.products.meta.offset,
+       getPage  : this.loadPage
+     })(TableWithRowPlugin)
 
      return <TableEx
               columns={[new TableColumn('Name','name'),
@@ -131,12 +136,7 @@ export class ProductsView extends React.Component<ProductsViewProps, ProductsVie
                  'Start Date': dateCell,
                  'Expiry'    : dateCell
                }}
-               renderCell={ defaultTextCell }
-               //Props from paging HoC
-               pageSize={5}
-               total= {this.state.products && this.state.products.meta.total}
-               offset= {this.state.products && this.state.products.meta.offset}
-               getPage={this.loadPage}/>
+               renderCell={ defaultTextCell }/>
   }
 
   render(){

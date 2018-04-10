@@ -22,6 +22,8 @@ import { PriceListEditor } from './PriceListEditor';
 import { createPriceListAction } from '../../actions/pricelists/CreatePricelistAction';
 import { loadPriceListsAction } from '../../actions/pricelists/LoadPriceListsAction';
 import { loadPriceListAction } from '../../actions/pricelists/LoadPriceListAction';
+import { loadPricelistsPageAction } from '../../actions/pricelists/LoadPageAction';
+
 import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
 import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListItemAction';
 import { dateOnly } from '../Utils'
@@ -30,6 +32,8 @@ import { Product  } from '../../actions/products/Model'
 import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
          removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
 import { withRowPlugin } from '../../components/tables/extensions/RowPlugins'
+import { withPagination } from '../../components/tables/extensions/Pagination'
+
 
 interface PageMetadata{
   total : number,
@@ -69,12 +73,24 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
     loadPriceListsAction().then(result => this.setState({pricelists: {data : result.data}}))
   }
 
+  loadPage = (offset, size) => {
+    loadPricelistsPageAction(offset, size).then(result => { return this.setState({
+      pricelists: {
+        data : result.data.data,
+        meta : {offset:offset, pageSize:size, total: result.data.collCount}
+      }
+    })})
+  }
+
   loadPriceList = (name : string) : Promise<{data : PriceList}> => {
     return loadPriceListAction(name)
   }
 
   componentDidMount(){
-    this.loadPricelists();
+    this.loadPage(
+      this.state.pricelists.meta.offset,
+      this.state.pricelists.meta.pageSize
+    )
   }
 
   renderTable(){
@@ -86,7 +102,14 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
                      loadPriceList={this.loadPriceList}/>
        }
     })(TableComponent)
-    return  <TableWithRowPlugin
+    let TableEx = withPagination<PriceList>({
+      pageSize : 5,
+      total : this.state.pricelists && this.state.pricelists.meta.total,
+      offset : this.state.pricelists && this.state.pricelists.meta.offset,
+      getPage : this.loadPage
+    })(TableWithRowPlugin)
+
+    return  <TableEx
                 columns={[new TableColumn('Name','name'),
                           new TableColumn('Description','description'),
                           new TableColumn('Start Date','startDate'),

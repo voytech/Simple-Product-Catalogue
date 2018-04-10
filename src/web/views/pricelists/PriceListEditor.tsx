@@ -84,7 +84,7 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
               onSubmit={(values: PriceAssignement) => this.addPriceListItem(values)}
               render={(props : FormikProps<PriceAssignement>) => (
                  <Form className="form-inline">
-                    <FormGroup>
+                    <FormGroup className="ml-1">
                       <FormControl name='product'
                                    value={props.values.product}
                                    onChange={props.handleChange}
@@ -93,7 +93,7 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
                           <option key={key.name} value={key.name}>{key.name}</option>)}
                       </FormControl>
                     </FormGroup>
-                    <InputGroup>
+                    <InputGroup className="ml-1">
                       <InputGroup.Addon>$</InputGroup.Addon>
                         <FormControl name='price'
                                      value={props.values.price}
@@ -101,7 +101,7 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
                                      onChange={props.handleChange} />
                       <InputGroup.Addon>.00</InputGroup.Addon>
                     </InputGroup>
-                    <Button bsStyle="primary" type="submit" >
+                    <Button className="ml-1" bsStyle="primary" type="submit" >
                       <Glyphicon glyph='save'/>
                     </Button>
                 </Form>
@@ -116,10 +116,9 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
                                     priceList={this.state.priceList}
                                     editMode={true}/>
               </EditorStep>
-              <EditorStep title="Items" step={2}>
+              <EditorStep title="Assign Prices" step={2}>
                 <Panel>
                   <Panel.Heading>
-                    <Panel.Title><b>Assign prices</b></Panel.Title>
                     {this.productEntries()}
                   </Panel.Heading>
                   <Panel.Body>
