@@ -17,7 +17,6 @@ import { TableComponent,
          NoArgRender,
          TableRowActions } from '../../components/tables/TableComponent'
 import { CenteredPanel } from '../../components/CenteredPanel';
-import { PriceListDetails } from './PriceListDetails';
 import { NewPriceList } from './NewPriceList';
 import { PriceListEditor } from './PriceListEditor';
 import { createPriceListAction } from '../../actions/pricelists/CreatePricelistAction';
@@ -32,21 +31,34 @@ import { editButtonCell, removeButtonCell, dateCell, defaultTextCell,
          removeButtonColumn, defaultTextColumn } from '../../components/tables/renderers/Basics'
 import { withRowPlugin } from '../../components/tables/extensions/RowPlugins'
 
+interface PageMetadata{
+  total : number,
+  offset : number,
+  pageSize : number
+}
 
 interface PriceListViewProps{
 
 }
 
 interface PriceListViewState {
-  pricelists : PriceList[];
-  productsKeys : [{_id:string, name:string}];
+  pricelists : {data : PriceList[], meta ?: PageMetadata}
 }
 
 export class PriceListsView extends React.Component<PriceListViewProps, PriceListViewState> {
 
   constructor(props){
     super(props);
-    this.state = { pricelists : [], productsKeys : [null]}
+    this.state = {
+      pricelists : {
+        data : [],
+        meta : {
+          total : 0,
+          offset : 0,
+          pageSize : 5
+        }
+      }
+    };
   }
 
   createPricelist = (pricelist : PriceList) => {
@@ -54,24 +66,15 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
   }
 
   loadPricelists = () => {
-    loadPriceListsAction().then(result => this.setState({pricelists: result.data}))
+    loadPriceListsAction().then(result => this.setState({pricelists: {data : result.data}}))
   }
 
-  loadPriceList = (name : string) => {
-    loadPriceListAction(name).then(result => console.log(result))
-  }
-
-  loadProductsKeys = () => {
-    loadProductsIdentsAction().then(idents => this.setState({productsKeys: idents.data}))
-  }
-
-  addPriceListItem = (item : PriceAssignement)=> {
-
+  loadPriceList = (name : string) : Promise<{data : PriceList}> => {
+    return loadPriceListAction(name)
   }
 
   componentDidMount(){
     this.loadPricelists();
-    this.loadProductsKeys();
   }
 
   renderTable(){
@@ -79,9 +82,6 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
         triggerIndex : 4,
         rowPlugin: (row : PriceList, actions : TableRowActions) => {
             return <PriceListEditor
-                     addPriceListItem={(item : PriceAssignement) => this.addPriceListItem(item)}
-                     updatePriceList={(item : PriceList) => actions.editRow()}
-                     productsKeys={this.state.productsKeys}
                      priceList={row}
                      loadPriceList={this.loadPriceList}/>
        }
@@ -92,7 +92,7 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
                           new TableColumn('Start Date','startDate'),
                           new TableColumn('Expiry','endDate'),
                           new TableColumn('X')]}
-                 rows={this.state.pricelists}
+                 rows={this.state.pricelists && this.state.pricelists.data}
                  onRemove={ (prs) =>  null }
                  renderColumns={ {
                    'X'  : removeButtonColumn

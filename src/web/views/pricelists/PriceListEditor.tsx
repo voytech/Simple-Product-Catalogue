@@ -9,35 +9,54 @@ import { EditorComponent } from '../../components/editors/EditorComponent';
 import { EditorStep } from '../../components/editors/EditorStep';
 import { PriceList, PriceListItem, PriceAssignement } from '../../actions/pricelists/Model'
 import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListItemAction'
-
-interface PriceListStateEntry {
-  toggle : boolean,
-  price  : number
-}
+import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
+import { loadPriceListAction } from '../../actions/pricelists/LoadPriceListAction';
+import { updatePriceListAction } from '../../actions/pricelists/UpdatePriceListAction';
 
 interface PriceListEditorState{
-  [name:string] : PriceListStateEntry
+  priceList ?: PriceList
+  productsKeys ?: [{name:string, _id:string}];
 }
 
 interface PriceListDetailsProps{
-  addPriceListItem : (item : PriceAssignement) => void;
-  updatePriceList : (update : PriceList) => void;
+  updatePriceList ?: (update : PriceList) => Promise<{data : PriceList }>
+  loadPriceList ?: (name : string) => Promise<{data : PriceList }>
   priceList ?: PriceList;
-  loadPriceList : (name : string) => void;
-  productsKeys ?: [{name:string, _id:string}];
 }
 
 export class PriceListEditor extends React.Component<PriceListDetailsProps,PriceListEditorState>{
 
   constructor(props){
     super(props);
-    this.state = {}
+    this.state = {  }
   }
 
-
   componentDidMount(){
-    console.log(this.props.priceList.name);
-    this.props.loadPriceList(this.props.priceList.name);
+    this.loadProductsKeys()
+    if (this.props.priceList){
+      this.setState({priceList : this.props.priceList})
+    } else {
+      this.loadPriceList(this.props.priceList.name)
+    }
+  }
+
+  private setResult = (result) =>  this.setState({priceList: result.data})
+
+  loadProductsKeys = () => {
+    loadProductsIdentsAction().then(idents =>
+      this.setState({productsKeys: idents.data}))
+  }
+
+  updatePriceList = (priceList : PriceList) => {
+    (this.props.updatePriceList || updatePriceListAction)(priceList).then(this.setResult)
+  }
+
+  addPriceListItem = (assignment : PriceAssignement) => {
+    addPriceListItemAction(assignment).then(this.setResult)
+  }
+
+  loadPriceList = (name : string) => {
+    (this.props.loadPriceList || loadPriceListAction)(name).then(this.setResult)
   }
 
   renderListItem = (item) => {
@@ -52,17 +71,17 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
   renderItems = () => {
     return <div style={{overflow: 'auto', maxHeight: 400}}>
               <ListGroup>
-                {this.props.priceList &&
-                 this.props.priceList.items &&
-                 this.props.priceList.items.map(item => this.renderListItem(item))}
+                {this.state.priceList &&
+                 this.state.priceList.items &&
+                 this.state.priceList.items.map(item => this.renderListItem(item))}
               </ListGroup>
             </div>
   }
 
   productEntries = () => {
     return <Formik
-              initialValues={ { product : '', price: 0, priceList : this.props.priceList && this.props.priceList.name } }
-              onSubmit={(values: PriceAssignement) => this.props.addPriceListItem(values)}
+              initialValues={ { product : '', price: 0, priceList : this.state.priceList && this.state.priceList.name } }
+              onSubmit={(values: PriceAssignement) => this.addPriceListItem(values)}
               render={(props : FormikProps<PriceAssignement>) => (
                  <Form className="form-inline">
                     <FormGroup>
@@ -70,7 +89,7 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
                                    value={props.values.product}
                                    onChange={props.handleChange}
                                    componentClass="select" placeholder="select">
-                        {this.props.productsKeys && this.props.productsKeys.map(key =>
+                        {this.state.productsKeys && this.state.productsKeys.map(key =>
                           <option key={key.name} value={key.name}>{key.name}</option>)}
                       </FormControl>
                     </FormGroup>
@@ -93,8 +112,8 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
   render(){
     return <EditorComponent>
               <EditorStep title="Basic Info" step={1}>
-                <PriceListBasicInfo createOrUpdatePriceList={this.props.updatePriceList}
-                                    priceList={this.props.priceList}
+                <PriceListBasicInfo createOrUpdatePriceList={this.updatePriceList}
+                                    priceList={this.state.priceList}
                                     editMode={true}/>
               </EditorStep>
               <EditorStep title="Items" step={2}>

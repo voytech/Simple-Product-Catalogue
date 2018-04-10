@@ -29,7 +29,7 @@ export class PriceLists extends CRUDRoute<IPriceList,PriceListService> {
     public addItemAction(router: Router): void {
         router.post('/addItem',this.restrict(['ADMIN']), (req: Request, res: Response) => {
             let payload : {priceList:string, product:string, price:number} = req.body;
-            this.service.addItem(payload.priceList,payload.product,payload.price)
+            this.service.addItemGetPriceList(payload.priceList,payload.product,payload.price)
                         .then(item => res.json(item))
                         .catch(err => res.status(500).json(err))
         });

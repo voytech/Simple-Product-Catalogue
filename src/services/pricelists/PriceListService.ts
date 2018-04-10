@@ -19,4 +19,9 @@ export class PriceListService extends BaseCRUDService<IPriceList>{
                  .then(result => { return result.addItem(product,price)} )
   }
 
+  public addItemGetPriceList(priceList: string, product: string, price: number){
+      return this.getByIdentityField(priceList)
+                 .then(result => { return result.addItem(product,price)} )
+                 .then(result => { return this.getByIdentityField(priceList)})
+  }
 }
