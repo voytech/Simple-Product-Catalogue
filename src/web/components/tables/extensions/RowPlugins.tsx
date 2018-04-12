@@ -47,10 +47,14 @@ export function withRowPlugin<M>(passProps ?: RowPluginProps<M>){
         return {...this.props.renderCells, 'Edit' :  this.props.renderTrigger || editButtonCell}
       }
 
+      private toggled = (record) => {
+         return this.state.selection && (this.state.selection == record)
+      }
+
       renderRow = (rowRender : NoArgRender, record : M, actions: TableRowActions) => {
         return <>
                  <tr>{rowRender()}</tr>
-                 {this.state.selection && (this.state.selection == record) &&
+                 {this.toggled(record) &&
                    <tr>
                      <td colSpan={999}>
                        {this.__props().rowPlugin(record,actions)}

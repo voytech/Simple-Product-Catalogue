@@ -23,7 +23,7 @@ import { createPriceListAction } from '../../actions/pricelists/CreatePricelistA
 import { loadPriceListsAction } from '../../actions/pricelists/LoadPriceListsAction';
 import { loadPriceListAction } from '../../actions/pricelists/LoadPriceListAction';
 import { loadPricelistsPageAction } from '../../actions/pricelists/LoadPageAction';
-
+import { updatePriceListAction } from '../../actions/pricelists/UpdatePriceListAction';
 import { loadProductsIdentsAction } from '../../actions/products/LoadProductsAction';
 import { addPriceListItemAction } from '../../actions/pricelists/AddPriceListItemAction';
 import { dateOnly } from '../Utils'
@@ -65,6 +65,11 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
     };
   }
 
+  private replace(priceList : PriceList){
+    let replaced = this.state.pricelists.data.map(p => p.name == priceList.name ? priceList : p);
+    this.setState({pricelists : {...this.state.pricelists, data : replaced}})
+  }
+
   createPricelist = (pricelist : PriceList) => {
     createPriceListAction(pricelist).then(result => this.loadPricelists())
   }
@@ -86,6 +91,13 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
     return loadPriceListAction(name)
   }
 
+  updatePriceList = (priceList : PriceList) : Promise<{data : PriceList}> => {
+    return updatePriceListAction(priceList).then(result => {
+      this.replace(result.data)
+      return result
+    })
+  }
+
   componentDidMount(){
     this.loadPage(
       this.state.pricelists.meta.offset,
@@ -99,6 +111,7 @@ export class PriceListsView extends React.Component<PriceListViewProps, PriceLis
         rowPlugin: (row : PriceList, actions : TableRowActions) => {
             return <PriceListEditor
                      priceList={row}
+                     updatePriceList={this.updatePriceList}
                      loadPriceList={this.loadPriceList}/>
        }
     })(TableComponent)
