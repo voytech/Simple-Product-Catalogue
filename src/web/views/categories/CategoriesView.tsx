@@ -10,6 +10,7 @@ import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
 
 import { CenteredPanel } from '../../components/CenteredPanel';
+import { TreeView, TreeItem, TreeItemImpl } from '../../components/treeview/TreeView';
 import { loadCategoryTreesAction } from '../../actions/categories/LoadCategoryTreesAction';
 import { createCategoryAction } from '../../actions/categories/CreateCategoryAction';
 import { Category, CategoryTree, CategoryTreeImpl  } from '../../actions/categories/Model'
@@ -47,41 +48,29 @@ export class CategoriesView extends React.Component<CategoriesViewProps, Categor
     this.loadCategoriesTree()
   }
 
-  identLevel = (level) => {
-    return  {
-      marginLeft : (level*30)
-    }
-  }
 
-  treeNode = (level,title,toggle,content) => {
-    return <div style={this.identLevel(level)}>
-              <Row>
-                <div className='pull-left' style={{marginRight:15}}>
-                  <a><Glyphicon glyph={toggle == false ? "triangle-bottom" : "triangle-top"} /></a></div>
-                <div className='pull-left'>title</div>
-              </Row>
-           </div>
-  }
 
-  iterate = (roots) => {
-     return null;
-  }
-
-  renderTree(){
-    return <ListGroup>
-            <ListGroupItem  href="#" >{this.treeNode(1,'root 1',true,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(2,'child 1',true,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(3,'child  1 1',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(3,'child  1 2',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(2,'child 2',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(1,'root 2',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(1,'root 3',false,null)}</ListGroupItem>
-          </ListGroup>
+  renderTest(){
+    let items = [
+      new TreeItemImpl('Root Category 1',[
+        new TreeItemImpl('Child 1',[]),
+        new TreeItemImpl('Child 2',[
+          new TreeItemImpl('Child 1',[])
+        ]),
+        new TreeItemImpl('Child 3',[]),
+      ]),
+      new TreeItemImpl('Root Category 2',[
+        new TreeItemImpl('Child 1',[]),
+        new TreeItemImpl('Child 2',[]),
+      ]),
+      new TreeItemImpl('Root Category 3',[])
+    ]
+    return <TreeView data={items}/>
   }
 
   render(){
       return <CenteredPanel lg={12} sm={12} md={12}>
-               {this.renderTree()}
+               {this.renderTest()}
              </CenteredPanel>
   }
 
