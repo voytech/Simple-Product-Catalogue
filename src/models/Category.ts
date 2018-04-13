@@ -23,7 +23,7 @@ export class CategoryTreeImpl implements CategoryTreeDoc {
 
 export interface ICategoryModel {
     loadProducts(category: CategoryDoc): Promise<any[]>
-    loadTree(category: CategoryDoc) : Promise<CategoryTree>
+    loadTree(category: CategoryDoc) : Promise<CategoryTreeDoc>
 }
 
 const categorySchema = new Schema({

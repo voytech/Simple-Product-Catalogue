@@ -17,5 +17,12 @@ export class Categories extends CRUDRoute<CategoryDoc,CategoryService> {
       return new CategoryService(model,identityField);
     }
 
+    public fetchCategoryTreesAction(router : Router) : void {
+        router.get('/load',this.restrict(['ADMIN']),(req: Request, res: Response) => {
+          this.service.getCategoryTrees()
+                      .then(result => res.json(result))
+                      .catch(err => res.status(500).json(err))
+        })
+    }
 
 }

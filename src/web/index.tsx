@@ -11,6 +11,7 @@ import { MainRoutes } from './routers/MainRoutes'
 import { UserRoutes } from './routers/UserRoutes'
 import { ProductRoutes } from './routers/ProductRoutes'
 import { PriceListRoutes } from './routers/PriceListRoutes'
+import { CategoryRoutes } from './routers/CategoryRoutes'
 import { Link, Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 import { HeaderComponent } from './components/HeaderComponent'
 import { Provider } from 'react-redux';
@@ -29,6 +30,7 @@ class App extends React.Component{
                          <Route path="/user"  component={UserRoutes}/>
                          <Route path="/products"  component={ProductRoutes}/>
                          <Route path="/pricelists"  component={PriceListRoutes}/>
+                         <Route path="/categories"  component={CategoryRoutes}/>
                          <Route path="/"  component={MainRoutes}/>
                        </Switch>
                    </div>
