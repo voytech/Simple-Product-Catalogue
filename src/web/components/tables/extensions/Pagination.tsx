@@ -26,57 +26,6 @@ type WithPaginationProps<E> =  PaginationPropsOpts<E>   &
                                TableActionsProps<E> &
                                RenderBodyProps<E>;
 
-/*
-export function withPagination<M>(passProps ?: PaginationProps<M>){
-  return (Component) => {
-    return class extends React.Component<WithPaginationProps<M>> {
-
-      constructor(props){
-        super(props)
-      }
-
-      pageCount(){
-        return (this.props.total && (this.props.total > 0)) ?
-               Math.ceil(this.props.total / this.props.pageSize) : 0
-      }
-
-      currentPage(){
-        return (this.props.offset && this.props.pageSize) ?
-               (this.props.offset / this.props.pageSize)+1 : 1
-      }
-
-      offset(page : number){
-        return page * this.props.pageSize;
-      }
-
-      requestPage(page : number){
-        this.props.getPage(this.offset(page-1),this.props.pageSize)
-      }
-
-      renderPageNumbers(){
-        return Array.apply(null, Array(this.pageCount())).map((i,idx) =>
-          <Pagination.Item active={idx+1 === this.currentPage()} onClick={()=> this.requestPage(idx+1)} >{idx+1}</Pagination.Item>)
-      }
-
-      renderPagination = () => {
-        return <>
-                <Pagination bsSize="small">
-                  {this.renderPageNumbers()}
-                </Pagination>
-               </>
-      }
-
-      render(){
-        return <>
-                <Component {...this.props} />
-                {this.renderPagination()}
-               </>
-      }
-    }
-  }
-
-}*/
-
 export function withPagination<M>(passProps ?: PaginationProps<M>){
   return (Component) => {
     let EXT = class extends React.Component<WithPaginationProps<M>> {

@@ -1,14 +1,19 @@
 import * as  React from 'react';
-import { ListGroup, ListGroupItem, Row, Glyphicon  } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, Row, Col, Glyphicon  } from 'react-bootstrap';
+import { v1 as uuid } from 'uuid';
 
 export interface TreeItem<T> {
+  id : string;
   title  : string;
   details ?: T;
   childs : TreeItem<T> []
 }
 
 export class TreeItemImpl<T> implements TreeItem<T> {
-  constructor(public title,public childs){}
+  id;
+  constructor(public title,public childs){
+    this.id = uuid()
+  }
 }
 
 export interface TreeItemActions {
@@ -20,8 +25,16 @@ export interface NoArgRender{
   () : React.ReactNode
 }
 
+export interface ExpanderClickCallback<T> {
+  (item : TreeItem<T>) : void
+}
+
 export interface RenderTreeItem<T> {
    (treeItem : TreeItem<T>) : React.ReactNode;
+}
+
+export interface RenderContent<T> {
+    (item : TreeItem<T>) : React.ReactNode;
 }
 
 export interface RenderByTitle<T> {
@@ -32,29 +45,29 @@ export interface Roots<T> {
   data : TreeItem<T>[]
 }
 
-
-
 export type TreeViewProps<T> = Roots<T> &
-                               {renderNode ?: RenderTreeItem<T>} ;
+                               {renderNode ?: RenderTreeItem<T>,
+                                renderContent ?: RenderContent<T>} ;
 
-
-interface TreeViewState<T> {
-  data : TreeItem<T>[]
+interface TreeItemState<T> {
+  expanded : boolean
+  isLeaf : boolean
 }
 
+interface TreeItemsState<T> {
+  [title : string] : TreeItemState<T>
+}
 
+interface TreeViewState<T> {
+  nodes : TreeItemsState<T>
+}
 
 //----------------------------------------------------
 export class TreeView<T> extends React.Component<TreeViewProps<T>,TreeViewState<T>>{
 
   constructor(props){
     super(props);
-  }
-
-
-
-  iterate = (roots) => {
-     return null;
+    this.state = {nodes : {}}
   }
 
   private flatten = (arr, result = []) => {
@@ -69,65 +82,70 @@ export class TreeView<T> extends React.Component<TreeViewProps<T>,TreeViewState<
     return result;
   }
 
-  renderTree(){
-    return <ListGroup>
-            <ListGroupItem  href="#" >{this.treeNode(1,'root 1',true,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(2,'child 1',true,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(3,'child  1 1',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(3,'child  1 2',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(2,'child 2',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(1,'root 2',false,null)}</ListGroupItem>
-            <ListGroupItem  href="#" >{this.treeNode(1,'root 3',false,null)}</ListGroupItem>
-          </ListGroup>
-  }
-
   private identLevel = (level) => {
     return  {
-      marginLeft : (level*30)
+      marginLeft : (level * 30)
     }
   }
 
-
-  private treeNode = (level,title,toggle,renderContent) => {
-    return
+  private itemState = (item : TreeItem<T>) => {
+    if (this.state && this.state.nodes){
+      if (!this.state.nodes[item.id]){
+        this.setState({nodes: {...this.state.nodes,[item.id] :  {expanded : false, isLeaf : item.childs.length == 0}}})
+      }
+    }
+    return this.state.nodes[item.id]
   }
 
   private expanded = (item : TreeItem<T>) => {
-    return false;
+    let state = this.itemState(item)
+    return (state && (state.expanded == true && !state.isLeaf)) === true
   }
 
-  private buildNode = (item : TreeItem<T>,level :number) => {
-    return [<ListGroupItem  href="#" >
+  private renderExpander = (item : TreeItem<T>) =>{
+    let state = this.itemState(item)
+    if (state && state.isLeaf == true)
+      return <Glyphicon glyph="stop" />
+    else {
+      return <Glyphicon glyph={this.expanded(item) == true ? "minus" : "plus"} />
+    }
+  }
+
+  private renderContent = (item : TreeItem<T>) => {
+    return this.props.renderContent ? this.props.renderContent(item) : item.title;
+  }
+
+  private expanderCallback = (item : TreeItem<T>, nextCallback ?: ExpanderClickCallback<T>) => {
+    if (this.state && this.state.nodes){
+      let current = this.state.nodes[item.id] || {expanded : false, isLeaf : item.childs.length == 0}
+      current.expanded =! current.expanded;
+      this.setState({nodes: {...this.state.nodes,[item.id] : current}})
+    }
+    if (nextCallback) nextCallback(item)
+  }
+
+  private buildNode = (item : TreeItem<T>,level :number,callback : ExpanderClickCallback<T>) => {
+    return [<ListGroupItem>
              <div style={this.identLevel(level)}>
                 <Row>
                   <div className='pull-left' style={{marginRight:15}}>
-                    <a><Glyphicon glyph={this.expanded(item) == false ? "triangle-bottom" : "triangle-top"} /></a></div>
-                  <div className='pull-left'>{item.title}</div>
+                    <a onClick={() => callback(item)}>{this.renderExpander(item)}</a>
+                  </div>
+                  <div>
+                    {this.renderContent(item)}
+                  </div>
                 </Row>
              </div>
-           </ListGroupItem>,
-           (this.buildNodes(item.childs,++level))]
+           </ListGroupItem>].concat(this.expanded(item) == true ? this.buildNodes(item.childs,++level,callback) : [])
   }
 
-  private buildNodes = (data : TreeItem<T>[],level:number) => {
-      return this.flatten(data.map(i => this.buildNode(i,level)),[])
-  }
-
-  private renderNode = (treeItem : TreeItem<T>) => {
-    return <ListGroup>
-            <ListGroupItem header="Heading 1">Some body text</ListGroupItem>
-            <ListGroupItem header="Heading 2" href="#">
-              Linked item
-            </ListGroupItem>
-            <ListGroupItem header="Heading 3" bsStyle="danger">
-              Danger styling
-            </ListGroupItem>
-          </ListGroup>;
+  private buildNodes = (data : TreeItem<T>[],level:number,callback : ExpanderClickCallback<T>) => {
+      return this.flatten(data.map(i => this.buildNode(i,level,callback)),[])
   }
 
   render(){
       return <ListGroup>
-                { this.buildNodes(this.props.data,0) }
+                { this.buildNodes(this.props.data,1,this.expanderCallback) }
              </ListGroup>;
   }
 }
