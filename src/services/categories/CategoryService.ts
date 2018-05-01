@@ -1,5 +1,6 @@
-import { CategoryDoc, CategoryTreeDoc, CategoryTreeImpl, Category } from '../../models/Category'
+import { CategoryDoc, Category } from '../../models/Category'
 import { Schema, Model, Document, model, connection } from 'mongoose';
+import { compose, ComposableFunction } from '../../Utils'
 
 import { BaseCRUDService } from '../BaseCRUDService'
 
@@ -9,16 +10,30 @@ export class CategoryService extends BaseCRUDService<CategoryDoc>{
     super(model,identityField)
   }
 
-  public getCategoryChildTree(node : CategoryDoc, tree ?: CategoryTreeDoc){
-    if (!tree) tree = new CategoryTreeImpl(node)
-    return Category.find({parent : node._id}).exec()
-                   .then(categories => Promise.all(categories.map(c => this.getCategoryChildTree(c,new CategoryTreeImpl(c)))))
-                   .then(subtrees => {return tree.childs = subtrees})
+  public getAll(){
+    return Category.find().populate('childs').exec();
+  }
+
+  public create(payload : CategoryDoc, ...transforms : ComposableFunction<CategoryDoc>[]){
+    let input = this.transformPayload(payload,...transforms)
+    if (input.parent){
+      return this.getByIdentityField(input.parent.name).then(parent => {
+        return Category.create(input).then(result => {
+          parent.childs.push(result)
+          return parent.save().then(parent => {  return result})
+        })
+      })
+    } else {
+      return Category.create(input)
+    }
+  }
+
+  public getCategoryChildTree(node : CategoryDoc){
+    return Category.find({parent: node._id}).populate('childs').exec()
   }
 
   public getCategoryTrees(){
-    return Category.find({parent: null}).exec()
-                   .then(roots => {return Promise.all(roots.map(root => this.getCategoryChildTree(root)))})
+    return Category.find({parent: null}).populate('childs').exec()
   }
 
 }

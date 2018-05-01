@@ -5,25 +5,12 @@ import { v1 as uuid } from 'uuid';
 export interface CategoryDoc extends Document{
   name : string;
   description : string;
-  parent : string;
-}
-
-export interface CategoryTreeDoc {
-  category : CategoryDoc,
-  childs : CategoryTreeDoc[]
-}
-
-
-export class CategoryTreeImpl implements CategoryTreeDoc {
-  childs : CategoryTreeDoc[]
-  constructor(public category : CategoryDoc){
-    this.childs = []
-  }
+  parent ?: CategoryDoc;
+  childs ?: CategoryDoc[];
 }
 
 export interface ICategoryModel {
-    loadProducts(category: CategoryDoc): Promise<any[]>
-    loadTree(category: CategoryDoc) : Promise<CategoryTreeDoc>
+    loadTree(category: CategoryDoc) : Promise<CategoryDoc>
 }
 
 const categorySchema = new Schema({
@@ -38,7 +25,12 @@ const categorySchema = new Schema({
     parent : {
       type: Schema.Types.ObjectId,
       ref: 'Category'
-    }
+    },
+    childs : [{
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
+    }]
+
 });
 
 categorySchema.pre('save', function(next) {

@@ -1,5 +1,5 @@
 import { http } from '../../Config';
-import { Category, CategoryTree, CategoryTreeImpl } from './Model'
+import { Category } from './Model'
 
 export const createCategoryAction = (category : Category) => {
     let url = (suffix) => 'categories/'+suffix;

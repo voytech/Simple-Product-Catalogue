@@ -11,7 +11,7 @@ export interface TreeItem<T> {
 
 export class TreeItemImpl<T> implements TreeItem<T> {
   id;
-  constructor(public title,public childs){
+  constructor(public title,public childs,public details){
     this.id = uuid()
   }
 }

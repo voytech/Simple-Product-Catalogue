@@ -1,9 +1,9 @@
 import * as  React from 'react';
 
-import { Formik, Form  } from 'formik';
+import { Formik, Form, FormikProps  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
-import { Button,
+import { Button, FormGroup, FormControl,
          Glyphicon , Panel,
          ListGroup, ListGroupItem, Row, Col  } from 'react-bootstrap';
 import { EditorComponent } from '../../components/editors/EditorComponent'
@@ -12,20 +12,21 @@ import { EditorStep } from '../../components/editors/EditorStep'
 import { CenteredPanel } from '../../components/CenteredPanel';
 import { TreeView, TreeItem, TreeItemImpl } from '../../components/treeview/TreeView';
 import { withItemEditor } from '../../components/treeview/extensions/TreeItemEditor';
-import { loadCategoryTreesAction } from '../../actions/categories/LoadCategoryTreesAction';
+import { loadCategoriesAction } from '../../actions/categories/LoadCategoriesAction';
 import { createCategoryAction } from '../../actions/categories/CreateCategoryAction';
-import { Category, CategoryTree, CategoryTreeImpl  } from '../../actions/categories/Model'
+import { deleteCategoryAction } from '../../actions/categories/DeleteCategoryAction';
+import { Category  } from '../../actions/categories/Model'
 
 interface CategoriesViewProps{
 
 }
 
 interface CategoriesViewState {
-  categories : CategoryTree[]
+  categories : Category[]
 }
 
 
-const EditableTreeView = withItemEditor()(TreeView)
+const EditableTreeView = withItemEditor<Category>()(TreeView)
 
 export class CategoriesView extends React.Component<CategoriesViewProps, CategoriesViewState> {
 
@@ -37,39 +38,84 @@ export class CategoriesView extends React.Component<CategoriesViewProps, Categor
   }
 
   createCategory = (category : Category) => {
-    createCategoryAction(category).then(result => this.loadCategoriesTree())
+    createCategoryAction(category).then(result => this.loadCategories())
   }
 
-  loadCategoriesTree = () => {
-    loadCategoryTreesAction().then(result => this.setState({categories : result.data}))
+  private toTreeItem = (category : Category) => {
+      return new TreeItemImpl(
+        category.name,
+        category.childs? category.childs.map(this.toTreeItem) : [],
+        category
+      )
+  }
+
+  deleteCategory = (item : TreeItem<Category>) => {
+    deleteCategoryAction(item.details.name).then(result => this.loadCategories())
+  }
+
+  loadCategories = () => {
+    loadCategoriesAction().then(result => {
+      let treeItems = result.data.map(this.toTreeItem);
+      console.log(treeItems);
+      this.setState({categories : result.data})
+    })
   }
 
   updateCategory = (category : Category) : Promise<{data : Category}> => {
     return null;
   }
 
-  componentDidMount(){
-    this.loadCategoriesTree()
+  addRootCategory = (category : Category) => {
+    createCategoryAction(category).then(data => {
+      this.loadCategories()
+    })
   }
 
+  addCategory = (name : string, description : string, forParent : TreeItem<Category>) => {
+    this.createCategory({
+      parent : forParent.details,
+      name : name,
+      description : description
+    })
+  }
 
+  componentDidMount(){
+    this.loadCategories()
+  }
 
   renderTest(){
-    let items = [
-      new TreeItemImpl('Root Category 1',[
-        new TreeItemImpl('Child 1',[]),
-        new TreeItemImpl('Child 2',[
-          new TreeItemImpl('Child 1',[])
-        ]),
-        new TreeItemImpl('Child 3',[]),
-      ]),
-      new TreeItemImpl('Root Category 2',[
-        new TreeItemImpl('Child 1',[]),
-        new TreeItemImpl('Child 2',[]),
-      ]),
-      new TreeItemImpl('Root Category 3',[])
-    ]
-    return <EditableTreeView data={items}/>
+    let items =  this.state.categories ? this.state.categories.map(this.toTreeItem) : [];
+    return <>
+          <Formik
+              initialValues={ { } }
+              onSubmit={(values: Category) => this.addRootCategory(values)}
+              render={(props : FormikProps<Category>) => (
+                 <Form className="form-inline mb-1">
+                    <FormGroup className="ml-1">
+                      <FormControl name='name'
+                                   type='text'
+                                   value={props.values.name}
+                                   onChange={props.handleChange}>
+                      </FormControl>
+                    </FormGroup>
+                    <FormGroup className="ml-1">
+                      <FormControl name='description'
+                                   type='text'
+                                   value={props.values.description}
+                                   onChange={props.handleChange}>
+                      </FormControl>
+                    </FormGroup>
+                    <Button className="ml-1" bsStyle="primary" type="submit" >
+                      <Glyphicon glyph='plus-sign'/>
+                    </Button>
+                </Form>
+            )}/>
+            <EditableTreeView
+              newItem={(details,item) => this.addCategory(details.name,details.description,item)}
+              delete={(item) => this.deleteCategory(item)}
+              edit={(item) => alert("Editing "+item)}
+              data={items}/>
+           </>
   }
 
   render(){

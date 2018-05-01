@@ -13,7 +13,7 @@ export class BaseCRUDService<T extends Document> {
     return new BaseCRUDService(model,identityField);
   }
 
-  private transformPayload(input : T, ...transforms : ComposableFunction<T>[]){
+  protected transformPayload(input : T, ...transforms : ComposableFunction<T>[]){
       return transforms ? compose<T>(...transforms)(input) : input;
   }
 

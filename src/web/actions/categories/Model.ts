@@ -1,17 +1,11 @@
 export interface Category {
-  name : string;
-  description : string;
-  parent : string;
+  name : string
+  description : string
+  parent ?: CategoryOrId
+  childs ?: CategoryOrId[]
+
 }
 
-export interface CategoryTree {
-  category : Category,
-  childs : CategoryTree[]
-}
+export type CategoryOrId = Category | string;
 
-export class CategoryTreeImpl implements CategoryTree {
-  childs : CategoryTree[]
-  constructor(public category : Category){
-    this.childs = []
-  }
-}
+ 
