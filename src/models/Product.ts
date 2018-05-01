@@ -69,6 +69,9 @@ const productSchema = new Schema({... DatedSchema,
     code: {
       type: String,
     },
+    price: {
+      type: Schema.Types.Number 
+    },
     status: {
       type: String,
       enum:[Status.Draft, Status.Live, Status.Published, Status.Archived],

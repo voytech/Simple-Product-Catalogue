@@ -4,7 +4,7 @@ import { Formik, Form, FormikProps  } from 'formik';
 import { VFormGroup  } from '../../components/forms/VFormGroup';
 import { HFormGroup  } from '../../components/forms/HFormGroup';
 import { Button, FormGroup, FormControl,
-         Glyphicon , Panel,
+         Glyphicon , Panel, ControlLabel,
          ListGroup, ListGroupItem, Row, Col  } from 'react-bootstrap';
 import { EditorComponent } from '../../components/editors/EditorComponent'
 import { EditorStep } from '../../components/editors/EditorStep'
@@ -56,7 +56,6 @@ export class CategoriesView extends React.Component<CategoriesViewProps, Categor
   loadCategories = () => {
     loadCategoriesAction().then(result => {
       let treeItems = result.data.map(this.toTreeItem);
-      console.log(treeItems);
       this.setState({categories : result.data})
     })
   }
@@ -92,6 +91,7 @@ export class CategoriesView extends React.Component<CategoriesViewProps, Categor
               render={(props : FormikProps<Category>) => (
                  <Form className="form-inline mb-1">
                     <FormGroup className="ml-1">
+                      <ControlLabel>Root Category Name </ControlLabel>{' '}
                       <FormControl name='name'
                                    type='text'
                                    value={props.values.name}
@@ -99,6 +99,7 @@ export class CategoriesView extends React.Component<CategoriesViewProps, Categor
                       </FormControl>
                     </FormGroup>
                     <FormGroup className="ml-1">
+                      <ControlLabel>Description</ControlLabel>{' '}
                       <FormControl name='description'
                                    type='text'
                                    value={props.values.description}

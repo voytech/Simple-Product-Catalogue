@@ -25,6 +25,7 @@ export interface Product {
   code ?: string;
   status : string;
   category : string;
+  price : number;
   description: string;
   startDate : string;
   effectiveStartDate : string;

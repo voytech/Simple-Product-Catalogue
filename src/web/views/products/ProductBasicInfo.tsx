@@ -51,7 +51,6 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
 
   loadCategoriesKeys = () => {
     loadCategoriesIdentsAction().then(idents => {
-      console.log(idents)
       this.setState({categories: idents.data})
     })
   }
@@ -61,6 +60,7 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
       name: '',
       type: 'tangible',
       status : '?',
+      price : 0,
       category : '',
       description:'...',
       startDate : new Date().toISOString().split('T')[0],
@@ -89,6 +89,11 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
                                   value={props.values.description}
                                   type='text'
                                   componentClass='textarea'
+                                  onChange={props.handleChange} />
+                      <HFormGroup name='price' display='Default Price'
+                                  value={props.values.price+""}
+                                  type='number'
+                                  errors={props.touched.price && props.errors.price}
                                   onChange={props.handleChange} />
                       <HFormGroup name='status' display='Status'
                                   type='text'>
@@ -131,7 +136,6 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
                                 <option key={key.path} value={key._id}>{key.path}</option>)}
                             </FormControl>
                           </HFormGroup>
-
                           <HFormGroup labelWidth={4} controlWidth={8}
                                       name='effectiveStartDate' display='Available Date'
                                       value={props.values.effectiveStartDate}

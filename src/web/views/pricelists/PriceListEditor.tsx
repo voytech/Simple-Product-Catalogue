@@ -28,16 +28,12 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
 
   constructor(props){
     super(props);
-    this.state = {  }
+    this.state = { }
   }
 
   componentDidMount(){
     this.loadProductsKeys()
-    if (this.props.priceList){
-      this.setState({priceList : this.props.priceList})
-    } else {
-      this.loadPriceList(this.props.priceList.name)
-    }
+    this.loadPriceList(this.props.priceList.name)
   }
 
   private setResult = (result) =>  this.setState({priceList: result.data})
@@ -52,7 +48,7 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
   }
 
   addPriceListItem = (assignment : PriceAssignement) => {
-    addPriceListItemAction(assignment).then(this.setResult)
+    addPriceListItemAction(assignment).then(() => this.loadPriceList(assignment.priceList))
   }
 
   loadPriceList = (name : string) => {
@@ -80,7 +76,7 @@ export class PriceListEditor extends React.Component<PriceListDetailsProps,Price
 
   productEntries = () => {
     return <Formik
-              initialValues={ { product : '', price: 0, priceList : this.state.priceList && this.state.priceList.name } }
+              initialValues={ { product : '', price: 0, priceList : this.props.priceList && this.props.priceList.name } }
               onSubmit={(values: PriceAssignement) => this.addPriceListItem(values)}
               render={(props : FormikProps<PriceAssignement>) => (
                  <Form className="form-inline">
