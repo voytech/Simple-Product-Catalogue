@@ -1,4 +1,5 @@
 import {Schema, Model, Document, model, connection} from 'mongoose';
+import  * as autopopulate from 'mongoose-autopopulate'
 import { Dated, DatedSchema } from './Dated'
 import { v1 as uuid } from 'uuid';
 
@@ -28,10 +29,13 @@ const categorySchema = new Schema({
     },
     childs : [{
       type: Schema.Types.ObjectId,
-      ref: 'Category'
+      ref: 'Category',
+      autopopulate : true
     }]
 
 });
+
+categorySchema.plugin(autopopulate);
 
 categorySchema.pre('save', function(next) {
   next()

@@ -60,7 +60,7 @@ export function withItemEditor<T>(passProps ?: ItemEditorTreeViewProps<T>){
                       <Button onClick={() => this.props.edit(item)} bsStyle="primary">
                         <Glyphicon glyph="pencil" />
                       </Button>
-                      <OverlayTrigger trigger="click" placement="right" overlay={this.editing(item)}>
+                      <OverlayTrigger trigger="click" rootClose placement="right" overlay={this.editing(item)}>
                         <Button onClick={() => this.toggleInputs(item)} bsStyle="success">
                           <Glyphicon glyph="plus-sign" />
                         </Button>

@@ -29,11 +29,11 @@ export class CategoryService extends BaseCRUDService<CategoryDoc>{
   }
 
   public getCategoryChildTree(node : CategoryDoc){
-    return Category.find({parent: node._id}).populate('childs').exec()
+    return Category.find({parent: node._id}).exec()
   }
 
   public getCategoryTrees(){
-    return Category.find({parent: null}).populate('childs').exec()
+    return Category.find({parent: null}).exec()
   }
 
 }
