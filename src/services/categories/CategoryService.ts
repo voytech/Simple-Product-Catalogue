@@ -17,7 +17,7 @@ export class CategoryService extends BaseCRUDService<CategoryDoc>{
   public create(payload : CategoryDoc, ...transforms : ComposableFunction<CategoryDoc>[]){
     let input = this.transformPayload(payload,...transforms)
     if (input.parent){
-      return this.getByIdentityField(input.parent.name).then(parent => {
+      return this.getByIdentityField(input.parent.path).then(parent => {
         return Category.create(input).then(result => {
           parent.childs.push(result)
           return parent.save().then(parent => {  return result})

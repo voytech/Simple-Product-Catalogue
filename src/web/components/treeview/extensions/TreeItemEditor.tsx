@@ -56,7 +56,7 @@ export function withItemEditor<T>(passProps ?: ItemEditorTreeViewProps<T>){
         renderContent = (item : TreeItem<T>) => {
           return <>
                   <b>{item.title}</b>
-                  <ButtonGroup bsSize="xsmall" className="pull-right">
+                  <ButtonGroup bsSize="xsmall" className="pull-right mr-1">
                       <Button onClick={() => this.props.edit(item)} bsStyle="primary">
                         <Glyphicon glyph="pencil" />
                       </Button>
@@ -72,10 +72,10 @@ export function withItemEditor<T>(passProps ?: ItemEditorTreeViewProps<T>){
                 </>
         }
 
-
         render(){
           return <Component {...this.props} renderContent={this.renderContent} />
         }
+
     }
     return class extends React.Component<ItemEditorTreeViewProps<T>> {
 

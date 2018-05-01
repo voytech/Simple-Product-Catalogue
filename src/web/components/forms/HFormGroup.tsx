@@ -11,7 +11,7 @@ import { FormEvent } from '../../utils/FormUtils';
 export interface IFormGroupProperties{
    name : string;
    display : string;
-   type : string;
+   type ? : string;
    value?: string;
    errors?: string;
    componentClass ?:string;

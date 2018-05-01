@@ -10,14 +10,15 @@ import {Model} from 'mongoose';
 export class Categories extends CRUDRoute<CategoryDoc,CategoryService> {
 
     constructor(){
-      super(Category,'name',[]);
+      super(Category,'path',[(category : CategoryDoc) => {
+        category.path = (category.parent ? category.parent.path : "") + "/" + category.name;
+        return category
+      }]);
     }
 
     createService(model : Model<CategoryDoc>,identityField : string) : CategoryService{
       return new CategoryService(model,identityField);
     }
-
-
 
     public fetchCategoryTreesAction(router : Router) : void {
         router.get('/load',this.restrict(['ADMIN']),(req: Request, res: Response) => {

@@ -6,8 +6,10 @@ import { StatusComponent  } from '../../components/StatusComponent';
 import { Col, Row,
          Button,
          Glyphicon,
-         ButtonToolbar  } from 'react-bootstrap';
+         ButtonToolbar, FormControl  } from 'react-bootstrap';
 import { Product, Status, ProductProperty, productValidation } from '../../actions/products/Model'
+import { loadCategoriesIdentsAction} from '../../actions/categories/LoadCategoriesAction'
+
 
 interface ProductBasicInfoProps{
   saveProduct : (product : Product) => void;
@@ -17,11 +19,13 @@ interface ProductBasicInfoProps{
 
 interface ProductBasicInfoState{
   product ?: Product;
+  categories ?: any
 }
 
 export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,ProductBasicInfoState>{
   constructor(props){
     super(props);
+    this.state = {categories : []}
   }
 
   private formatDate(key) {
@@ -39,6 +43,17 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
             ...this.formatDate('effectiveStartDate'),
             ...this.formatDate('effectiveEndDate'),
           };
+  }
+
+  componentDidMount(){
+    this.loadCategoriesKeys()
+  }
+
+  loadCategoriesKeys = () => {
+    loadCategoriesIdentsAction().then(idents => {
+      console.log(idents)
+      this.setState({categories: idents.data})
+    })
   }
 
   private default() : Product{
@@ -104,12 +119,19 @@ export class ProductBasicInfo extends React.Component<ProductBasicInfoProps,Prod
                                       onChange={props.handleChange}  />
                         </Col>
                         <Col sm={6}>
-                          <HFormGroup labelWidth={4} controlWidth={8}
-                                      name='category' display='Category'
-                                      value={props.values.category}
-                                      type='text'
-                                      errors={props.touched.category && props.errors.category}
-                                      onChange={props.handleChange} />
+                          <HFormGroup display='Category'
+                                      name='category'
+                                      labelWidth={4}
+                                      controlWidth={8}>
+                            <FormControl name='category'
+                                         value={props.values.category}
+                                         onChange={props.handleChange}
+                                         componentClass="select" placeholder="select">
+                              {this.state.categories && this.state.categories.map(key =>
+                                <option key={key.path} value={key._id}>{key.path}</option>)}
+                            </FormControl>
+                          </HFormGroup>
+
                           <HFormGroup labelWidth={4} controlWidth={8}
                                       name='effectiveStartDate' display='Available Date'
                                       value={props.values.effectiveStartDate}

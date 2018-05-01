@@ -5,6 +5,7 @@ import {ResourceDescriptorSchema, IResourceDescriptor} from './ResourceDescripto
 import { Dated, DatedSchema } from './Dated'
 import { v1 as uuid } from 'uuid';
 import { Resource } from './Resource'
+import { CategoryDoc } from './Category'
 
 let ObjectId =  Schema.Types.ObjectId;
 
@@ -23,7 +24,8 @@ export enum Status {
 export interface IProduct extends Document, Dated {
     name: string;
     code: string;
-    category : string;
+    price : number;
+    category : CategoryDoc;
     description: string;
     type: string;
     status: Status;
@@ -81,7 +83,8 @@ const productSchema = new Schema({... DatedSchema,
       required: true
     },
     category : {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
       required : true
     },
     tags: [{

@@ -5,6 +5,7 @@ import { v1 as uuid } from 'uuid';
 
 export interface CategoryDoc extends Document{
   name : string;
+  path : string;
   description : string;
   parent ?: CategoryDoc;
   childs ?: CategoryDoc[];
@@ -17,8 +18,12 @@ export interface ICategoryModel {
 const categorySchema = new Schema({
     name: {
       type: String,
+      required: true
+    },
+    path: {
+      type: String,
       required: true,
-      unique: true
+      unique : true
     },
     description: {
       type: String
@@ -37,9 +42,7 @@ const categorySchema = new Schema({
 
 categorySchema.plugin(autopopulate);
 
-categorySchema.pre('save', function(next) {
-  next()
-});
+ 
 
 export type CategoryModel = Model<CategoryDoc> & ICategoryModel & CategoryDoc;
 

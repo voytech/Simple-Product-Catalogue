@@ -22,6 +22,7 @@ interface ProductEditorViewProps{
 
 interface ProductEditorViewState {
   product ?: Product;
+  categories ?: any;
 }
 
 export class ProductEditor extends React.Component<ProductEditorViewProps,ProductEditorViewState> {
